@@ -4,3 +4,12 @@ html, body {
   height: 100%;
   overflow: hidden;
 }
+
+:root {
+  --color-primary: #152026;
+  --color-bg: #FFFFFF;
+  --color-accent: #455059;
+  --color-muted: #5C6A73;
+  --color-dark: #293540;
+  --color-secondary: #4A5568;
+}
