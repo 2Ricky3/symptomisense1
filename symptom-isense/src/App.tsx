@@ -8,8 +8,12 @@ function App() {
 
   return (
     <>
-      {page === 'home' && <HomePage onLoginClick={() => setPage('login')} />}
-      {page === 'login' && <LoginPage />}
+      {page === 'home' && (
+        <HomePage onLoginClick={() => setPage('login')} />
+      )}
+      {page === 'login' && (
+        <LoginPage onHomeClick={() => setPage('home')} />
+      )}
     </>
   );
 }
