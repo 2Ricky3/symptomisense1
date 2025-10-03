@@ -3,11 +3,11 @@
   <br>
   <a href="http://www.amitmerchant.com/electron-markdownify"><img src="https://raw.githubusercontent.com/amitmerchant1990/electron-markdownify/master/app/img/markdownify.png" alt="Markdownify" width="200"></a>
   <br>
-  Markdownify
+  Symptom-ISense
   <br>
 </h1>
 
-<h4 align="center">A minimal Markdown Editor desktop app built on top of <a href="http://electron.atom.io" target="_blank">Electron</a>.</h4>
+<h4 align="center">A minimal Markdown Editor desktop app built on top of <a href="http://react.atom.io" target="_blank">React</a>.</h4>
 
 <p align="center">
   <a href="https://badge.fury.io/js/electron-markdownify">
@@ -88,7 +88,7 @@ Markdownify is an [emailware](https://en.wiktionary.org/wiki/emailware). Meaning
 
 This software uses the following open source packages:
 
-- [Electron](http://electron.atom.io/)
+- [React](http://react.atom.io/)
 - [Node.js](https://nodejs.org/)
 - [Marked - a markdown parser](https://github.com/chjj/marked)
 - [showdown](http://showdownjs.github.io/showdown/)
