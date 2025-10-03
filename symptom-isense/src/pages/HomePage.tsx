@@ -1,15 +1,32 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Dialog } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
+import type { User } from 'firebase/auth';
 import Logo from '../assets/Logo.png';
+
+interface HomePageProps {
+  user: User | null;
+  onLoginClick?: () => void;
+  onLogoutClick?: () => void;
+  onCheckSymptomsClick?: () => void;
+}
 
 const navigation = [
   { name: 'Features', href: '#' },
   { name: 'Company', href: '#' },
 ];
 
-const HomePage: React.FC<{ onLoginClick?: () => void }> = ({ onLoginClick }) => {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+const HomePage: React.FC<HomePageProps> = ({ user, onLoginClick, onLogoutClick, onCheckSymptomsClick }) => {
+  const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
+
+  const handleCheckSymptomsClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    event.preventDefault();
+    if (onCheckSymptomsClick) {
+      onCheckSymptomsClick();
+    } else {
+      window.location.href = '/testOpenAI';
+    }
+  };
 
   return (
     <div className="fixed inset-0 bg-gradient-to-br from-bg via-bg to-muted overflow-hidden">
@@ -43,12 +60,21 @@ const HomePage: React.FC<{ onLoginClick?: () => void }> = ({ onLoginClick }) => 
             ))}
           </div>
           <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-            <button
-              onClick={onLoginClick}
-              className="text-sm font-semibold text-dark hover:text-accent transition bg-transparent border-none cursor-pointer"
-            >
-              Log in <span aria-hidden="true">&rarr;</span>
-            </button>
+            {user ? (
+              <button
+                onClick={onLogoutClick}
+                className="text-sm font-semibold text-dark hover:text-accent transition bg-transparent border-none cursor-pointer"
+              >
+                Log out
+              </button>
+            ) : (
+              <button
+                onClick={onLoginClick}
+                className="text-sm font-semibold text-dark hover:text-accent transition bg-transparent border-none cursor-pointer"
+              >
+                Log in <span aria-hidden="true">&rarr;</span>
+              </button>
+            )}
           </div>
         </nav>
         <Dialog open={mobileMenuOpen} onClose={setMobileMenuOpen} className="lg:hidden">
@@ -82,19 +108,27 @@ const HomePage: React.FC<{ onLoginClick?: () => void }> = ({ onLoginClick }) => 
                   ))}
                 </div>
                 <div className="py-6">
-                  <a
-                    href="#"
-                    className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold text-dark hover:bg-muted hover:text-primary transition"
-                  >
-                    Log in
-                  </a>
+                  {user ? (
+                    <button
+                      onClick={onLogoutClick}
+                      className="-mx-3 block w-full rounded-lg px-3 py-2.5 text-base font-semibold text-dark hover:bg-muted hover:text-primary transition text-left"
+                    >
+                      Log out
+                    </button>
+                  ) : (
+                    <button
+                      onClick={onLoginClick}
+                      className="-mx-3 block w-full rounded-lg px-3 py-2.5 text-base font-semibold text-dark hover:bg-muted hover:text-primary transition text-left"
+                    >
+                      Log in
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
           </Dialog.Panel>
         </Dialog>
       </header>
-
       <main className="flex flex-col items-center justify-center min-h-screen px-6 pt-24 lg:px-8">
         <div className="mx-auto max-w-2xl text-center">
           <img
@@ -105,6 +139,7 @@ const HomePage: React.FC<{ onLoginClick?: () => void }> = ({ onLoginClick }) => 
           <h1 className="text-5xl font-extrabold text-dark mb-4 drop-shadow">Symptom-iSense</h1>
           <p className="text-lg text-muted mb-8">Your intelligent symptom checker</p>
         </div>
+
         <ul className="mb-8 text-muted space-y-2 text-base text-left max-w-sm mx-auto">
           <li className="flex items-center gap-2">
             <span className="text-secondary">✓</span> Fast & accurate symptom analysis
@@ -116,26 +151,29 @@ const HomePage: React.FC<{ onLoginClick?: () => void }> = ({ onLoginClick }) => 
             <span className="text-secondary">✓</span> Free to use
           </li>
         </ul>
+
         <div className="flex justify-center">
           <button
+            onClick={handleCheckSymptomsClick}
             className="rounded-md px-5 py-3 text-base font-semibold text-dark shadow-lg transition
-              bg-bg/60 backdrop-blur-lg border border-muted/30 hover:bg-accent/30 hover:text-primary"
-            style={{
-              boxShadow: '0 8px 32px 0 rgba(21, 32, 38, 0.15)',
-            }}
+            bg-bg/60 backdrop-blur-lg border border-muted/30 hover:bg-accent/30 hover:text-primary"
+            style={{ boxShadow: '0 8px 32px 0 rgba(21, 32, 38, 0.15)' }}
           >
             Check Symptoms
           </button>
         </div>
+
         <div className="mt-4 flex justify-center">
           <a href="#" className="text-base font-semibold text-dark hover:text-accent hover:underline transition">
             Learn more <span aria-hidden="true">→</span>
           </a>
         </div>
+
         <div className="mt-6 text-xs text-muted text-center">
           Tip: Describe your symptoms in detail for best results.
         </div>
       </main>
+
       <footer className="w-full text-muted text-xs text-center py-2 absolute bottom-0 left-0 bg-transparent">
         &copy; 2025 Symptom-iSense. All rights reserved.
       </footer>

@@ -4,6 +4,7 @@ import {
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
 } from 'firebase/auth';
+import { FirebaseError } from 'firebase/app';
 import { auth } from '../services/firebase';
 
 const firebaseErrorMessages: Record<string, string> = {
@@ -40,11 +41,7 @@ const LoginPage: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => {
 
       if (onHomeClick) onHomeClick();
     } catch (err: unknown) {
-      if (err && typeof err === 'object' && 'code' in err) {
-        interface FirebaseError {
-          code: string;
-          message?: string;
-        }
+      if (err instanceof FirebaseError) {
         const code = (err as FirebaseError).code;
         setError(firebaseErrorMessages[code] || 'Something went wrong. Please try again.');
       } else {
@@ -69,11 +66,7 @@ const LoginPage: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => {
       await sendPasswordResetEmail(auth, email);
       setMessage('Password reset email sent! Please check your inbox.');
     } catch (err: unknown) {
-      if (err && typeof err === 'object' && 'code' in err) {
-        interface FirebaseError {
-          code: string;
-          message?: string;
-        }
+      if (err instanceof FirebaseError) {
         const code = (err as FirebaseError).code;
         switch (code) {
           case 'auth/user-not-found':
