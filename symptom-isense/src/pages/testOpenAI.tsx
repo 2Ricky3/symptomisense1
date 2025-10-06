@@ -93,26 +93,32 @@ const AiTestPage: React.FC<AiTestPageProps> = ({ onHomeClick }) => {
         ← Back to Home
       </button>
 
-      <h1 className="text-3xl font-bold mb-6 text-center">AI Test Page</h1>
+      <h1 className="text-3xl font-bold mb-6 text-center" data-aos="fade-down">
+        AI Test Page
+      </h1>
 
-      <textarea
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        placeholder="Ask me something..."
-        className="w-full border rounded p-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
-        rows={5}
-      />
+      <div data-aos="fade-up">
+        <textarea
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="Ask me something..."
+          className="w-full border rounded p-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          rows={5}
+        />
+      </div>
 
-      <button
-        onClick={handleAsk}
-        disabled={loading}
-        className="mt-4 w-full px-5 py-3 bg-blue-500 text-white rounded font-semibold hover:bg-blue-600 transition disabled:opacity-50"
-      >
-        {loading ? "Thinking..." : "Ask AI"}
-      </button>
+      <div data-aos="fade-up" data-aos-delay="100">
+        <button
+          onClick={handleAsk}
+          disabled={loading}
+          className="mt-4 w-full px-5 py-3 bg-blue-500 text-white rounded font-semibold hover:bg-blue-600 transition disabled:opacity-50"
+        >
+          {loading ? "Thinking..." : "Ask AI"}
+        </button>
+      </div>
 
       {response && (
-        <div className="mt-6 p-4 border rounded bg-gray-50">
+        <div className="mt-6 p-4 border rounded bg-gray-50" data-aos="fade-in" data-aos-delay="200">
           <strong>Response:</strong>
           <p className="mt-2 whitespace-pre-wrap">{response}</p>
         </div>

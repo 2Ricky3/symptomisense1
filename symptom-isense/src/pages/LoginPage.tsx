@@ -86,11 +86,19 @@ const LoginPage: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => {
     }
   };
 
+  const buttonClasses =
+    "w-full rounded-md px-5 py-3 text-base font-semibold text-dark bg-bg border border-muted/30 shadow-md " +
+    "transition-all duration-300 transform hover:bg-dark hover:text-bg hover:shadow-lg hover:scale-105 " +
+    "disabled:opacity-50 disabled:cursor-not-allowed";
+
+  const smallButtonClasses =
+    "text-accent hover:text-bg hover:bg-accent/20 hover:scale-105 transition-all duration-200 rounded px-2 py-1 cursor-pointer";
+
   return (
-    <div className="fixed inset-0 bg-gradient-to-br from-bg via-bg to-muted flex items-center justify-center">
+    <div className="fixed inset-0 bg-gradient-to-br from-bg via-bg to-muted flex items-center justify-center px-4">
       <button
         type="button"
-        className="absolute top-6 left-6 text-sm text-muted hover:text-accent hover:underline transition bg-transparent border-none cursor-pointer z-50"
+        className={`${smallButtonClasses} absolute top-6 left-6 z-50`}
         onClick={onHomeClick}
       >
         ← Back to Home
@@ -99,10 +107,10 @@ const LoginPage: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => {
       <form className="space-y-5 max-w-md w-full text-center" onSubmit={handleSubmit}>
         <h2 className="text-3xl font-bold text-dark mb-6">
           {showSignUp
-            ? 'Sign up for Symptom-iSense'
+            ? 'Sign up'
             : showResetPassword
             ? 'Reset Password'
-            : 'Log in to Symptom-iSense'}
+            : 'Login'}
         </h2>
 
         {showSignUp && (
@@ -158,35 +166,22 @@ const LoginPage: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => {
         {message && <p className="text-green-500 text-sm">{message}</p>}
 
         {!showResetPassword && (
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full rounded-md px-5 py-3 text-base font-semibold text-dark shadow-lg transition
-            bg-bg/60 backdrop-blur-lg border border-muted/30 hover:bg-accent/30 hover:text-primary disabled:opacity-50"
-            style={{ boxShadow: '0 8px 32px 0 rgba(21, 32, 38, 0.15)' }}
-          >
+          <button type="submit" disabled={loading} className={buttonClasses}>
             {loading ? 'Please wait...' : showSignUp ? 'Sign Up' : 'Log in'}
           </button>
         )}
 
         {showResetPassword && (
-          <button
-            type="button"
-            disabled={loading}
-            onClick={handlePasswordReset}
-            className="w-full rounded-md px-5 py-3 text-base font-semibold text-dark shadow-lg transition
-            bg-bg/60 backdrop-blur-lg border border-muted/30 hover:bg-accent/30 hover:text-primary disabled:opacity-50"
-            style={{ boxShadow: '0 8px 32px 0 rgba(21, 32, 38, 0.15)' }}
-          >
+          <button type="button" disabled={loading} onClick={handlePasswordReset} className={buttonClasses}>
             {loading ? 'Sending...' : 'Send Reset Email'}
           </button>
         )}
 
-        <div className="mt-4 text-sm text-muted">
+        <div className="mt-4 text-sm text-muted flex flex-col gap-2 items-center">
           {!showSignUp && !showResetPassword && (
             <button
               type="button"
-              className="text-accent hover:underline transition bg-transparent border-none cursor-pointer"
+              className={smallButtonClasses}
               onClick={() => {
                 setShowResetPassword(true);
                 setError(null);
@@ -200,7 +195,7 @@ const LoginPage: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => {
           {showResetPassword && (
             <button
               type="button"
-              className="text-accent hover:underline transition bg-transparent border-none cursor-pointer"
+              className={smallButtonClasses}
               onClick={() => {
                 setShowResetPassword(false);
                 setError(null);
@@ -218,7 +213,7 @@ const LoginPage: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => {
                   Already have an account?{' '}
                   <button
                     type="button"
-                    className="text-accent hover:underline transition bg-transparent border-none cursor-pointer"
+                    className={smallButtonClasses}
                     onClick={() => setShowSignUp(false)}
                   >
                     Log in
@@ -229,7 +224,7 @@ const LoginPage: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => {
                   Don't have an account?{' '}
                   <button
                     type="button"
-                    className="text-accent hover:underline transition bg-transparent border-none cursor-pointer"
+                    className={smallButtonClasses}
                     onClick={() => setShowSignUp(true)}
                   >
                     Sign up

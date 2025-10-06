@@ -4,9 +4,10 @@ import { auth } from './services/firebase';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import AiTestPage from './pages/testOpenAI';
+import LearnMorePage from './pages/LearnMorePage';
 import './App.css';
 
-type PageRoute = 'home' | 'login' | 'ai';
+type PageRoute = 'home' | 'login' | 'ai' | 'learnMore';
 
 function App() {
   const [page, setPage] = useState<PageRoute>('home');
@@ -39,6 +40,7 @@ function App() {
           onLoginClick={() => setPage('login')}
           onLogoutClick={handleLogout}
           onCheckSymptomsClick={() => (user ? setPage('ai') : setPage('login'))}
+          onLearnMoreClick={() => setPage('learnMore')}
         />
       )}
       {page === 'login' && (
@@ -47,6 +49,7 @@ function App() {
         />
       )}
       {page === 'ai' && user && <AiTestPage onHomeClick={() => setPage('home')} />}
+      {page === 'learnMore' && <LearnMorePage onHomeClick={() => setPage('home')} />}
     </>
   );
 }
