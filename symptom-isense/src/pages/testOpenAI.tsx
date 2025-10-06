@@ -82,47 +82,64 @@ const AiTestPage: React.FC<AiTestPageProps> = ({ onHomeClick }) => {
       setLoading(false);
     }
   };
+  const textButtonClass =
+    "text-accent hover:text-bg hover:bg-accent/20 hover:scale-105 transition-all duration-200 rounded px-2 py-1 cursor-pointer";
+
+  const mainButtonClass =
+    "w-full rounded-md px-5 py-3 text-base font-semibold text-dark bg-bg border border-muted/30 shadow-md " +
+    "transition-all duration-300 transform hover:bg-dark hover:text-bg hover:shadow-lg hover:scale-105 " +
+    "disabled:opacity-50 disabled:cursor-not-allowed";
 
   return (
-    <div className="p-6 max-w-xl mx-auto mt-12">
+    <div className="fixed inset-0 bg-gradient-to-br from-bg via-bg to-muted flex flex-col items-center justify-start overflow-y-auto p-6 lg:p-8">
       <button
         type="button"
-        className="absolute top-6 left-6 text-sm text-muted hover:text-accent hover:underline transition bg-transparent border-none cursor-pointer z-50"
+        className={`${textButtonClass} absolute top-6 left-6 z-50`}
         onClick={onHomeClick}
       >
         ← Back to Home
       </button>
-
-      <h1 className="text-3xl font-bold mb-6 text-center" data-aos="fade-down">
-        AI Test Page
-      </h1>
-
-      <div data-aos="fade-up">
-        <textarea
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="Ask me something..."
-          className="w-full border rounded p-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
-          rows={5}
-        />
-      </div>
-
-      <div data-aos="fade-up" data-aos-delay="100">
-        <button
-          onClick={handleAsk}
-          disabled={loading}
-          className="mt-4 w-full px-5 py-3 bg-blue-500 text-white rounded font-semibold hover:bg-blue-600 transition disabled:opacity-50"
+      <div className="mt-20 w-full max-w-2xl bg-bg/80 backdrop-blur-lg rounded-lg shadow-xl border border-muted/20 p-8">
+        <h1
+          className="text-4xl font-extrabold text-dark text-center mb-6 drop-shadow-sm"
+          data-aos="fade-down"
         >
-          {loading ? "Thinking..." : "Ask AI"}
-        </button>
+         Check your symptoms with AI
+        </h1>
+        <div data-aos="fade-up">
+          <textarea
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Ask me something..."
+            className="w-full border border-muted/30 bg-bg rounded-md p-4 text-dark text-base focus:outline-none focus:ring-2 focus:ring-accent/40 transition duration-200"
+            rows={5}
+          />
+        </div>
+        <div data-aos="fade-up" data-aos-delay="100">
+          <button
+            onClick={handleAsk}
+            disabled={loading}
+            className={`mt-6 ${mainButtonClass}`}
+          >
+            {loading ? "Thinking..." : "Ask AI"}
+          </button>
+        </div>
+        {response && (
+          <div
+            className="mt-6 p-4 border border-muted/30 rounded-md bg-bg/60 backdrop-blur-sm text-dark shadow-inner"
+            data-aos="fade-in"
+            data-aos-delay="200"
+          >
+            <strong className="block text-accent mb-2">Response:</strong>
+            <p className="whitespace-pre-wrap text-muted text-base">{response}</p>
+          </div>
+        )}
       </div>
 
-      {response && (
-        <div className="mt-6 p-4 border rounded bg-gray-50" data-aos="fade-in" data-aos-delay="200">
-          <strong>Response:</strong>
-          <p className="mt-2 whitespace-pre-wrap">{response}</p>
-        </div>
-      )}
+      {/* Tip / Footer */}
+      <div className="mt-6 text-xs text-muted text-center">
+        Tip: Describe your symptoms in detail for better results.
+      </div>
     </div>
   );
 };
