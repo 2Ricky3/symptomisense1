@@ -4,7 +4,6 @@ import {
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
 } from 'firebase/auth';
-import { FirebaseError } from 'firebase/app';
 import { auth } from '../services/firebase';
 
 const firebaseErrorMessages: Record<string, string> = {
@@ -14,9 +13,32 @@ const firebaseErrorMessages: Record<string, string> = {
   'auth/user-not-found': 'No account found with this email.',
   'auth/wrong-password': 'Incorrect password. Please try again.',
   'auth/too-many-requests': 'Too many attempts. Please try again later.',
+  'auth/network-request-failed': 'Network error. Check your connection and try again.',
+  'auth/user-disabled': 'This account has been disabled. Contact support if you think this is a mistake.',
+  'auth/operation-not-allowed': 'This authentication method is not enabled.',
+  'auth/requires-recent-login': 'Please re-authenticate and try again.',
 };
 
-const LoginPage: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => {
+type ErrorLike = { code?: unknown; message?: unknown } & Record<string, unknown>;
+
+function extractAuthCode(err: unknown): string | null {
+  if (!err || typeof err !== 'object') return null;
+  const e = err as ErrorLike;
+
+  if (typeof e.code === 'string') return e.code;
+
+  if (typeof e.message === 'string') {
+    const msg = e.message as string;
+    const m = msg.match(/auth\/[a-zA-Z-]+/);
+    if (m) return m[0];
+    const m2 = msg.match(/\(auth\/[a-zA-Z-]+\)/);
+    if (m2) return m2[0].replace(/[()]/g, '');
+  }
+
+  return null;
+}
+
+const LoginPage: React.FC<{ onClose?: () => void; onSuccess?: () => void }> = ({ onClose, onSuccess }) => {
   const [showSignUp, setShowSignUp] = useState(false);
   const [showResetPassword, setShowResetPassword] = useState(false);
   const [email, setEmail] = useState('');
@@ -39,11 +61,22 @@ const LoginPage: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => {
         await signInWithEmailAndPassword(auth, email, password);
       }
 
-      if (onHomeClick) onHomeClick();
+      if (onSuccess) onSuccess();
+      else if (onClose) onClose();
     } catch (err: unknown) {
-      if (err instanceof FirebaseError) {
-        const code = (err as FirebaseError).code;
-        setError(firebaseErrorMessages[code] || 'Something went wrong. Please try again.');
+      const code = extractAuthCode(err);
+      if (code && firebaseErrorMessages[code]) {
+        setError(firebaseErrorMessages[code]);
+      } else if (code) {
+        if (/password|wrong/i.test(code)) {
+          setError('Incorrect password. Please try again.');
+        } else if (/user|not-found/i.test(code)) {
+          setError('No account found with this email.');
+        } else {
+          setError('Authentication failed. Please check your email and password and try again.');
+        }
+      } else if (err && typeof err === 'object' && 'message' in err && typeof (err as ErrorLike).message === 'string') {
+        setError((err as ErrorLike).message as string);
       } else {
         setError('An unexpected error occurred. Please try again.');
       }
@@ -66,20 +99,23 @@ const LoginPage: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => {
       await sendPasswordResetEmail(auth, email);
       setMessage('Password reset email sent! Please check your inbox.');
     } catch (err: unknown) {
-      if (err instanceof FirebaseError) {
-        const code = (err as FirebaseError).code;
-        switch (code) {
-          case 'auth/user-not-found':
-            setError('No account found with this email.');
-            break;
-          case 'auth/invalid-email':
-            setError('Please enter a valid email address.');
-            break;
-          default:
-            setError('Failed to send reset email. Please try again.');
+      const code = extractAuthCode(err);
+      if (code === 'auth/user-not-found') {
+        setError('No account found with this email.');
+      } else if (code === 'auth/invalid-email') {
+        setError('Please enter a valid email address.');
+      } else if (code && firebaseErrorMessages[code]) {
+        setError(firebaseErrorMessages[code]);
+      } else if (code) {
+        if (/user|not-found/i.test(code)) {
+          setError('No account found with this email.');
+        } else {
+          setError('Failed to send reset email. Please check the address and try again.');
         }
+      } else if (err && typeof err === 'object' && 'message' in err && typeof (err as ErrorLike).message === 'string') {
+        setError((err as ErrorLike).message as string);
       } else {
-        setError('An unexpected error occurred. Please try again.');
+        setError('Failed to send reset email. Please try again.');
       }
     } finally {
       setLoading(false);
@@ -99,7 +135,7 @@ const LoginPage: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => {
       <button
         type="button"
         className={`${smallButtonClasses} absolute top-6 left-6 z-50`}
-        onClick={onHomeClick}
+        onClick={onClose}
       >
         ← Back to Home
       </button>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { onAuthStateChanged, signOut, type User } from 'firebase/auth';
 import { auth } from './services/firebase'; 
 import HomePage from './pages/HomePage';
@@ -11,6 +11,7 @@ type PageRoute = 'home' | 'login' | 'ai' | 'learnMore';
 
 function App() {
   const [page, setPage] = useState<PageRoute>('home');
+  const [loginReturnTo, setLoginReturnTo] = useState<PageRoute | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -37,15 +38,29 @@ function App() {
       {page === 'home' && (
         <HomePage
           user={user}
-          onLoginClick={() => setPage('login')}
+          onLoginClick={() => {
+            setLoginReturnTo('home');
+            setPage('login');
+          }}
           onLogoutClick={handleLogout}
-          onCheckSymptomsClick={() => (user ? setPage('ai') : setPage('login'))}
+          onCheckSymptomsClick={() => {
+            if (user) setPage('ai');
+            else {
+              setLoginReturnTo('ai');
+              setPage('login');
+            }
+          }}
           onLearnMoreClick={() => setPage('learnMore')}
         />
       )}
       {page === 'login' && (
         <LoginPage
-          onHomeClick={() => setPage('home')}
+          onClose={() => setPage('home')}
+          onSuccess={() => {
+            if (loginReturnTo === 'ai') setPage('ai');
+            else setPage('home');
+            setLoginReturnTo(null);
+          }}
         />
       )}
       {page === 'ai' && user && <AiTestPage onHomeClick={() => setPage('home')} />}

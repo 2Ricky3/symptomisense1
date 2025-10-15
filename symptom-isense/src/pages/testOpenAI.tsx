@@ -1,14 +1,18 @@
 import React, { useState } from "react";
 import OpenAI from "openai";
-import { PDFDocument, StandardFonts, rgb, PDFEmbeddedFont } from "pdf-lib";
+import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
+
+type FontLike = {
+  widthOfTextAtSize: (text: string, size: number) => number;
+};
 
 import Loader from "./Loader"; 
 const client = new OpenAI({
   apiKey: import.meta.env.VITE_OPENAI_API_KEY,
-  dangerouslyAllowBrowser: true, //  Dev only i should fix later on
+  dangerouslyAllowBrowser: true, //  Dev only i should fix later for production
 });
 
-const TestOpenAI: React.FC = () => {
+const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => {
   const [input, setInput] = useState("");
   const [response, setResponse] = useState("");
   const [soapNote, setSoapNote] = useState("");
@@ -83,7 +87,7 @@ const TestOpenAI: React.FC = () => {
 
   const getWrappedLines = (
     text: string,
-    font: PDFEmbeddedFont,
+    font: FontLike,
     fontSize: number,
     maxWidth: number
   ): string[] => {
@@ -196,9 +200,9 @@ const TestOpenAI: React.FC = () => {
       color: rgb(0.5, 0.5, 0.5),
     });
   
-    const pdfBytes: Uint8Array = await pdfDoc.save();
-    const arrayBuffer = pdfBytes.buffer.slice(0);
-    const blob = new Blob([arrayBuffer], { type: "application/pdf" });
+  const pdfBytes: Uint8Array = await pdfDoc.save();
+  const arrayBuffer = pdfBytes.buffer as ArrayBuffer;
+  const blob = new Blob([arrayBuffer], { type: "application/pdf" });
     const url = URL.createObjectURL(blob);
 
     const a = document.createElement("a");
@@ -224,7 +228,10 @@ const TestOpenAI: React.FC = () => {
           <button
             type="button"
             className={`${smallButtonClasses} -ml-2`}
-            onClick={() => window.location.reload()}
+            onClick={() => {
+              if (onHomeClick) onHomeClick();
+              else window.location.href = '/';
+            }}
           >
             ← Back to Home
           </button>

@@ -47,7 +47,7 @@ const faqs = [
   },
   {
     question: "Do I need to create an account?",
-    answer: "No account is required to check symptoms, but logging in lets you save your history."
+    answer: "A account is required to use the symptom checker, but we prioritize your privacy."
   },
   {
     question: "Can I use this for emergencies?",
