@@ -88,7 +88,7 @@ const HomePage: React.FC<HomePageProps> = ({
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-bg via-bg to-muted overflow-auto">
       <header className="w-full z-50 sticky top-0">
-        <nav className="flex items-center justify-between p-6 lg:px-8 bg-bg"
+        <nav className="flex items-center justify-between p-4 lg:px-6"
           aria-label="Global"
         >
           <div className="flex lg:flex-1">
@@ -107,15 +107,15 @@ const HomePage: React.FC<HomePageProps> = ({
               <Bars3Icon className="h-6 w-6" aria-hidden="true" />
             </button>
           </div>
-          <div className="hidden lg:flex lg:gap-x-12">
+          <div className="hidden lg:flex lg:gap-x-10">
             <button
-              className="text-sm font-semibold text-dark hover:text-accent transition-colors duration-200 bg-transparent"
+              className="text-sm font-semibold text-dark hover:text-accent hover:underline hover:decoration-accent hover:decoration-2 underline-offset-4 transition-all duration-200 bg-transparent"
               onClick={() => scrollToSection('features')}
             >
               Features
             </button>
             <button
-              className="text-sm font-semibold text-dark hover:text-accent transition-colors duration-200 bg-transparent"
+              className="text-sm font-semibold text-dark hover:text-accent hover:underline hover:decoration-accent hover:decoration-2 underline-offset-4 transition-all duration-200 bg-transparent"
               onClick={() => scrollToSection('faq')}
             >
               FAQ
@@ -154,13 +154,13 @@ const HomePage: React.FC<HomePageProps> = ({
               <div className="-my-6 divide-y divide-muted/10">
                 <div className="space-y-2 py-6">
                   <button
-                    className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold text-dark hover:bg-muted/20 hover:text-accent transition-colors duration-200 w-full text-left"
+                    className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold text-dark hover:bg-muted/20 hover:text-accent hover:underline hover:decoration-accent hover:decoration-2 underline-offset-4 transition-all duration-200 w-full text-left"
                     onClick={() => scrollToSection('features')}
                   >
                     Features
                   </button>
                   <button
-                    className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold text-dark hover:bg-muted/20 hover:text-accent transition-colors duration-200 w-full text-left"
+                    className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold text-dark hover:bg-muted/20 hover:text-accent hover:underline hover:decoration-accent hover:decoration-2 underline-offset-4 transition-all duration-200 w-full text-left"
                     onClick={() => scrollToSection('faq')}
                   >
                     FAQ
@@ -183,8 +183,8 @@ const HomePage: React.FC<HomePageProps> = ({
         </Dialog>
       </header>
 
-      <main className="flex-1 flex flex-col items-center px-6 pt-32 lg:px-8">
-        <div className="mx-auto max-w-2xl text-center py-8">
+      <main className="flex-1 flex flex-col items-center px-4 pt-24 lg:px-6">
+        <div className="w-full max-w-4xl text-center py-8 mx-auto px-4">
           <img
             src={Logo}
             alt="Health illustration"
@@ -223,7 +223,7 @@ const HomePage: React.FC<HomePageProps> = ({
           Tip: Describe your symptoms in detail for best results.
         </div>
 
-        <section id="features" className="max-w-4xl w-full mx-auto mt-8 mb-12 scroll-mt-24 px-4 py-8">
+        <section id="features" className="w-full max-w-6xl mx-auto mt-8 mb-12 scroll-mt-24 px-6 py-8">
           <h2 className="text-2xl font-bold text-center mb-6 text-primary">Features</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {features.map((feature, idx) => (
@@ -238,7 +238,7 @@ const HomePage: React.FC<HomePageProps> = ({
             ))}
           </div>
         </section>
-        <section id="faq" className="max-w-3xl w-full mx-auto mb-16 scroll-mt-24 px-4 py-8">
+        <section id="faq" className="w-full max-w-6xl mx-auto mb-16 scroll-mt-24 px-6 py-8">
           <h2 className="text-2xl font-bold text-center mb-6 text-primary">Frequently Asked Questions</h2>
           <div className="space-y-4">
             {faqs.map((faq, idx) => (

@@ -7,6 +7,7 @@ type FontLike = {
 };
 
 import Loader from "./Loader"; 
+import { FaTrash } from 'react-icons/fa';
 const client = new OpenAI({
   apiKey: import.meta.env.VITE_OPENAI_API_KEY,
   dangerouslyAllowBrowser: true, //  Dev only i should fix later for production
@@ -16,11 +17,13 @@ const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => 
   const [input, setInput] = useState("");
   const [response, setResponse] = useState("");
   const [soapNote, setSoapNote] = useState("");
+  const [submittedInput, setSubmittedInput] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   const handleAsk = async () => {
     if (!input.trim()) return;
 
+    setSubmittedInput(input.trim());
     setLoading(true);
     setResponse("");
     setSoapNote("");
@@ -83,6 +86,13 @@ const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => 
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleReset = () => {
+    setSubmittedInput(null);
+    setResponse("");
+    setSoapNote("");
+    setInput("");
   };
 
   const getWrappedLines = (
@@ -220,10 +230,25 @@ const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => 
     "transition-all duration-300 transform hover:bg-dark hover:text-bg hover:shadow-lg hover:scale-105 " +
     "disabled:opacity-50 disabled:cursor-not-allowed";
 
+  const editButtonClasses =
+    "rounded-md px-4 py-2 text-sm font-medium text-dark bg-bg border border-muted/30 shadow-md " +
+    "transition-all duration-300 transform hover:bg-dark hover:text-bg hover:shadow-lg hover:scale-105 " +
+    "disabled:opacity-50 disabled:cursor-not-allowed";
+
+  if (loading) {
+    return (
+      <div className="min-h-screen w-full bg-gradient-to-br from-bg via-bg to-muted flex items-center justify-center p-4 sm:p-6 lg:p-8">
+        <div className="bg-white/90 backdrop-blur-md rounded-2xl shadow-xl p-8 flex flex-col items-center">
+          <Loader />
+          <p className="mt-4 text-muted">AI is analyzing your symptoms...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen w-full bg-gradient-to-br from-bg via-bg to-muted flex flex-col items-center justify-start p-4 sm:p-6 lg:p-8">
-      {loading && <Loader />}
-      <div className="w-full max-w-6xl flex-grow bg-white/80 backdrop-blur-md rounded-2xl shadow-xl p-6 sm:p-8 flex flex-col">
+      <div className="w-full max-w-6xl flex-grow bg-white/80 backdrop-blur-md rounded-2xl p-6 sm:p-8 flex flex-col">
         <div className="flex items-center justify-between mb-6">
           <button
             type="button"
@@ -240,48 +265,61 @@ const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => 
           </h1>
           <div className="w-24"></div> 
         </div>
-        <div className="flex-grow grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 min-h-0">
-          <div className="flex flex-col h-full">
-            <label className="text-dark font-medium mb-2 block text-left">
-              Describe your symptoms:
-            </label>
+        {!submittedInput ? (
+          <div className="flex-grow flex flex-col items-center justify-center">
+            <label className="text-dark font-medium mb-2 block text-left w-full max-w-3xl">Describe your symptoms:</label>
             <textarea
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="For example: 'I have a persistent dry cough, a slight fever of 38°C, and feel very tired for the last 3 days...'"
-              className="w-full flex-grow p-3 border border-muted/30 rounded-md text-dark bg-bg/70 focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent resize-none mb-4"
+              className="w-full max-w-3xl p-4 border border-muted/30 rounded-md text-dark bg-bg/70 focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent resize-none mb-4 h-40"
             />
-            <button
-              onClick={handleAsk}
-              disabled={loading}
-              className={buttonClasses}
-            >
-              {loading ? "Thinking..." : "Get Analysis"}
-            </button>
+            <div className="w-full max-w-3xl flex gap-3">
+              <button onClick={handleAsk} disabled={loading} className={buttonClasses}>
+                {loading ? 'Thinking...' : 'Get Analysis'}
+              </button>
+              <button
+                onClick={() => { setInput(''); }}
+                aria-label="Clear input"
+                title="Clear input"
+                className="rounded-md px-4 py-3 text-sm text-white bg-red-600 hover:bg-red-700 shadow-md transition-all duration-200 flex items-center justify-center"
+              >
+                <FaTrash className="h-4 w-4" aria-hidden />
+              </button>
+            </div>
           </div>
-
-          <div className="flex flex-col min-h-[300px] lg:min-h-full bg-bg/40 p-4 rounded-lg border border-muted/20 overflow-y-auto custom-scrollbar">
-            <h2 className="text-lg font-semibold text-dark mb-2 sticky top-0 bg-bg/40 py-2">
-              AI Analysis
-            </h2>
-            <p className="text-muted whitespace-pre-wrap flex-grow">
-              {response || "— Your analysis will appear here —"}
-            </p>
-            {soapNote && (
-              <div className="mt-6 text-center border-t border-muted/20 pt-4">
-                <p className="text-sm text-dark mb-2">
-                  A summary for your doctor is ready.
-                </p>
-                <button
-                  onClick={handleDownloadSOAP}
-                  className="mt-2 px-4 py-2 bg-accent text-bg font-medium rounded-md shadow hover:scale-105 transition-all duration-200"
-                >
-                  Download Doctor Report (PDF)
-                </button>
+        ) : (
+          <div className="flex-grow flex flex-col items-center gap-6 md:gap-8 min-h-0">
+            <div className="flex flex-col w-full max-w-3xl">
+              <label className="text-dark font-medium mb-2 block text-left">Your input</label>
+              <div className="w-full p-4 border border-muted/30 rounded-md bg-bg/60 text-dark whitespace-pre-wrap mb-4">
+                {submittedInput}
               </div>
-            )}
+              <div className="w-full bg-bg/40 p-4 rounded-md border border-muted/20 mb-4">
+                <h2 className="text-lg font-semibold text-dark mb-2">AI Analysis</h2>
+                <p className="text-muted whitespace-pre-wrap">
+                  {response || "— Your analysis will appear here —"}
+                </p>
+                {soapNote && (
+                  <div className="mt-6 text-center border-t border-muted/20 pt-4">
+                    <p className="text-sm text-dark mb-2">A summary for your doctor is ready.</p>
+                    <button
+                      onClick={handleDownloadSOAP}
+                      className="mt-2 px-4 py-2 bg-accent text-bg font-medium rounded-md shadow hover:scale-105 transition-all duration-200"
+                    >
+                      Download Doctor Report (PDF)
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              <div className="flex gap-3">
+                <button onClick={handleReset} disabled={loading} className={editButtonClasses}>Edit input</button>
+                <button onClick={handleAsk} disabled={loading} className={buttonClasses}>{loading ? 'Thinking...' : 'Get Analysis'}</button>
+              </div>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );
