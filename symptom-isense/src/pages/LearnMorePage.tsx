@@ -29,24 +29,22 @@ const processSteps = [
 ];
 
 const LearnMorePage: React.FC<LearnMorePageProps> = ({ onHomeClick }) => {
-  const textButtonClass =
-    "text-accent hover:text-bg hover:bg-accent/20 hover:scale-105 transition-all duration-200 rounded px-2 py-1 cursor-pointer";
-
   return (
     <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden">
       <div className="absolute inset-0 -z-10 animate-gradient bg-gradient-to-br from-primary/30 via-accent/20 to-muted/40" />
       <div className="absolute top-0 left-0 w-72 h-72 bg-primary/20 rounded-full blur-3xl opacity-60 -z-10 animate-pulse" />
       <div className="absolute bottom-0 right-0 w-96 h-96 bg-accent/20 rounded-full blur-3xl opacity-50 -z-10 animate-pulse" />
 
-      <div className="relative max-w-3xl mx-auto my-16 bg-white/70 backdrop-blur-xl p-10 rounded-2xl shadow-2xl border border-muted/20">
+      <div className="relative max-w-3xl sm:max-w-4xl mx-auto my-10 sm:my-16 bg-white/70 backdrop-blur-xl p-6 sm:p-10 rounded-2xl shadow-2xl border border-muted/20">
         <button
           type="button"
-          className={`${textButtonClass} absolute top-6 left-6 z-10`}
+          className="text-sm font-semibold text-dark hover:text-accent hover:underline hover:decoration-accent hover:decoration-2 underline-offset-4 transition-all duration-200 bg-transparent px-2 py-1"
           onClick={onHomeClick}
         >
+          
           ← Back to Home
         </button>
-        <div className="h-10" />
+        <div className="h-6 sm:h-10" />
 
         <div className="prose prose-invert max-w-none text-dark" data-aos="fade-up">
           <h1 className="text-4xl font-extrabold text-primary mb-8 text-center drop-shadow-lg">

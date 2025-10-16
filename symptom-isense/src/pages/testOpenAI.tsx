@@ -20,6 +20,12 @@ const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => 
   const [submittedInput, setSubmittedInput] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
+  const recommendations = [
+    "I have a headache and feel dizzy.",
+    "I have a sore throat and a mild fever.",
+    "I have a persistent cough and shortness of breath.",
+  ];
+
   const handleAsk = async () => {
     if (!input.trim()) return;
 
@@ -40,14 +46,18 @@ const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => 
               "Do not use emojis, symbols, bullet points, or decorative formatting. " +
               "Write in a calm, factual, and respectful tone. " +
               "Keep answers concise but complete. " +
-              "Always include a short reminder to consult a real doctor for medical concerns.",
+              "Always include a short reminder to consult a real doctor for medical concerns. " +
+              "When generating the SOAP note, do not assume any vital signs (e.g., blood pressure, temperature) unless explicitly provided. " +
+              "If vital signs are missing, explicitly recommend the doctor to measure them (e.g., 'Recommend measuring temperature, blood pressure, heart rate, respiratory rate, and pulse oximetry').",
           },
           {
             role: "user",
             content:
               input +
               "\n\nAfter your normal response, generate a structured SOAP note (Subjective, Objective, Assessment, Plan) " +
-              "for a doctor to review. Label it clearly as 'SOAP Note:' and make it medically concise.",
+              "for a doctor to review. Label it clearly as 'SOAP Note:' and make it medically concise. " +
+              "Do not fabricate symptoms, vital signs (e.g., temperature, blood pressure), or timelines. Only include details explicitly provided by the user. " +
+              "If certain information is missing, recommend that the doctor obtain these details (e.g., 'Recommend measuring temperature, blood pressure, heart rate, respiratory rate, and pulse oximetry').",
           },
         ],
       });
@@ -101,7 +111,7 @@ const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => 
     fontSize: number,
     maxWidth: number
   ): string[] => {
-    const words = text.split(' ');
+    const words = text.split(/\s+/); 
     const lines: string[] = [];
     let currentLine = '';
 
@@ -109,27 +119,28 @@ const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => 
       const testLine = currentLine ? `${currentLine} ${word}` : word;
       const width = font.widthOfTextAtSize(testLine, fontSize);
 
-      if (width < maxWidth) {
+      if (width <= maxWidth) {
         currentLine = testLine;
       } else {
         if (currentLine) {
-          lines.push(currentLine);
+          lines.push(currentLine.trim()); 
         }
         currentLine = word;
         while (font.widthOfTextAtSize(currentLine, fontSize) > maxWidth) {
-          let i = currentLine.length -1;
-          while(font.widthOfTextAtSize(currentLine.slice(0, i), fontSize) > maxWidth) {
+          let i = currentLine.length - 1;
+          while (i > 0 && font.widthOfTextAtSize(currentLine.slice(0, i), fontSize) > maxWidth) {
             i--;
           }
-          lines.push(currentLine.slice(0, i));
-          currentLine = currentLine.slice(i);
+          lines.push(currentLine.slice(0, i).trim());
+          currentLine = currentLine.slice(i).trim();
         }
       }
     }
 
     if (currentLine) {
-      lines.push(currentLine);
+      lines.push(currentLine.trim()); 
     }
+
     return lines;
   };
 
@@ -223,17 +234,17 @@ const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => 
   };
 
   const smallButtonClasses =
-    "text-accent hover:text-bg hover:bg-accent/20 hover:scale-105 transition-all duration-200 rounded px-2 py-1 cursor-pointer";
+    "text-accent hover:text-bg hover:bg-accent/20 hover:scale-105 transition-all duration-200 rounded px-2 py-1 cursor-pointer text-sm hover:underline hover:decoration-accent hover:decoration-2 underline-offset-4";
 
   const buttonClasses =
     "w-full rounded-md px-5 py-3 text-base font-semibold text-dark bg-bg border border-muted/30 shadow-md " +
     "transition-all duration-300 transform hover:bg-dark hover:text-bg hover:shadow-lg hover:scale-105 " +
-    "disabled:opacity-50 disabled:cursor-not-allowed";
+    "disabled:opacity-50 disabled:cursor-not-allowed text-sm hover:underline hover:decoration-accent hover:decoration-2 underline-offset-4";
 
   const editButtonClasses =
     "rounded-md px-4 py-2 text-sm font-medium text-dark bg-bg border border-muted/30 shadow-md " +
     "transition-all duration-300 transform hover:bg-dark hover:text-bg hover:shadow-lg hover:scale-105 " +
-    "disabled:opacity-50 disabled:cursor-not-allowed";
+    "disabled:opacity-50 disabled:cursor-not-allowed text-sm hover:underline hover:decoration-accent hover:decoration-2 underline-offset-4";
 
   if (loading) {
     return (
@@ -274,6 +285,17 @@ const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => 
               placeholder="For example: 'I have a persistent dry cough, a slight fever of 38°C, and feel very tired for the last 3 days...'"
               className="w-full max-w-3xl p-4 border border-muted/30 rounded-md text-dark bg-bg/70 focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent resize-none mb-4 h-40"
             />
+            <div className="flex flex-wrap gap-2 justify-center mb-4">
+              {recommendations.map((rec, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setInput(rec)}
+                  className="px-4 py-2 bg-dark text-bg rounded-full shadow-md hover:bg-accent hover:text-bg hover:scale-105 transition-all duration-200"
+                >
+                  {rec}
+                </button>
+              ))}
+            </div>
             <div className="w-full max-w-3xl flex gap-3">
               <button onClick={handleAsk} disabled={loading} className={buttonClasses}>
                 {loading ? 'Thinking...' : 'Get Analysis'}

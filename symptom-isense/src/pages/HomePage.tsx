@@ -15,22 +15,22 @@ interface HomePageProps {
 
 const features = [
   {
-    icon: <FaHeartbeat className="text-primary text-3xl mb-2" />,
+    icon: <FaHeartbeat className="text-current text-3xl mb-2" />,
     title: "AI Symptom Checker",
     description: "Get instant insights on your symptoms using advanced AI."
   },
   {
-    icon: <FaShieldAlt className="text-primary text-3xl mb-2" />,
+    icon: <FaShieldAlt className="text-current text-3xl mb-2" />,
     title: "Privacy First",
     description: "Your health data is never stored or shared."
   },
   {
-    icon: <FaRobot className="text-primary text-3xl mb-2" />,
+    icon: <FaRobot className="text-current text-3xl mb-2" />,
     title: "Easy to Use",
     description: "Simple, conversational interface for everyone."
   },
   {
-    icon: <FaUserCheck className="text-primary text-3xl mb-2" />,
+    icon: <FaUserCheck className="text-current text-3xl mb-2" />,
     title: "Personalized Results",
     description: "Tailored suggestions based on your unique symptoms."
   }
@@ -118,16 +118,30 @@ const HomePage: React.FC<HomePageProps> = ({
               className="text-sm font-semibold text-dark hover:text-accent hover:underline hover:decoration-accent hover:decoration-2 underline-offset-4 transition-all duration-200 bg-transparent"
               onClick={() => scrollToSection('faq')}
             >
-              FAQ
+              <span
+                className="absolute inset-0 transform origin-left scale-x-0 group-hover:scale-x-100 bg-accent/20 transition-transform duration-500 ease-in-out will-change-transform -z-10 pointer-events-none"
+              />
+              <span
+                className="relative z-10 text-sm font-semibold text-dark transition-colors duration-500 ease-in-out group-hover:text-accent"
+              >
+                FAQ
+              </span>
             </button>
           </div>
           <div className="hidden lg:flex lg:flex-1 lg:justify-end">
             {user ? (
-              <button onClick={onLogoutClick} className={textButtonClass}>
-                Log out
+              <button
+                onClick={onLogoutClick}
+                className="text-sm font-semibold text-dark hover:text-accent hover:underline hover:decoration-accent hover:decoration-2 underline-offset-4 transition-all duration-200 bg-transparent px-2 py-1 flex items-center gap-2"
+              >
+                <FaUserCheck className="text-current text-xl" />
+                <span>Log out</span>
               </button>
             ) : (
-              <button onClick={onLoginClick} className={textButtonClass}>
+              <button
+                onClick={onLoginClick}
+                className="text-sm font-semibold text-dark hover:text-accent hover:underline hover:decoration-accent hover:decoration-2 underline-offset-4 transition-all duration-200 bg-transparent px-2 py-1"
+              >
                 Log in <span aria-hidden="true">&rarr;</span>
               </button>
             )}
@@ -183,15 +197,15 @@ const HomePage: React.FC<HomePageProps> = ({
         </Dialog>
       </header>
 
-      <main className="flex-1 flex flex-col items-center px-4 pt-24 lg:px-6">
-        <div className="w-full max-w-4xl text-center py-8 mx-auto px-4">
+      <main className="flex-1 flex flex-col items-center px-4 pt-20 lg:px-6">
+        <div className="w-full max-w-3xl md:max-w-4xl text-center py-6 mx-auto px-4">
           <img
             src={Logo}
             alt="Health illustration"
             className="mx-auto mb-6 w-32 h-20"
             data-aos="zoom-in"
           />
-          <h1 className="text-5xl font-extrabold text-dark mb-4 drop-shadow-sm" data-aos="fade-up">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-dark mb-4 drop-shadow-sm" data-aos="fade-up">
             Symptom-iSense
           </h1>
           <p className="text-lg text-muted mb-8" data-aos="fade-up" data-aos-delay="100">
@@ -203,9 +217,9 @@ const HomePage: React.FC<HomePageProps> = ({
           <button
             onClick={handleCheckSymptomsClick}
             className="rounded-md px-6 py-3 text-base font-semibold
-                       text-dark bg-bg border border-muted/30 shadow-md
+                       text-[var(--color-bg)] bg-[var(--color-dark)] border border-[var(--color-dark)] shadow-md
                        transition-all duration-300 transform
-                       hover:bg-dark hover:text-bg hover:shadow-lg hover:scale-105"
+                       hover:bg-[var(--color-accent)] hover:shadow-lg hover:scale-105"
           >
             Check Symptoms
           </button>
@@ -223,17 +237,19 @@ const HomePage: React.FC<HomePageProps> = ({
           Tip: Describe your symptoms in detail for best results.
         </div>
 
-        <section id="features" className="w-full max-w-6xl mx-auto mt-8 mb-12 scroll-mt-24 px-6 py-8">
+        <section id="features" className="w-full max-w-5xl mx-auto mt-6 mb-12 scroll-mt-24 px-4 sm:px-6 py-6">
           <h2 className="text-2xl font-bold text-center mb-6 text-primary">Features</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {features.map((feature, idx) => (
               <div
                 key={idx}
-                className="bg-white/80 rounded-lg shadow p-6 flex flex-col items-center text-center transition-all duration-200 hover:bg-primary/10 hover:scale-[1.03] hover:shadow-lg cursor-pointer"
+                className="group bg-white/90 rounded-xl p-6 flex flex-col items-center text-center transform transition-transform duration-500 ease-out will-change-transform motion-safe:transform-gpu hover:-translate-y-2 hover:shadow-2xl cursor-pointer border border-muted/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/30"
               >
-                {feature.icon}
-                <h3 className="font-semibold text-lg mb-2">{feature.title}</h3>
-                <p className="text-muted">{feature.description}</p>
+                <div className="bg-accent/10 group-hover:bg-accent/20 text-accent group-hover:text-bg rounded-full p-4 mb-4 flex items-center justify-center shadow-sm transition-colors duration-500 ease-in-out transform group-hover:scale-105 group-hover:shadow-md">
+                  {feature.icon}
+                </div>
+                <h3 className="font-semibold text-lg mb-2 transition-colors duration-500 ease-in-out group-hover:text-accent">{feature.title}</h3>
+                <p className="text-muted text-sm">{feature.description}</p>
               </div>
             ))}
           </div>
@@ -244,7 +260,7 @@ const HomePage: React.FC<HomePageProps> = ({
             {faqs.map((faq, idx) => (
               <div
                 key={idx}
-                className="bg-white/70 rounded-lg p-4 shadow transition-all duration-200 hover:bg-accent/10 hover:scale-[1.02] hover:shadow-lg cursor-pointer"
+                className="bg-white/70 rounded-lg p-4 shadow transform transition-transform duration-300 ease-out hover:-translate-y-1 hover:shadow-lg hover:bg-accent/10 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/30 motion-safe:transform-gpu"
               >
                 <h4 className="font-semibold text-md mb-1">{faq.question}</h4>
                 <p className="text-muted text-sm">{faq.answer}</p>

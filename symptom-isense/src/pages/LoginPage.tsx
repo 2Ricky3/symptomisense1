@@ -134,7 +134,7 @@ const LoginPage: React.FC<{ onClose?: () => void; onSuccess?: () => void }> = ({
     <div className="fixed inset-0 bg-gradient-to-br from-bg via-bg to-muted flex items-center justify-center px-4">
       <button
         type="button"
-        className={`${smallButtonClasses} absolute top-6 left-6 z-50`}
+        className="text-sm font-semibold text-dark hover:text-accent hover:underline hover:decoration-accent hover:decoration-2 underline-offset-4 transition-all duration-200 bg-transparent px-2 py-1 absolute top-6 left-6 z-50"
         onClick={onClose}
       >
         ← Back to Home
