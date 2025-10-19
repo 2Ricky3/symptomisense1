@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaSearch, FaDatabase, FaListAlt, FaRegLightbulb, FaExclamationTriangle } from 'react-icons/fa';
+import { FaSearch, FaDatabase, FaListAlt, FaRegLightbulb, FaExclamationTriangle, FaArrowLeft } from 'react-icons/fa';
 
 interface LearnMorePageProps {
   onHomeClick?: () => void;
@@ -30,22 +30,23 @@ const processSteps = [
 
 const LearnMorePage: React.FC<LearnMorePageProps> = ({ onHomeClick }) => {
   return (
-    <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden">
-      <div className="absolute inset-0 -z-10 animate-gradient bg-gradient-to-br from-primary/30 via-accent/20 to-muted/40" />
-      <div className="absolute top-0 left-0 w-72 h-72 bg-primary/20 rounded-full blur-3xl opacity-60 -z-10 animate-pulse" />
-      <div className="absolute bottom-0 right-0 w-96 h-96 bg-accent/20 rounded-full blur-3xl opacity-50 -z-10 animate-pulse" />
+    <div className="min-h-screen w-full bg-gradient-to-br from-bg via-bg to-muted flex flex-col items-center justify-start p-4 sm:p-6 lg:p-8">
+      <header className="w-full z-50 sticky top-0">
+        <nav className="flex items-center justify-between p-4 lg:px-6" aria-label="Global">
+          <button
+            type="button"
+            className="text-accent hover:text-bg hover:bg-accent/20 hover:scale-105 transition-all duration-200 rounded px-2 py-1 cursor-pointer text-sm hover:underline hover:decoration-accent hover:decoration-2 underline-offset-4 -ml-2"
+            onClick={() => {
+              if (onHomeClick) onHomeClick();
+              else window.location.href = "/";
+            }}
+          >
+            <FaArrowLeft className="inline-block mr-2" /> Back to Home
+          </button>
+        </nav>
+      </header>
 
-      <div className="relative max-w-3xl sm:max-w-4xl mx-auto my-10 sm:my-16 bg-white/70 backdrop-blur-xl p-6 sm:p-10 rounded-2xl shadow-2xl border border-muted/20">
-        <button
-          type="button"
-          className="text-sm font-semibold text-dark hover:text-accent hover:underline hover:decoration-accent hover:decoration-2 underline-offset-4 transition-all duration-200 bg-transparent px-2 py-1"
-          onClick={onHomeClick}
-        >
-          
-          ← Back to Home
-        </button>
-        <div className="h-6 sm:h-10" />
-
+      <main className="flex-1 flex flex-col items-center justify-center w-full max-w-6xl bg-white/80 backdrop-blur-md rounded-2xl p-6 sm:p-8">
         <div className="prose prose-invert max-w-none text-dark" data-aos="fade-up">
           <h1 className="text-4xl font-extrabold text-primary mb-8 text-center drop-shadow-lg">
             How Symptom-iSense Works
@@ -82,7 +83,7 @@ const LearnMorePage: React.FC<LearnMorePageProps> = ({ onHomeClick }) => {
             </p>
           </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 };

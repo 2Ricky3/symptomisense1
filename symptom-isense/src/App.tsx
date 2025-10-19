@@ -5,9 +5,10 @@ import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import AiTestPage from './pages/testOpenAI';
 import LearnMorePage from './pages/LearnMorePage';
+import ProfilePage from './pages/ProfilePage';
 import './App.css';
 
-type PageRoute = 'home' | 'login' | 'ai' | 'learnMore';
+type PageRoute = 'home' | 'login' | 'ai' | 'learnMore' | 'profile';
 
 function App() {
   const [page, setPage] = useState<PageRoute>('home');
@@ -51,13 +52,24 @@ function App() {
             }
           }}
           onLearnMoreClick={() => setPage('learnMore')}
+          onProfileClick={() => {
+            console.log('Profile button clicked'); 
+            if (user) {
+              console.log('User is logged in:', user);
+              setPage('profile');
+            } else {
+              console.log('User is not logged in'); 
+              setLoginReturnTo('profile');
+              setPage('login');
+            }
+          }}
         />
       )}
       {page === 'login' && (
         <LoginPage
           onClose={() => setPage('home')}
           onSuccess={() => {
-            if (loginReturnTo === 'ai') setPage('ai');
+            if (loginReturnTo) setPage(loginReturnTo);
             else setPage('home');
             setLoginReturnTo(null);
           }}
@@ -65,6 +77,7 @@ function App() {
       )}
       {page === 'ai' && user && <AiTestPage onHomeClick={() => setPage('home')} />}
       {page === 'learnMore' && <LearnMorePage onHomeClick={() => setPage('home')} />}
+      {page === 'profile' && user && <ProfilePage user={user} onHomeClick={() => setPage('home')} />}
     </>
   );
 }

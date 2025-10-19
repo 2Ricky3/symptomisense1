@@ -11,6 +11,7 @@ interface HomePageProps {
   onLogoutClick?: () => void;
   onCheckSymptomsClick?: () => void;
   onLearnMoreClick?: () => void;
+  onProfileClick?: () => void; 
 }
 
 const features = [
@@ -61,6 +62,7 @@ const HomePage: React.FC<HomePageProps> = ({
   onLogoutClick,
   onCheckSymptomsClick,
   onLearnMoreClick,
+  onProfileClick, 
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
 
@@ -82,15 +84,14 @@ const HomePage: React.FC<HomePageProps> = ({
       window.location.href = '/testOpenAI';
     }
   };
+
   const textButtonClass =
     "text-accent hover:text-bg hover:bg-accent/20 hover:scale-105 transition-all duration-200 rounded px-2 py-1 cursor-pointer";
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-bg via-bg to-muted overflow-auto">
       <header className="w-full z-50 sticky top-0">
-        <nav className="flex items-center justify-between p-4 lg:px-6"
-          aria-label="Global"
-        >
+        <nav className="flex items-center justify-between p-4 lg:px-6" aria-label="Global">
           <div className="flex lg:flex-1">
             <a href="#" className="-m-1.5 p-1.5 flex items-center gap-2 hover:opacity-90 transition">
               <img src={Logo} alt="Symptom-iSense Logo" className="h-8 w-auto" />
@@ -118,14 +119,13 @@ const HomePage: React.FC<HomePageProps> = ({
               className="text-sm font-semibold text-dark hover:text-accent hover:underline hover:decoration-accent hover:decoration-2 underline-offset-4 transition-all duration-200 bg-transparent"
               onClick={() => scrollToSection('faq')}
             >
-              <span
-                className="absolute inset-0 transform origin-left scale-x-0 group-hover:scale-x-100 bg-accent/20 transition-transform duration-500 ease-in-out will-change-transform -z-10 pointer-events-none"
-              />
-              <span
-                className="relative z-10 text-sm font-semibold text-dark transition-colors duration-500 ease-in-out group-hover:text-accent"
-              >
-                FAQ
-              </span>
+              FAQ
+            </button>
+            <button
+              className="text-sm font-semibold text-dark hover:text-accent hover:underline hover:decoration-accent hover:decoration-2 underline-offset-4 transition-all duration-200 bg-transparent"
+              onClick={onProfileClick} 
+            >
+              Profile
             </button>
           </div>
           <div className="hidden lg:flex lg:flex-1 lg:justify-end">

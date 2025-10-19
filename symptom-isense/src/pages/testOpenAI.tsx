@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import OpenAI from "openai";
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
+import { savePrompt, auth } from "../services/firebase";
 
 type FontLike = {
   widthOfTextAtSize: (text: string, size: number) => number;
@@ -80,12 +81,18 @@ const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => 
 
       const [plainAnswer, soapPart] = fullText.split(/SOAP\s*Note:/i);
 
-      setResponse(
+      const finalResponse =
         (plainAnswer?.trim() || fullText) +
-          "\n\nReminder: I am not a real doctor. Please consult a healthcare professional for any medical concerns."
-      );
+        "\n\nReminder: I am not a real doctor. Please consult a healthcare professional for any medical concerns.";
+
+      setResponse(finalResponse);
 
       if (soapPart) setSoapNote("SOAP Note:\n" + soapPart.trim());
+
+      const userId = auth.currentUser?.uid;
+      if (userId) {
+        await savePrompt(userId, input.trim(), finalResponse);
+      }
     } catch (error: unknown) {
       console.error("Error calling OpenAI API:", error);
       const errorMessage =
@@ -239,12 +246,19 @@ const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => 
   const buttonClasses =
     "w-full rounded-md px-5 py-3 text-base font-semibold text-dark bg-bg border border-muted/30 shadow-md " +
     "transition-all duration-300 transform hover:bg-dark hover:text-bg hover:shadow-lg hover:scale-105 " +
-    "disabled:opacity-50 disabled:cursor-not-allowed text-sm hover:underline hover:decoration-accent hover:decoration-2 underline-offset-4";
+    "disabled:opacity-50 disabled:cursor-not-allowed text-sm"; 
 
   const editButtonClasses =
     "rounded-md px-4 py-2 text-sm font-medium text-dark bg-bg border border-muted/30 shadow-md " +
     "transition-all duration-300 transform hover:bg-dark hover:text-bg hover:shadow-lg hover:scale-105 " +
     "disabled:opacity-50 disabled:cursor-not-allowed text-sm hover:underline hover:decoration-accent hover:decoration-2 underline-offset-4";
+
+  const recommendationButtonClasses = (isActive: boolean) =>
+  `px-4 py-2 rounded-full shadow transition-all duration-200 ${
+    isActive
+      ? "bg-[var(--color-primary)] text-white"
+      : "bg-white text-black border border-muted/30"
+  }`;
 
   if (loading) {
     return (
@@ -290,7 +304,7 @@ const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => 
                 <button
                   key={idx}
                   onClick={() => setInput(rec)}
-                  className="px-4 py-2 bg-dark text-bg rounded-full shadow-md hover:bg-accent hover:text-bg hover:scale-105 transition-all duration-200"
+                  className={recommendationButtonClasses(input === rec)}
                 >
                   {rec}
                 </button>
