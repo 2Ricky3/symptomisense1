@@ -60,13 +60,13 @@ const LearnMorePage: React.FC<LearnMorePageProps> = ({ onHomeClick }) => {
             {processSteps.map((step, idx) => (
               <li
                 key={idx}
-                className="flex items-start bg-bg/40 rounded-lg p-4 shadow-sm transition-all duration-200 hover:bg-primary/10 hover:scale-[1.03] hover:shadow-lg cursor-pointer"
+                className="flex flex-col items-center bg-bg/40 rounded-lg p-4 shadow-sm transition-all duration-200 hover:bg-primary/10 hover:scale-[1.03] hover:shadow-lg cursor-pointer"
               >
-                {step.icon}
-                <div>
-                  <span className="font-bold text-lg">{step.title}</span>
-                  <p className="text-muted text-base">{step.description}</p>
+                <div className="flex items-center mb-2">
+                  {step.icon}
+                  <span className="font-bold text-lg text-center">{step.title}</span>
                 </div>
+                <p className="text-muted text-base text-center">{step.description}</p>
               </li>
             ))}
           </ul>

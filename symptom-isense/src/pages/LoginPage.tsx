@@ -5,6 +5,8 @@ import {
   sendPasswordResetEmail,
 } from 'firebase/auth';
 import { auth } from '../services/firebase';
+import { extractAuthCode } from '../utils/errorUtils';
+import { FaArrowLeft } from 'react-icons/fa';
 
 const firebaseErrorMessages: Record<string, string> = {
   'auth/email-already-in-use': 'This email is already registered. Try logging in.',
@@ -20,23 +22,6 @@ const firebaseErrorMessages: Record<string, string> = {
 };
 
 type ErrorLike = { code?: unknown; message?: unknown } & Record<string, unknown>;
-
-function extractAuthCode(err: unknown): string | null {
-  if (!err || typeof err !== 'object') return null;
-  const e = err as ErrorLike;
-
-  if (typeof e.code === 'string') return e.code;
-
-  if (typeof e.message === 'string') {
-    const msg = e.message as string;
-    const m = msg.match(/auth\/[a-zA-Z-]+/);
-    if (m) return m[0];
-    const m2 = msg.match(/\(auth\/[a-zA-Z-]+\)/);
-    if (m2) return m2[0].replace(/[()]/g, '');
-  }
-
-  return null;
-}
 
 const LoginPage: React.FC<{ onClose?: () => void; onSuccess?: () => void }> = ({ onClose, onSuccess }) => {
   const [showSignUp, setShowSignUp] = useState(false);
@@ -137,7 +122,7 @@ const LoginPage: React.FC<{ onClose?: () => void; onSuccess?: () => void }> = ({
         className="text-sm font-semibold text-dark hover:text-accent hover:underline hover:decoration-accent hover:decoration-2 underline-offset-4 transition-all duration-200 bg-transparent px-2 py-1 absolute top-6 left-6 z-50"
         onClick={onClose}
       >
-        ← Back to Home
+        <FaArrowLeft className="inline-block mr-2" /> Back to Home
       </button>
 
       <form className="space-y-5 max-w-md w-full text-center" onSubmit={handleSubmit}>

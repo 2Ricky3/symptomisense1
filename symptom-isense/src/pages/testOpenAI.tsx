@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import OpenAI from "openai";
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 import { savePrompt, auth } from "../services/firebase";
+import { FaUserMd, FaArrowLeft } from "react-icons/fa";
 
 type FontLike = {
   widthOfTextAtSize: (text: string, size: number) => number;
@@ -20,11 +21,20 @@ const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => 
   const [soapNote, setSoapNote] = useState("");
   const [submittedInput, setSubmittedInput] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [showMore, setShowMore] = useState(false);
 
   const recommendations = [
     "I have a headache and feel dizzy.",
     "I have a sore throat and a mild fever.",
     "I have a persistent cough and shortness of breath.",
+  ];
+
+  const extraRecommendations = [
+    "I have a rash and itchy skin.",
+    "I have a sharp pain in my chest.",
+    "I have been feeling nauseous and vomiting.",
+    "I have swelling in my joints.",
+    "I have blurred vision and headaches.",
   ];
 
   const handleAsk = async () => {
@@ -253,13 +263,6 @@ const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => 
     "transition-all duration-300 transform hover:bg-dark hover:text-bg hover:shadow-lg hover:scale-105 " +
     "disabled:opacity-50 disabled:cursor-not-allowed text-sm hover:underline hover:decoration-accent hover:decoration-2 underline-offset-4";
 
-  const recommendationButtonClasses = (isActive: boolean) =>
-  `px-4 py-2 rounded-full shadow transition-all duration-200 ${
-    isActive
-      ? "bg-[var(--color-primary)] text-white"
-      : "bg-white text-black border border-muted/30"
-  }`;
-
   if (loading) {
     return (
       <div className="min-h-screen w-full bg-gradient-to-br from-bg via-bg to-muted flex items-center justify-center p-4 sm:p-6 lg:p-8">
@@ -283,12 +286,20 @@ const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => 
               else window.location.href = '/';
             }}
           >
-            ← Back to Home
+            <FaArrowLeft className="inline-block mr-2" /> Back to Home
           </button>
           <h1 className="text-2xl sm:text-3xl font-bold text-dark text-center">
             Symptom Checker
           </h1>
           <div className="w-24"></div> 
+        </div>
+        <div className="bg-white shadow-md rounded-lg p-4 mb-6 flex items-center gap-4 transform transition-transform duration-300 hover:-translate-y-1 hover:shadow-lg cursor-pointer">
+          <div className="text-primary text-4xl">
+            <FaUserMd />
+          </div>
+          <p className="text-sm text-muted">
+            Please describe your symptoms in as much detail as possible. Include information such as temperature, duration, and any other relevant details to help us provide better insights.
+          </p>
         </div>
         {!submittedInput ? (
           <div className="flex-grow flex flex-col items-center justify-center">
@@ -304,11 +315,45 @@ const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => 
                 <button
                   key={idx}
                   onClick={() => setInput(rec)}
-                  className={recommendationButtonClasses(input === rec)}
+                  className={`px-4 py-2 rounded-full shadow transition-all duration-200 transform hover:-translate-y-1 hover:shadow-lg ${
+                    input === rec
+                      ? "bg-[var(--color-primary)] text-white"
+                      : "bg-white text-black border border-muted/30"
+                  }`}
                 >
                   {rec}
                 </button>
               ))}
+
+              {showMore &&
+                extraRecommendations.map((rec, idx) => (
+                  <button
+                    key={`extra-${idx}`}
+                    onClick={() => setInput(rec)}
+                    className={`px-4 py-2 rounded-full shadow transition-all duration-200 transform hover:-translate-y-1 hover:shadow-lg ${
+                      input === rec
+                        ? "bg-[var(--color-primary)] text-white"
+                        : "bg-white text-black border border-muted/30"
+                    }`}
+                  >
+                    {rec}
+                  </button>
+                ))}
+
+              <button
+                onClick={() => setShowMore(!showMore)}
+                className="px-4 py-2 rounded-full shadow transition-all duration-200 transform hover:-translate-y-1 hover:shadow-lg bg-white text-black border border-muted/30 flex items-center gap-2"
+              >
+                {showMore ? (
+                  <>
+                    Show Less <span className="text-lg">▲</span>
+                  </>
+                ) : (
+                  <>
+                    Show More Options <span className="text-lg">▼</span>
+                  </>
+                )}
+              </button>
             </div>
             <div className="w-full max-w-3xl flex gap-3">
               <button onClick={handleAsk} disabled={loading} className={buttonClasses}>

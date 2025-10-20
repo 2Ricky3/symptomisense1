@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { db } from "../services/firebase";
 import { collection, getDocs, query, deleteDoc, doc } from "firebase/firestore";
 import type { User } from "firebase/auth";
-import { FaSearch, FaTrash, FaRegFolderOpen } from "react-icons/fa";
+import { FaSearch, FaTrash, FaRegFolderOpen, FaExclamationTriangle, FaArrowLeft } from "react-icons/fa";
 
 interface Prompt {
   id: string;
@@ -17,6 +17,35 @@ interface ProfilePageProps {
   onHomeClick: () => void;
 }
 
+const ConfirmationPopup: React.FC<{
+  message: string;
+  onConfirm: () => void;
+  onCancel: () => void;
+}> = ({ message, onConfirm, onCancel }) => (
+  <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+    <div className="bg-white rounded-lg shadow-lg p-6 w-96">
+      <div className="flex flex-col items-center">
+        <FaExclamationTriangle className="text-red-600 text-4xl mb-4" />
+        <p className="text-center text-lg mb-4">{message}</p>
+      </div>
+      <div className="flex justify-center gap-4">
+        <button
+          onClick={onConfirm}
+          className="px-4 py-2 bg-red-600 text-white rounded-md shadow hover:bg-red-700 transition-all duration-200"
+        >
+          Confirm
+        </button>
+        <button
+          onClick={onCancel}
+          className="px-4 py-2 bg-gray-300 text-gray-800 rounded-md shadow hover:bg-gray-400 transition-all duration-200"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+);
+
 const ProfilePage: React.FC<ProfilePageProps> = ({ user, onHomeClick }) => {
   const navigate = useNavigate();
   const [prompts, setPrompts] = useState<Prompt[]>([]);
@@ -24,6 +53,8 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, onHomeClick }) => {
   const [loading, setLoading] = useState(true);
   const [keyword, setKeyword] = useState("");
   const [activeFilter, setActiveFilter] = useState<string | null>(null);
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupAction, setPopupAction] = useState<() => void>(() => {});
 
   const smallButtonClasses =
     "text-accent hover:text-bg hover:bg-accent/20 hover:scale-105 transition-all duration-200 rounded px-2 py-1 cursor-pointer text-sm hover:underline hover:decoration-accent hover:decoration-2 underline-offset-4";
@@ -88,8 +119,8 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, onHomeClick }) => {
     else setFilteredPrompts(prompts);
   };
 
-  const handleDeleteAll = async () => {
-    if (window.confirm("Are you sure you want to delete all prompts? This action cannot be undone.")) {
+  const handleDeleteAll = () => {
+    setPopupAction(() => async () => {
       try {
         const promptsQuery = query(collection(db, "users", user?.uid || "", "prompts"));
         const promptsSnapshot = await getDocs(promptsQuery);
@@ -99,28 +130,30 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, onHomeClick }) => {
 
         setPrompts([]);
         setFilteredPrompts([]);
-        alert("All prompts have been deleted.");
       } catch (error) {
         console.error("Error deleting all prompts: ", error);
-        alert("Failed to delete all prompts. Please try again.");
+      } finally {
+        setShowPopup(false);
       }
-    }
+    });
+    setShowPopup(true);
   };
 
-  const handleDeletePrompt = async (promptId: string) => {
-    if (window.confirm("Are you sure you want to delete this prompt? This action cannot be undone.")) {
+  const handleDeletePrompt = (promptId: string) => {
+    setPopupAction(() => async () => {
       try {
         await deleteDoc(doc(db, "users", user?.uid || "", "prompts", promptId));
 
         const updatedPrompts = prompts.filter((prompt) => prompt.id !== promptId);
         setPrompts(updatedPrompts);
         setFilteredPrompts(updatedPrompts);
-        alert("Prompt deleted successfully.");
       } catch (error) {
         console.error("Error deleting prompt: ", error);
-        alert("Failed to delete the prompt. Please try again.");
+      } finally {
+        setShowPopup(false);
       }
-    }
+    });
+    setShowPopup(true);
   };
 
   if (loading) {
@@ -129,6 +162,14 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, onHomeClick }) => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-bg via-bg to-muted flex flex-col">
+      {showPopup && (
+        <ConfirmationPopup
+          message="Are you sure you want to proceed with this action?"
+          onConfirm={popupAction}
+          onCancel={() => setShowPopup(false)}
+        />
+      )}
+
       <header className="w-full z-50 sticky top-0">
         <nav className="flex items-center justify-between p-4 lg:px-6" aria-label="Global">
           <button
@@ -136,7 +177,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, onHomeClick }) => {
             className={`${smallButtonClasses} -ml-2`}
             onClick={onHomeClick}
           >
-            ← Back to Home
+            <FaArrowLeft className="inline-block mr-2" /> Back to Home
           </button>
         </nav>
       </header>
