@@ -3,10 +3,13 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
+  GoogleAuthProvider,
+  signInWithPopup,
 } from 'firebase/auth';
 import { auth } from '../services/firebase';
 import { extractAuthCode } from '../utils/errorUtils';
-import { FaArrowLeft } from 'react-icons/fa';
+import { FaArrowLeft, FaGoogle } from 'react-icons/fa';
+import type { UserCredential } from 'firebase/auth';
 
 const firebaseErrorMessages: Record<string, string> = {
   'auth/email-already-in-use': 'This email is already registered. Try logging in.',
@@ -107,6 +110,37 @@ const LoginPage: React.FC<{ onClose?: () => void; onSuccess?: () => void }> = ({
     }
   };
 
+  const handleSocialLogin = async () => {
+    setError(null);
+    setMessage(null);
+    setLoading(true);
+
+    try {
+      const authProvider = new GoogleAuthProvider();
+
+      const result = await signInWithPopup(auth, authProvider);
+
+      const isNewUser = (result as UserCredential & { additionalUserInfo?: { isNewUser: boolean } }).additionalUserInfo?.isNewUser;
+      if (isNewUser) {
+        setMessage('Account created successfully!');
+      } else {
+        setMessage('Logged in successfully!');
+      }
+
+      if (onSuccess) onSuccess();
+      else if (onClose) onClose();
+    } catch (err: unknown) {
+      const code = extractAuthCode(err);
+      if (code && firebaseErrorMessages[code]) {
+        setError(firebaseErrorMessages[code]);
+      } else {
+        setError('Failed to log in or sign up with Google. Please try again.');
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const buttonClasses =
     "w-full rounded-md px-5 py-3 text-base font-semibold text-dark bg-bg border border-muted/30 shadow-md " +
     "transition-all duration-300 transform hover:bg-dark hover:text-bg hover:shadow-lg hover:scale-105 " +
@@ -187,14 +221,27 @@ const LoginPage: React.FC<{ onClose?: () => void; onSuccess?: () => void }> = ({
         {message && <p className="text-green-500 text-sm">{message}</p>}
 
         {!showResetPassword && (
-          <button type="submit" disabled={loading} className={buttonClasses}>
-            {loading ? 'Please wait...' : showSignUp ? 'Sign Up' : 'Log in'}
-          </button>
+          <div className="mt-6">
+            <button
+              type="button"
+              onClick={handleSocialLogin}
+              className="w-full rounded-md px-5 py-3 text-base font-semibold text-dark bg-white border border-muted/30 shadow-md flex items-center justify-center gap-2 transition-all duration-300 transform hover:bg-gray-100 hover:shadow-lg hover:scale-105"
+            >
+              <FaGoogle className="h-5 w-5" />
+              Continue with Google
+            </button>
+          </div>
         )}
 
         {showResetPassword && (
           <button type="button" disabled={loading} onClick={handlePasswordReset} className={buttonClasses}>
             {loading ? 'Sending...' : 'Send Reset Email'}
+          </button>
+        )}
+
+        {!showResetPassword && (
+          <button type="submit" disabled={loading} className={`${buttonClasses} mt-6`}>
+            {loading ? 'Please wait...' : showSignUp ? 'Sign Up' : 'Log in'}
           </button>
         )}
 

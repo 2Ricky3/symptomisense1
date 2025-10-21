@@ -293,14 +293,16 @@ const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => 
           </h1>
           <div className="w-24"></div> 
         </div>
-        <div className="bg-white shadow-md rounded-lg p-4 mb-6 flex items-center gap-4 transform transition-transform duration-300 hover:-translate-y-1 hover:shadow-lg cursor-pointer">
-          <div className="text-primary text-4xl">
-            <FaUserMd />
+        {!submittedInput && !response && (
+          <div className="bg-white shadow-md rounded-lg p-4 mb-6 flex items-center gap-4 transform transition-transform duration-300 hover:-translate-y-1 hover:shadow-lg cursor-pointer">
+            <div className="text-primary text-4xl">
+              <FaUserMd />
+            </div>
+            <p className="text-sm text-muted">
+              Please describe your symptoms in as much detail as possible. Include information such as temperature, duration, and any other relevant details to help us provide better insights.
+            </p>
           </div>
-          <p className="text-sm text-muted">
-            Please describe your symptoms in as much detail as possible. Include information such as temperature, duration, and any other relevant details to help us provide better insights.
-          </p>
-        </div>
+        )}
         {!submittedInput ? (
           <div className="flex-grow flex flex-col items-center justify-center">
             <label className="text-dark font-medium mb-2 block text-left w-full max-w-3xl">Describe your symptoms:</label>

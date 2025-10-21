@@ -1,12 +1,14 @@
-import { useState, useEffect } from 'react';
+import { lazy, Suspense, useState, useEffect } from 'react';
 import { onAuthStateChanged, signOut, type User } from 'firebase/auth';
-import { auth } from './services/firebase'; 
-import HomePage from './pages/HomePage';
-import LoginPage from './pages/LoginPage';
-import AiTestPage from './pages/testOpenAI';
-import LearnMorePage from './pages/LearnMorePage';
-import ProfilePage from './pages/ProfilePage';
+import { auth } from './services/firebase';
 import './App.css';
+import Loader from './pages/Loader';
+
+const HomePage = lazy(() => import('./pages/HomePage'));
+const LoginPage = lazy(() => import('./pages/LoginPage'));
+const AiTestPage = lazy(() => import('./pages/testOpenAI'));
+const LearnMorePage = lazy(() => import('./pages/LearnMorePage'));
+const ProfilePage = lazy(() => import('./pages/ProfilePage'));
 
 type PageRoute = 'home' | 'login' | 'ai' | 'learnMore' | 'profile';
 
@@ -30,12 +32,20 @@ function App() {
   };
 
   if (loading) {
-    return <div>Loading...</div>; 
-  
+    return <div>Loading...</div>;
   }
 
   return (
-    <>
+    <Suspense
+      fallback={
+        <div className="min-h-screen w-full bg-gradient-to-br from-bg via-bg to-muted flex items-center justify-center p-4 sm:p-6 lg:p-8">
+          <div className="bg-white/90 backdrop-blur-md rounded-2xl shadow-xl p-12 sm:p-16 flex flex-col items-center max-w-2xl w-full">
+            <Loader />
+            <p className="mt-6 text-muted text-lg text-center">Loading, please wait...</p>
+          </div>
+        </div>
+      }
+    >
       {page === 'home' && (
         <HomePage
           user={user}
@@ -53,12 +63,9 @@ function App() {
           }}
           onLearnMoreClick={() => setPage('learnMore')}
           onProfileClick={() => {
-            console.log('Profile button clicked'); 
             if (user) {
-              console.log('User is logged in:', user);
               setPage('profile');
             } else {
-              console.log('User is not logged in'); 
               setLoginReturnTo('profile');
               setPage('login');
             }
@@ -78,7 +85,7 @@ function App() {
       {page === 'ai' && user && <AiTestPage onHomeClick={() => setPage('home')} />}
       {page === 'learnMore' && <LearnMorePage onHomeClick={() => setPage('home')} />}
       {page === 'profile' && user && <ProfilePage user={user} onHomeClick={() => setPage('home')} />}
-    </>
+    </Suspense>
   );
 }
 
