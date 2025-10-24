@@ -8,21 +8,13 @@ import {
 } from 'firebase/auth';
 import { auth } from '../services/firebase';
 import { extractAuthCode } from '../utils/errorUtils';
-import { FaArrowLeft, FaGoogle } from 'react-icons/fa';
+import { firebaseErrorMessages as errorMessages } from '../utils/constants';
+import { FaGoogle } from 'react-icons/fa';
 import type { UserCredential } from 'firebase/auth';
-
-const firebaseErrorMessages: Record<string, string> = {
-  'auth/email-already-in-use': 'This email is already registered. Try logging in.',
-  'auth/invalid-email': 'Please enter a valid email address.',
-  'auth/weak-password': 'Password should be at least 6 characters.',
-  'auth/user-not-found': 'No account found with this email.',
-  'auth/wrong-password': 'Incorrect password. Please try again.',
-  'auth/too-many-requests': 'Too many attempts. Please try again later.',
-  'auth/network-request-failed': 'Network error. Check your connection and try again.',
-  'auth/user-disabled': 'This account has been disabled. Contact support if you think this is a mistake.',
-  'auth/operation-not-allowed': 'This authentication method is not enabled.',
-  'auth/requires-recent-login': 'Please re-authenticate and try again.',
-};
+import Button from '../components/ui/Button';
+import BackButton from '../components/ui/BackButton';
+import FormInput from '../components/forms/FormInput';
+import FormLabel from '../components/forms/FormLabel';
 
 type ErrorLike = { code?: unknown; message?: unknown } & Record<string, unknown>;
 
@@ -53,8 +45,8 @@ const LoginPage: React.FC<{ onClose?: () => void; onSuccess?: () => void }> = ({
       else if (onClose) onClose();
     } catch (err: unknown) {
       const code = extractAuthCode(err);
-      if (code && firebaseErrorMessages[code]) {
-        setError(firebaseErrorMessages[code]);
+      if (code && errorMessages[code]) {
+        setError(errorMessages[code]);
       } else if (code) {
         if (/password|wrong/i.test(code)) {
           setError('Incorrect password. Please try again.');
@@ -92,8 +84,8 @@ const LoginPage: React.FC<{ onClose?: () => void; onSuccess?: () => void }> = ({
         setError('No account found with this email.');
       } else if (code === 'auth/invalid-email') {
         setError('Please enter a valid email address.');
-      } else if (code && firebaseErrorMessages[code]) {
-        setError(firebaseErrorMessages[code]);
+      } else if (code && errorMessages[code]) {
+        setError(errorMessages[code]);
       } else if (code) {
         if (/user|not-found/i.test(code)) {
           setError('No account found with this email.');
@@ -131,8 +123,8 @@ const LoginPage: React.FC<{ onClose?: () => void; onSuccess?: () => void }> = ({
       else if (onClose) onClose();
     } catch (err: unknown) {
       const code = extractAuthCode(err);
-      if (code && firebaseErrorMessages[code]) {
-        setError(firebaseErrorMessages[code]);
+      if (code && errorMessages[code]) {
+        setError(errorMessages[code]);
       } else {
         setError('Failed to log in or sign up with Google. Please try again.');
       }
@@ -141,23 +133,15 @@ const LoginPage: React.FC<{ onClose?: () => void; onSuccess?: () => void }> = ({
     }
   };
 
-  const buttonClasses =
-    "w-full rounded-md px-5 py-3 text-base font-semibold text-dark bg-bg border border-muted/30 shadow-md " +
-    "transition-all duration-300 transform hover:bg-dark hover:text-bg hover:shadow-lg hover:scale-105 " +
-    "disabled:opacity-50 disabled:cursor-not-allowed";
-
   const smallButtonClasses =
     "text-accent hover:text-bg hover:bg-accent/20 hover:scale-105 transition-all duration-200 rounded px-2 py-1 cursor-pointer";
 
   return (
     <div className="fixed inset-0 bg-gradient-to-br from-bg via-bg to-muted flex items-center justify-center px-4">
-      <button
-        type="button"
-        className="text-sm font-semibold text-dark hover:text-accent hover:underline hover:decoration-accent hover:decoration-2 underline-offset-4 transition-all duration-200 bg-transparent px-2 py-1 absolute top-6 left-6 z-50"
-        onClick={onClose}
-      >
-        <FaArrowLeft className="inline-block mr-2" /> Back to Home
-      </button>
+      <BackButton
+        onClick={onClose || (() => {})}
+        className="absolute top-6 left-6 z-50"
+      />
 
       <form className="space-y-5 max-w-md w-full text-center" onSubmit={handleSubmit}>
         <h2 className="text-3xl font-bold text-dark mb-6">
@@ -170,15 +154,12 @@ const LoginPage: React.FC<{ onClose?: () => void; onSuccess?: () => void }> = ({
 
         {showSignUp && (
           <div>
-            <label className="block text-sm font-medium text-dark mb-1" htmlFor="name">
-              Name
-            </label>
-            <input
+            <FormLabel htmlFor="name">Name</FormLabel>
+            <FormInput
               type="text"
               id="name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full rounded-md border border-muted px-4 py-2 text-dark focus:outline-none focus:ring-2 focus:ring-accent bg-bg/80 backdrop-blur"
               placeholder="Your name"
               required
             />
@@ -186,15 +167,12 @@ const LoginPage: React.FC<{ onClose?: () => void; onSuccess?: () => void }> = ({
         )}
 
         <div>
-          <label className="block text-sm font-medium text-dark mb-1" htmlFor="email">
-            Email
-          </label>
-          <input
+          <FormLabel htmlFor="email">Email</FormLabel>
+          <FormInput
             type="email"
             id="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full rounded-md border border-muted px-4 py-2 text-dark focus:outline-none focus:ring-2 focus:ring-accent bg-bg/80 backdrop-blur"
             placeholder="you@example.com"
             required
           />
@@ -202,15 +180,12 @@ const LoginPage: React.FC<{ onClose?: () => void; onSuccess?: () => void }> = ({
 
         {!showResetPassword && (
           <div>
-            <label className="block text-sm font-medium text-dark mb-1" htmlFor="password">
-              Password
-            </label>
-            <input
+            <FormLabel htmlFor="password">Password</FormLabel>
+            <FormInput
               type="password"
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded-md border border-muted px-4 py-2 text-dark focus:outline-none focus:ring-2 focus:ring-accent bg-bg/80 backdrop-blur"
               placeholder="••••••••"
               required={!showResetPassword}
             />
@@ -222,27 +197,37 @@ const LoginPage: React.FC<{ onClose?: () => void; onSuccess?: () => void }> = ({
 
         {!showResetPassword && (
           <div className="mt-6">
-            <button
+            <Button
               type="button"
+              variant="social"
               onClick={handleSocialLogin}
-              className="w-full rounded-md px-5 py-3 text-base font-semibold text-dark bg-white border border-muted/30 shadow-md flex items-center justify-center gap-2 transition-all duration-300 transform hover:bg-gray-100 hover:shadow-lg hover:scale-105"
             >
               <FaGoogle className="h-5 w-5" />
               Continue with Google
-            </button>
+            </Button>
           </div>
         )}
 
         {showResetPassword && (
-          <button type="button" disabled={loading} onClick={handlePasswordReset} className={buttonClasses}>
-            {loading ? 'Sending...' : 'Send Reset Email'}
-          </button>
+          <Button 
+            type="button" 
+            disabled={loading} 
+            onClick={handlePasswordReset}
+            loading={loading}
+          >
+            Send Reset Email
+          </Button>
         )}
 
         {!showResetPassword && (
-          <button type="submit" disabled={loading} className={`${buttonClasses} mt-6`}>
-            {loading ? 'Please wait...' : showSignUp ? 'Sign Up' : 'Log in'}
-          </button>
+          <Button 
+            type="submit" 
+            disabled={loading}
+            loading={loading}
+            className="mt-6"
+          >
+            {showSignUp ? 'Sign Up' : 'Log in'}
+          </Button>
         )}
 
         <div className="mt-4 text-sm text-muted flex flex-col gap-2 items-center">

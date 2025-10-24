@@ -1,9 +1,11 @@
 import React from 'react';
-import { Dialog } from '@headlessui/react';
-import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import type { User } from 'firebase/auth';
 import Logo from '../assets/Logo.png';
-import { FaHeartbeat, FaShieldAlt, FaRobot, FaUserCheck } from 'react-icons/fa';
+import { features as featuresData, faqs as faqsData } from '../utils/constants';
+import Button from '../components/ui/Button';
+import Header from '../components/layout/Header';
+import FeatureCard from '../components/layout/FeatureCard';
+import FAQItem from '../components/layout/FAQItem';
 
 interface HomePageProps {
   user: User | null;
@@ -14,48 +16,6 @@ interface HomePageProps {
   onProfileClick?: () => void; 
 }
 
-const features = [
-  {
-    icon: <FaHeartbeat className="text-current text-3xl mb-2" />,
-    title: "AI Symptom Checker",
-    description: "Get instant insights on your symptoms using advanced AI."
-  },
-  {
-    icon: <FaShieldAlt className="text-current text-3xl mb-2" />,
-    title: "Privacy First",
-    description: "Your health data is never stored or shared."
-  },
-  {
-    icon: <FaRobot className="text-current text-3xl mb-2" />,
-    title: "Easy to Use",
-    description: "Simple, conversational interface for everyone."
-  },
-  {
-    icon: <FaUserCheck className="text-current text-3xl mb-2" />,
-    title: "Personalized Results",
-    description: "Tailored suggestions based on your unique symptoms."
-  }
-];
-
-const faqs = [
-  {
-    question: "Is my data private?",
-    answer: "Yes. We do not store or share any personal health information."
-  },
-  {
-    question: "How accurate are the results?",
-    answer: "Our AI uses up-to-date medical information, but always consult a healthcare professional for serious concerns."
-  },
-  {
-    question: "Do I need to create an account?",
-    answer: "A account is required to use the symptom checker, but we prioritize your privacy."
-  },
-  {
-    question: "Can I use this for emergencies?",
-    answer: "No. For emergencies, contact your local medical services immediately."
-  }
-];
-
 const HomePage: React.FC<HomePageProps> = ({
   user,
   onLoginClick,
@@ -64,13 +24,10 @@ const HomePage: React.FC<HomePageProps> = ({
   onLearnMoreClick,
   onProfileClick, 
 }) => {
-  const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
-
   const scrollToSection = (id: string) => {
     const el = document.getElementById(id);
     if (el) {
       el.scrollIntoView({ behavior: 'smooth' });
-      setMobileMenuOpen(false);
     }
   };
 
@@ -85,117 +42,15 @@ const HomePage: React.FC<HomePageProps> = ({
     }
   };
 
-  const textButtonClass =
-    "text-accent hover:text-bg hover:bg-accent/20 hover:scale-105 transition-all duration-200 rounded px-2 py-1 cursor-pointer";
-
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-bg via-bg to-muted overflow-auto">
-      <header className="w-full z-50 sticky top-0">
-        <nav className="flex items-center justify-between p-4 lg:px-6" aria-label="Global">
-          <div className="flex lg:flex-1">
-            <a href="#" className="-m-1.5 p-1.5 flex items-center gap-2 hover:opacity-90 transition">
-              <img src={Logo} alt="Symptom-iSense Logo" className="h-8 w-auto" />
-              <span className="text-primary font-bold text-xl">Symptom-iSense</span>
-            </a>
-          </div>
-          <div className="flex lg:hidden">
-            <button
-              type="button"
-              onClick={() => setMobileMenuOpen(true)}
-              className="p-2.5 text-primary hover:text-accent transition-colors duration-200"
-            >
-              <span className="sr-only">Open main menu</span>
-              <Bars3Icon className="h-6 w-6" aria-hidden="true" />
-            </button>
-          </div>
-          <div className="hidden lg:flex lg:gap-x-10">
-            <button
-              className="text-sm font-semibold text-dark hover:text-accent hover:underline hover:decoration-accent hover:decoration-2 underline-offset-4 transition-all duration-200 bg-transparent"
-              onClick={() => scrollToSection('features')}
-            >
-              Features
-            </button>
-            <button
-              className="text-sm font-semibold text-dark hover:text-accent hover:underline hover:decoration-accent hover:decoration-2 underline-offset-4 transition-all duration-200 bg-transparent"
-              onClick={() => scrollToSection('faq')}
-            >
-              FAQ
-            </button>
-            <button
-              className="text-sm font-semibold text-dark hover:text-accent hover:underline hover:decoration-accent hover:decoration-2 underline-offset-4 transition-all duration-200 bg-transparent"
-              onClick={onProfileClick} 
-            >
-              Profile
-            </button>
-          </div>
-          <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-            {user ? (
-              <button
-                onClick={onLogoutClick}
-                className="text-sm font-semibold text-dark hover:text-accent hover:underline hover:decoration-accent hover:decoration-2 underline-offset-4 transition-all duration-200 bg-transparent px-2 py-1 flex items-center gap-2"
-              >
-                <FaUserCheck className="text-current text-xl" />
-                <span>Log out</span>
-              </button>
-            ) : (
-              <button
-                onClick={onLoginClick}
-                className="text-sm font-semibold text-dark hover:text-accent hover:underline hover:decoration-accent hover:decoration-2 underline-offset-4 transition-all duration-200 bg-transparent px-2 py-1"
-              >
-                Log in <span aria-hidden="true">&rarr;</span>
-              </button>
-            )}
-          </div>
-        </nav>
-        <Dialog open={mobileMenuOpen} onClose={setMobileMenuOpen} className="lg:hidden">
-          <div className="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm" />
-          <Dialog.Panel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-bg p-6 sm:max-w-sm sm:ring-1 sm:ring-muted/10 shadow-xl">
-            <div className="flex items-center justify-between">
-              <a href="#" className="-m-1.5 p-1.5 flex items-center gap-2 hover:opacity-80 transition">
-                <img src={Logo} alt="Symptom-iSense Logo" className="h-8 w-auto" />
-                <span className="text-primary font-bold text-xl">Symptom-iSense</span>
-              </a>
-              <button
-                type="button"
-                onClick={() => setMobileMenuOpen(false)}
-                className="p-2.5 text-primary hover:text-accent transition-colors duration-200"
-              >
-                <span className="sr-only">Close menu</span>
-                <XMarkIcon className="h-6 w-6" aria-hidden="true" />
-              </button>
-            </div>
-            <div className="mt-6 flow-root">
-              <div className="-my-6 divide-y divide-muted/10">
-                <div className="space-y-2 py-6">
-                  <button
-                    className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold text-dark hover:bg-muted/20 hover:text-accent hover:underline hover:decoration-accent hover:decoration-2 underline-offset-4 transition-all duration-200 w-full text-left"
-                    onClick={() => scrollToSection('features')}
-                  >
-                    Features
-                  </button>
-                  <button
-                    className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold text-dark hover:bg-muted/20 hover:text-accent hover:underline hover:decoration-accent hover:decoration-2 underline-offset-4 transition-all duration-200 w-full text-left"
-                    onClick={() => scrollToSection('faq')}
-                  >
-                    FAQ
-                  </button>
-                </div>
-                <div className="py-6">
-                  {user ? (
-                    <button onClick={onLogoutClick} className={`w-full text-left ${textButtonClass}`}>
-                      Log out
-                    </button>
-                  ) : (
-                    <button onClick={onLoginClick} className={`w-full text-left ${textButtonClass}`}>
-                      Log in
-                    </button>
-                  )}
-                </div>
-              </div>
-            </div>
-          </Dialog.Panel>
-        </Dialog>
-      </header>
+      <Header
+        user={user}
+        onLoginClick={onLoginClick}
+        onLogoutClick={onLogoutClick}
+        onProfileClick={onProfileClick}
+        scrollToSection={scrollToSection}
+      />
 
       <main className="flex-1 flex flex-col items-center px-4 pt-20 lg:px-6">
         <div className="w-full max-w-3xl md:max-w-4xl text-center py-6 mx-auto px-4">
@@ -214,15 +69,12 @@ const HomePage: React.FC<HomePageProps> = ({
         </div>
 
         <div className="flex justify-center mb-2" data-aos="fade-up" data-aos-delay="300">
-          <button
+          <Button
+            variant="checkSymptoms"
             onClick={handleCheckSymptomsClick}
-            className="rounded-md px-6 py-3 text-base font-semibold
-                       text-[var(--color-bg)] bg-[var(--color-dark)] border border-[var(--color-dark)] shadow-md
-                       transition-all duration-300 transform
-                       hover:bg-[var(--color-accent)] hover:shadow-lg hover:scale-105"
           >
             Check Symptoms
-          </button>
+          </Button>
         </div>
         <div className="mt-4 flex justify-center mb-8" data-aos="fade-up" data-aos-delay="400">
           <button
@@ -240,31 +92,16 @@ const HomePage: React.FC<HomePageProps> = ({
         <section id="features" className="w-full max-w-5xl mx-auto mt-6 mb-12 scroll-mt-24 px-4 sm:px-6 py-6">
           <h2 className="text-2xl font-bold text-center mb-6 text-primary">Features</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {features.map((feature, idx) => (
-              <div
-                key={idx}
-                className="group bg-white/90 rounded-xl p-6 flex flex-col items-center text-center transform transition-transform duration-500 ease-out will-change-transform motion-safe:transform-gpu hover:-translate-y-2 hover:shadow-2xl cursor-pointer border border-muted/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/30"
-              >
-                <div className="bg-accent/10 group-hover:bg-accent/20 text-accent group-hover:text-bg rounded-full p-4 mb-4 flex items-center justify-center shadow-sm transition-colors duration-500 ease-in-out transform group-hover:scale-105 group-hover:shadow-md">
-                  {feature.icon}
-                </div>
-                <h3 className="font-semibold text-lg mb-2 transition-colors duration-500 ease-in-out group-hover:text-accent">{feature.title}</h3>
-                <p className="text-muted text-sm">{feature.description}</p>
-              </div>
+            {featuresData.map((feature, idx) => (
+              <FeatureCard key={idx} feature={feature} index={idx} />
             ))}
           </div>
         </section>
         <section id="faq" className="w-full max-w-6xl mx-auto mb-16 scroll-mt-24 px-6 py-8">
           <h2 className="text-2xl font-bold text-center mb-6 text-primary">Frequently Asked Questions</h2>
           <div className="space-y-4">
-            {faqs.map((faq, idx) => (
-              <div
-                key={idx}
-                className="bg-white/70 rounded-lg p-4 shadow transform transition-transform duration-300 ease-out hover:-translate-y-1 hover:shadow-lg hover:bg-accent/10 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/30 motion-safe:transform-gpu"
-              >
-                <h4 className="font-semibold text-md mb-1">{faq.question}</h4>
-                <p className="text-muted text-sm">{faq.answer}</p>
-              </div>
+            {faqsData.map((faq, idx) => (
+              <FAQItem key={idx} faq={faq} />
             ))}
           </div>
         </section>

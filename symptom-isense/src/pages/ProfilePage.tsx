@@ -3,7 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { db } from "../services/firebase";
 import { collection, getDocs, query, deleteDoc, doc } from "firebase/firestore";
 import type { User } from "firebase/auth";
-import { FaSearch, FaTrash, FaRegFolderOpen, FaExclamationTriangle, FaArrowLeft } from "react-icons/fa";
+import { FaSearch, FaTrash, FaRegFolderOpen } from "react-icons/fa";
+import BackButton from "../components/ui/BackButton";
+import Button from "../components/ui/Button";
+import ConfirmationDialog from "../components/ui/ConfirmationDialog";
 
 interface Prompt {
   id: string;
@@ -17,35 +20,6 @@ interface ProfilePageProps {
   onHomeClick: () => void;
 }
 
-const ConfirmationPopup: React.FC<{
-  message: string;
-  onConfirm: () => void;
-  onCancel: () => void;
-}> = ({ message, onConfirm, onCancel }) => (
-  <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-    <div className="bg-white rounded-lg shadow-lg p-6 w-96">
-      <div className="flex flex-col items-center">
-        <FaExclamationTriangle className="text-red-600 text-4xl mb-4" />
-        <p className="text-center text-lg mb-4">{message}</p>
-      </div>
-      <div className="flex justify-center gap-4">
-        <button
-          onClick={onConfirm}
-          className="px-4 py-2 bg-red-600 text-white rounded-md shadow hover:bg-red-700 transition-all duration-200"
-        >
-          Confirm
-        </button>
-        <button
-          onClick={onCancel}
-          className="px-4 py-2 bg-gray-300 text-gray-800 rounded-md shadow hover:bg-gray-400 transition-all duration-200"
-        >
-          Cancel
-        </button>
-      </div>
-    </div>
-  </div>
-);
-
 const ProfilePage: React.FC<ProfilePageProps> = ({ user, onHomeClick }) => {
   const navigate = useNavigate();
   const [prompts, setPrompts] = useState<Prompt[]>([]);
@@ -55,9 +29,6 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, onHomeClick }) => {
   const [activeFilter, setActiveFilter] = useState<string | null>(null);
   const [showPopup, setShowPopup] = useState(false);
   const [popupAction, setPopupAction] = useState<() => void>(() => {});
-
-  const smallButtonClasses =
-    "text-accent hover:text-bg hover:bg-accent/20 hover:scale-105 transition-all duration-200 rounded px-2 py-1 cursor-pointer text-sm hover:underline hover:decoration-accent hover:decoration-2 underline-offset-4";
 
   useEffect(() => {
     console.log("ProfilePage rendered");
@@ -163,22 +134,20 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, onHomeClick }) => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-bg via-bg to-muted flex flex-col">
       {showPopup && (
-        <ConfirmationPopup
+        <ConfirmationDialog
           message="Are you sure you want to proceed with this action?"
           onConfirm={popupAction}
           onCancel={() => setShowPopup(false)}
+          isOpen={showPopup}
         />
       )}
 
       <header className="w-full z-50 sticky top-0">
         <nav className="flex items-center justify-between p-4 lg:px-6" aria-label="Global">
-          <button
-            type="button"
-            className={`${smallButtonClasses} -ml-2`}
+          <BackButton
             onClick={onHomeClick}
-          >
-            <FaArrowLeft className="inline-block mr-2" /> Back to Home
-          </button>
+            className="-ml-2"
+          />
         </nav>
       </header>
 
@@ -238,12 +207,12 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, onHomeClick }) => {
               </button>
             </div>
             <div className="mt-4">
-              <button
+              <Button
+                variant="danger"
                 onClick={handleDeleteAll}
-                className="px-4 py-2 bg-red-600 text-white rounded-md shadow hover:bg-red-700 transition-all duration-200"
               >
                 Delete All
-              </button>
+              </Button>
             </div>
           </div>
 
@@ -263,12 +232,13 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, onHomeClick }) => {
                   <h4 className="font-semibold text-md mb-1">{prompt.promptText}</h4>
                   <p className="text-muted text-sm">{prompt.responseText}</p>
                   <p className="text-xs text-gray-500">{prompt.createdAt?.toDate().toLocaleString()}</p>
-                  <button
+                  <Button
+                    variant="danger"
                     onClick={() => handleDeletePrompt(prompt.id)}
-                    className="mt-2 px-3 py-1 bg-red-600 text-white rounded-md shadow hover:bg-red-700 transition-all duration-200 flex items-center gap-2"
+                    className="mt-2 px-3 py-1 flex items-center gap-2"
                   >
                     <FaTrash /> Delete
-                  </button>
+                  </Button>
                 </div>
               ))}
             </div>
