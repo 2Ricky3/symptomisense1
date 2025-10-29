@@ -36,22 +36,102 @@ const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => 
       .replace(/##\s*(.*?)(?=\n|$)/g, '$1')
       .replace(/#\s*(.*?)(?=\n|$)/g, '$1');
     
+    const sections = [];
     const lines = formattedText.split('\n');
-    return lines.map((line, index) => {
-      if (!line.trim()) return <br key={index} />;
+    let currentSection = { title: '', content: [] as string[] };
+    
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i].trim();
       
-      const boldTerms = ['immediately', 'urgent', 'emergency', 'severe', 'serious', 'warning', 'danger', 'critical'];
-      let processedLine = line;
+      if (!line) {
+        if (currentSection.content.length > 0) {
+          currentSection.content.push('');
+        }
+        continue;
+      }
       
-      boldTerms.forEach(term => {
-        const regex = new RegExp(`\\b(${term})\\b`, 'gi');
-        processedLine = processedLine.replace(regex, `<strong>$1</strong>`);
-      });
+      const lowerLine = line.toLowerCase();
       
-      return (
-        <span key={index} dangerouslySetInnerHTML={{ __html: processedLine }} />
-      );
-    });
+      // Check for Possible Causes section
+      if ((lowerLine.includes('possible causes') || lowerLine.includes('likely causes') || 
+           lowerLine.includes('potential causes') || lowerLine.includes('explanations')) && 
+          currentSection.title !== '🔍 Possible Causes') {
+        if (currentSection.title) sections.push(currentSection);
+        currentSection = { title: '🔍 Possible Causes', content: [] };
+        if (!lowerLine.match(/^(possible|likely|potential)\s+(causes|explanations)/)) {
+          currentSection.content.push(line);
+        }
+      }
+      // Check for Self-Care/Treatment section
+      else if ((lowerLine.includes('self-care') || lowerLine.includes('treatment') || 
+                lowerLine.includes('recommendations') || lowerLine.includes('at home') ||
+                lowerLine.includes('home remedies') || lowerLine.includes('what you can do') ||
+                lowerLine.includes('steps to take')) && 
+               currentSection.title !== '🩹 Self-Care Recommendations') {
+        if (currentSection.title) sections.push(currentSection);
+        currentSection = { title: '🩹 Self-Care Recommendations', content: [] };
+        if (!lowerLine.match(/^(self-care|treatment|recommendations|at home)/)) {
+          currentSection.content.push(line);
+        }
+      }
+      // Check for Medical Care section
+      else if ((lowerLine.includes('see a doctor') || lowerLine.includes('seek medical') || 
+                lowerLine.includes('medical attention') || lowerLine.includes('emergency') ||
+                lowerLine.includes('when to call') || lowerLine.includes('warning signs') ||
+                lowerLine.includes('red flags') || lowerLine.includes('immediately')) && 
+               currentSection.title !== '🚨 When to Seek Medical Care') {
+        if (currentSection.title) sections.push(currentSection);
+        currentSection = { title: '🚨 When to Seek Medical Care', content: [] };
+        if (!lowerLine.match(/^(when to|seek medical|see a doctor|medical attention)/)) {
+          currentSection.content.push(line);
+        }
+      }
+      // Check for Reminder section
+      else if (lowerLine.includes('reminder') && lowerLine.includes('doctor') && 
+               currentSection.title !== '💡 Important Reminder') {
+        if (currentSection.title) sections.push(currentSection);
+        currentSection = { title: '💡 Important Reminder', content: [] };
+        currentSection.content.push(line);
+      }
+      // Add to existing section or create Analysis section
+      else {
+        if (!currentSection.title) {
+          currentSection.title = '📋 Analysis';
+        }
+        
+        currentSection.content.push(line);
+      }
+    }
+    
+    if (currentSection.title) sections.push(currentSection);
+    
+    const boldTerms = ['immediately', 'urgent', 'emergency', 'severe', 'serious', 'warning', 'danger', 'critical'];
+    
+    return (
+      <div className="space-y-4">
+        {sections.map((section, sectionIndex) => (
+          <div key={sectionIndex} className="bg-white/50 rounded-lg p-4 border border-gray-200">
+            <h3 className="font-semibold text-dark mb-2 text-sm">{section.title}</h3>
+            <div className="space-y-1">
+              {section.content.map((line, lineIndex) => {
+                if (!line.trim()) return <br key={lineIndex} />;
+                
+                let processedLine = line;
+                boldTerms.forEach(term => {
+                  const regex = new RegExp(`\\b(${term})\\b`, 'gi');
+                  processedLine = processedLine.replace(regex, `<strong class="text-red-600">$1</strong>`);
+                });
+                
+                return (
+                  <p key={lineIndex} className="text-muted text-sm leading-relaxed" 
+                     dangerouslySetInnerHTML={{ __html: processedLine }} />
+                );
+              })}
+            </div>
+          </div>
+        ))}
+      </div>
+    );
   };
 
   const handleAsk = async () => {
@@ -97,20 +177,18 @@ const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => 
             role: "system",
             content:
               "You are a compassionate medical assistant designed to help people understand their symptoms. You are not a real doctor, but you should be helpful within your limitations. " +
-              "Your goals are to: " +
-              "1. Provide clear, concise explanations of possible causes " +
-              "2. Suggest practical self-care measures when appropriate " +
-              "3. Recommend when to seek medical attention " +
-              "4. Offer reassurance while remaining medically responsible " +
+              "Structure your responses clearly with these sections: " +
+              "1. Possible Causes: 2-3 most likely explanations for the symptoms " +
+              "2. Self-Care Recommendations: Practical steps the person can take " +
+              "3. When to Seek Medical Care: Red flags and when to see a doctor " +
               "Guidelines: " +
-              "- Keep responses under 200 words for the main explanation " +
+              "- Keep responses under 200 words total " +
               "- Write in plain text without any markdown formatting like *, **, ###, or other symbols " +
               "- Use simple, empathetic language with appropriate emojis to make responses friendly " +
-              "- Provide 2-3 most likely explanations " +
-              "- Include specific, actionable self-care tips " +
+              "- Clearly organize content into the three sections above " +
+              "- Include specific, actionable advice " +
               "- Clearly state red flags requiring immediate care " +
               "- Be supportive but concise " +
-              "- Organize information in short, clear paragraphs " +
               "- Use emojis sparingly but appropriately (🩺💊🌡️❤️🔴⚠️) " +
               "- Never use asterisks (*), hashtags (#), or other markdown symbols " +
               "- Write naturally as if speaking to someone, not as formatted text " +
@@ -120,10 +198,11 @@ const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => 
             role: "user",
             content:
               input +
-              "\n\nPlease provide a concise response (under 200 words) that includes: " +
-              "1. Most likely explanations for these symptoms " +
-              "2. Practical self-care recommendations " +
-              "3. When to see a doctor immediately " +
+              "\n\nPlease provide a well-structured response (under 200 words) organized into these clear sections: " +
+              "1. Possible Causes: List the 2-3 most likely explanations for these symptoms " +
+              "2. Self-Care Recommendations: Provide specific, practical steps they can take at home " +
+              "3. When to Seek Medical Care: Clearly state red flags and when to see a doctor immediately " +
+              "Make each section clear and easy to identify. " +
               "After your response, generate a comprehensive SOAP note for healthcare providers. " +
               "Label it clearly as 'SOAP Note:' and make it detailed and medically precise. " +
               "For the SOAP note, use this structure:" +
