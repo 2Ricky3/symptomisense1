@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import OpenAI from "openai";
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 import { savePrompt, auth } from "../services/firebase";
-import { FaUserMd, FaTrash } from "react-icons/fa";
+import { FaUserMd, FaTrash, FaShare } from "react-icons/fa";
 import { recommendations, extraRecommendations } from "../utils/constants";
 import Button from "../components/ui/Button";
 import BackButton from "../components/ui/BackButton";
@@ -25,6 +25,7 @@ const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => 
   const [loading, setLoading] = useState(false);
   const [showMore, setShowMore] = useState(false);
   const [isInvalidInput, setIsInvalidInput] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
   const formatResponse = (text: string) => {
     if (!text) return text;
@@ -52,7 +53,6 @@ const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => 
       
       const lowerLine = line.toLowerCase();
       
-      // Check for Possible Causes section
       if ((lowerLine.includes('possible causes') || lowerLine.includes('likely causes') || 
            lowerLine.includes('potential causes') || lowerLine.includes('explanations')) && 
           currentSection.title !== '🔍 Possible Causes') {
@@ -62,7 +62,6 @@ const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => 
           currentSection.content.push(line);
         }
       }
-      // Check for Self-Care/Treatment section
       else if ((lowerLine.includes('self-care') || lowerLine.includes('treatment') || 
                 lowerLine.includes('recommendations') || lowerLine.includes('at home') ||
                 lowerLine.includes('home remedies') || lowerLine.includes('what you can do') ||
@@ -74,7 +73,6 @@ const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => 
           currentSection.content.push(line);
         }
       }
-      // Check for Medical Care section
       else if ((lowerLine.includes('see a doctor') || lowerLine.includes('seek medical') || 
                 lowerLine.includes('medical attention') || lowerLine.includes('emergency') ||
                 lowerLine.includes('when to call') || lowerLine.includes('warning signs') ||
@@ -86,14 +84,14 @@ const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => 
           currentSection.content.push(line);
         }
       }
-      // Check for Reminder section
       else if (lowerLine.includes('reminder') && lowerLine.includes('doctor') && 
                currentSection.title !== '💡 Important Reminder') {
         if (currentSection.title) sections.push(currentSection);
         currentSection = { title: '💡 Important Reminder', content: [] };
         currentSection.content.push(line);
       }
-      // Add to existing section or create Analysis section
+
+
       else {
         if (!currentSection.title) {
           currentSection.title = '📋 Analysis';
@@ -165,6 +163,7 @@ const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => 
     setIsInvalidInput(false);
 
     setSubmittedInput(input.trim());
+    setIsEditing(false);
     setLoading(true);
     setResponse("");
     setSoapNote("");
@@ -257,11 +256,23 @@ const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => 
   };
 
   const handleReset = () => {
+    if (submittedInput) {
+      setInput(submittedInput);
+      setIsEditing(true);
+    }
+    setSubmittedInput(null);
+    setResponse("");
+    setSoapNote("");
+    setIsInvalidInput(false);
+  };
+
+  const handleClearAll = () => {
     setSubmittedInput(null);
     setResponse("");
     setSoapNote("");
     setInput("");
     setIsInvalidInput(false);
+    setIsEditing(false);
   };
 
   const handleDownloadSOAP = async () => {
@@ -557,16 +568,23 @@ const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => 
         {!submittedInput ? (
           <div className="flex-grow flex flex-col items-center justify-center">
             {!response && (
-              <div className="bg-white shadow-md rounded-lg p-4 mb-6 flex items-center gap-4 transform transition-transform duration-300 hover:-translate-y-1 hover:shadow-lg cursor-pointer w-full max-w-3xl">
-                <div className="text-primary text-4xl">
+              <div className="bg-black shadow-md rounded-lg p-4 mb-6 flex items-center gap-4 transform transition-transform duration-300 hover:-translate-y-1 hover:shadow-lg cursor-pointer w-full max-w-3xl">
+                <div className="text-white text-4xl">
                   <FaUserMd />
                 </div>
-                <p className="text-sm text-muted">
+                <p className="text-sm text-white">
                   Please describe your symptoms in as much detail as possible. Include information such as temperature, duration, and any other relevant details to help us provide better insights.
                 </p>
               </div>
             )}
-            <FormLabel className="text-left w-full max-w-3xl">Describe your symptoms:</FormLabel>
+            <FormLabel className="text-left w-full max-w-3xl">
+              Describe your symptoms:
+              {isEditing && (
+                <span className="ml-2 text-sm font-normal text-blue-600 bg-blue-100 px-2 py-1 rounded">
+                  ✏️ Editing previous input
+                </span>
+              )}
+            </FormLabel>
             <FormTextarea
               value={input}
               onChange={(e) => {
@@ -574,7 +592,13 @@ const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => 
                 if (isInvalidInput) setIsInvalidInput(false);
               }}
               placeholder="For example: 'I have a persistent dry cough, a slight fever of 38°C, and feel very tired for the last 3 days...'"
-              className={`max-w-3xl mb-4 h-40 ${isInvalidInput ? 'border-red-500 border-2 bg-red-50' : ''}`}
+              className={`max-w-3xl mb-4 h-40 ${
+                isInvalidInput 
+                  ? 'border-red-500 border-2 bg-red-50' 
+                  : isEditing 
+                    ? 'border-blue-500 border-2 bg-blue-50' 
+                    : ''
+              }`}
             />
             {isInvalidInput && (
               <p className="text-red-600 text-sm mb-3 max-w-3xl text-center">
@@ -626,7 +650,7 @@ const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => 
                 Get Analysis
               </Button>
               <IconButton
-                onClick={() => { setInput(''); }}
+                onClick={handleClearAll}
                 aria-label="Clear input"
                 title="Clear input"
                 icon={<FaTrash />}
@@ -680,7 +704,9 @@ const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => 
                     }
                   }}
                   disabled={loading}
+                  className="flex items-center justify-center gap-2"
                 >
+                  <FaShare className="w-4 h-4" />
                   Share
                 </Button>
                 <Button 

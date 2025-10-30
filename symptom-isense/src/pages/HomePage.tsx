@@ -1,11 +1,13 @@
 import React from 'react';
 import type { User } from 'firebase/auth';
 import Logo from '../assets/Logo.png';
-import { features as featuresData, faqs as faqsData } from '../utils/constants';
+import { features as featuresData, faqs as faqsData, healthcareProviders } from '../utils/constants';
+import { FaHeartbeat, FaHospital } from 'react-icons/fa';
 import Button from '../components/ui/Button';
 import Header from '../components/layout/Header';
 import FeatureCard from '../components/layout/FeatureCard';
 import FAQItem from '../components/layout/FAQItem';
+import HealthcareProviderItem from '../components/layout/HealthcareProviderItem';
 
 interface HomePageProps {
   user: User | null;
@@ -79,7 +81,7 @@ const HomePage: React.FC<HomePageProps> = ({
         <div className="mt-4 flex justify-center mb-8" data-aos="fade-up" data-aos-delay="400">
           <button
             onClick={onLearnMoreClick}
-            className="text-base font-semibold text-dark hover:text-accent hover:underline transition-colors duration-200"
+            className="text-base font-semibold text-dark hover:text-accent hover:underline transition-colors duration-200 cursor-pointer"
           >
             Learn more <span aria-hidden="true">→</span>
           </button>
@@ -97,6 +99,49 @@ const HomePage: React.FC<HomePageProps> = ({
             ))}
           </div>
         </section>
+
+        <section id="healthcare-providers" className="w-full max-w-6xl mx-auto mb-16 scroll-mt-24 px-6 py-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold mb-4 text-primary">Healthcare Providers</h2>
+            <p className="text-lg text-muted max-w-2xl mx-auto">
+              Connect with trusted healthcare professionals and mental health support services in South Africa
+            </p>
+            <div className="w-24 h-1 bg-gradient-to-r from-primary to-accent mx-auto mt-4 rounded-full"></div>
+          </div>
+          
+          <div className="mb-16">
+            <div className="bg-gradient-to-r from-green-50 to-teal-50 rounded-2xl p-8 border border-green-100 shadow-sm">
+              <div className="flex items-center justify-center gap-3 mb-8">
+                <div className="bg-green-100 p-3 rounded-full">
+                  <FaHeartbeat className="text-green-600 text-2xl" />
+                </div>
+                <h3 className="text-2xl font-bold text-green-800">Mental Health Support</h3>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {healthcareProviders.mentalHealth.map((provider, idx) => (
+                  <HealthcareProviderItem key={idx} provider={provider} />
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-8 border border-blue-100 shadow-sm">
+              <div className="flex items-center justify-center gap-3 mb-8">
+                <div className="bg-blue-100 p-3 rounded-full">
+                  <FaHospital className="text-blue-600 text-2xl" />
+                </div>
+                <h3 className="text-2xl font-bold text-blue-800">Medical Services</h3>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {healthcareProviders.medical.map((provider, idx) => (
+                  <HealthcareProviderItem key={idx} provider={provider} />
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
         <section id="faq" className="w-full max-w-6xl mx-auto mb-16 scroll-mt-24 px-6 py-8">
           <h2 className="text-2xl font-bold text-center mb-6 text-primary">Frequently Asked Questions</h2>
           <div className="space-y-4">

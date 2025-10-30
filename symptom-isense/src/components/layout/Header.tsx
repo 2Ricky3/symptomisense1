@@ -39,7 +39,7 @@ const Header: React.FC<HeaderProps> = ({
           <button
             type="button"
             onClick={() => setMobileMenuOpen(true)}
-            className="p-2.5 text-primary hover:text-accent transition-colors duration-200"
+            className="p-2.5 text-primary hover:text-accent transition-colors duration-200 cursor-pointer"
           >
             <span className="sr-only">Open main menu</span>
             <Bars3Icon className="h-6 w-6" aria-hidden="true" />
@@ -47,19 +47,25 @@ const Header: React.FC<HeaderProps> = ({
         </div>
         <div className="hidden lg:flex lg:gap-x-10">
           <button
-            className="text-sm font-semibold text-dark hover:text-accent hover:underline hover:decoration-accent hover:decoration-2 underline-offset-4 transition-all duration-200 bg-transparent"
+            className="text-sm font-semibold text-dark hover:text-accent hover:underline hover:decoration-accent hover:decoration-2 underline-offset-4 transition-all duration-200 bg-transparent cursor-pointer"
             onClick={() => scrollToSection('features')}
           >
             Features
           </button>
           <button
-            className="text-sm font-semibold text-dark hover:text-accent hover:underline hover:decoration-accent hover:decoration-2 underline-offset-4 transition-all duration-200 bg-transparent"
+            className="text-sm font-semibold text-dark hover:text-accent hover:underline hover:decoration-accent hover:decoration-2 underline-offset-4 transition-all duration-200 bg-transparent cursor-pointer"
+            onClick={() => scrollToSection('healthcare-providers')}
+          >
+            Healthcare Providers
+          </button>
+          <button
+            className="text-sm font-semibold text-dark hover:text-accent hover:underline hover:decoration-accent hover:decoration-2 underline-offset-4 transition-all duration-200 bg-transparent cursor-pointer"
             onClick={() => scrollToSection('faq')}
           >
             FAQ
           </button>
           <button
-            className="text-sm font-semibold text-dark hover:text-accent hover:underline hover:decoration-accent hover:decoration-2 underline-offset-4 transition-all duration-200 bg-transparent"
+            className="text-sm font-semibold text-dark hover:text-accent hover:underline hover:decoration-accent hover:decoration-2 underline-offset-4 transition-all duration-200 bg-transparent cursor-pointer"
             onClick={onProfileClick} 
           >
             Profile
@@ -69,7 +75,7 @@ const Header: React.FC<HeaderProps> = ({
           {user ? (
             <button
               onClick={onLogoutClick}
-              className="text-sm font-semibold text-dark hover:text-accent hover:underline hover:decoration-accent hover:decoration-2 underline-offset-4 transition-all duration-200 bg-transparent px-2 py-1 flex items-center gap-2"
+              className="text-sm font-semibold text-dark hover:text-accent hover:underline hover:decoration-accent hover:decoration-2 underline-offset-4 transition-all duration-200 bg-transparent px-2 py-1 flex items-center gap-2 cursor-pointer"
             >
               <FaUserCheck className="text-current text-xl" />
               <span>Log out</span>
@@ -77,7 +83,7 @@ const Header: React.FC<HeaderProps> = ({
           ) : (
             <button
               onClick={onLoginClick}
-              className="text-sm font-semibold text-dark hover:text-accent hover:underline hover:decoration-accent hover:decoration-2 underline-offset-4 transition-all duration-200 bg-transparent px-2 py-1"
+              className="text-sm font-semibold text-dark hover:text-accent hover:underline hover:decoration-accent hover:decoration-2 underline-offset-4 transition-all duration-200 bg-transparent px-2 py-1 cursor-pointer"
             >
               Log in <span aria-hidden="true">&rarr;</span>
             </button>
@@ -95,7 +101,7 @@ const Header: React.FC<HeaderProps> = ({
             <button
               type="button"
               onClick={() => setMobileMenuOpen(false)}
-              className="p-2.5 text-primary hover:text-accent transition-colors duration-200"
+              className="p-2.5 text-primary hover:text-accent transition-colors duration-200 cursor-pointer"
             >
               <span className="sr-only">Close menu</span>
               <XMarkIcon className="h-6 w-6" aria-hidden="true" />
@@ -105,7 +111,7 @@ const Header: React.FC<HeaderProps> = ({
             <div className="-my-6 divide-y divide-muted/10">
               <div className="space-y-2 py-6">
                 <button
-                  className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold text-dark hover:bg-muted/20 hover:text-accent hover:underline hover:decoration-accent hover:decoration-2 underline-offset-4 transition-all duration-200 w-full text-left"
+                  className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold text-dark hover:bg-muted/20 hover:text-accent hover:underline hover:decoration-accent hover:decoration-2 underline-offset-4 transition-all duration-200 w-full text-left cursor-pointer"
                   onClick={() => {
                     scrollToSection('features');
                     setMobileMenuOpen(false);
@@ -114,7 +120,16 @@ const Header: React.FC<HeaderProps> = ({
                   Features
                 </button>
                 <button
-                  className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold text-dark hover:bg-muted/20 hover:text-accent hover:underline hover:decoration-accent hover:decoration-2 underline-offset-4 transition-all duration-200 w-full text-left"
+                  className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold text-dark hover:bg-muted/20 hover:text-accent hover:underline hover:decoration-accent hover:decoration-2 underline-offset-4 transition-all duration-200 w-full text-left cursor-pointer"
+                  onClick={() => {
+                    scrollToSection('healthcare-providers');
+                    setMobileMenuOpen(false);
+                  }}
+                >
+                  Healthcare Providers
+                </button>
+                <button
+                  className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold text-dark hover:bg-muted/20 hover:text-accent hover:underline hover:decoration-accent hover:decoration-2 underline-offset-4 transition-all duration-200 w-full text-left cursor-pointer"
                   onClick={() => {
                     scrollToSection('faq');
                     setMobileMenuOpen(false);
