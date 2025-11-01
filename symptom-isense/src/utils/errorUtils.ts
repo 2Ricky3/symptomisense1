@@ -1,9 +1,5 @@
 export type ErrorLike = { code?: unknown; message?: unknown } & Record<string, unknown>;
 
-/**
- * @param err 
- * @returns 
- */
 export function extractAuthCode(err: unknown): string | null {
   if (!err || typeof err !== 'object') return null;
   const e = err as ErrorLike;

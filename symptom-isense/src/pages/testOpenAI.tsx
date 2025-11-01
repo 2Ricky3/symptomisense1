@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import OpenAI from "openai";
-import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 import { savePrompt, auth } from "../services/firebase";
+import { analyzeSymptoms } from "../services/openAiService";
+import { generateMedicalReportPDF } from "../services/pdfService";
+import { isMedicalQuery } from "../utils/medicalKeywords";
 import { FaUserMd, FaTrash, FaShare } from "react-icons/fa";
 import { recommendations, extraRecommendations } from "../utils/constants";
 import Button from "../components/ui/Button";
@@ -10,12 +11,9 @@ import FormTextarea from "../components/forms/FormTextarea";
 import FormLabel from "../components/forms/FormLabel";
 import IconButton from "../components/ui/IconButton";
 import RecommendationChip from "../components/ui/RecommendationChip";
+import AIResponseDisplay from "../components/ui/AIResponseDisplay";
+import DownloadReportButton from "../components/ui/DownloadReportButton";
 import Loader from "./Loader";
-
-const client = new OpenAI({
-  apiKey: import.meta.env.VITE_OPENAI_API_KEY,
-  dangerouslyAllowBrowser: true,
-});
 
 const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => {
   const [input, setInput] = useState("");
@@ -27,133 +25,10 @@ const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => 
   const [isInvalidInput, setIsInvalidInput] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
-  const formatResponse = (text: string) => {
-    if (!text) return text;
-    
-    const formattedText = text
-      .replace(/\*\*(.*?)\*\*/g, '$1')
-      .replace(/\*(.*?)\*/g, '$1')
-      .replace(/###\s*(.*?)(?=\n|$)/g, '$1')
-      .replace(/##\s*(.*?)(?=\n|$)/g, '$1')
-      .replace(/#\s*(.*?)(?=\n|$)/g, '$1');
-    
-    const sections = [];
-    const lines = formattedText.split('\n');
-    let currentSection = { title: '', content: [] as string[] };
-    
-    for (let i = 0; i < lines.length; i++) {
-      const line = lines[i].trim();
-      
-      if (!line) {
-        if (currentSection.content.length > 0) {
-          currentSection.content.push('');
-        }
-        continue;
-      }
-      
-      const lowerLine = line.toLowerCase();
-      
-      if ((lowerLine.includes('possible causes') || lowerLine.includes('likely causes') || 
-           lowerLine.includes('potential causes') || lowerLine.includes('explanations')) && 
-          currentSection.title !== '🔍 Possible Causes') {
-        if (currentSection.title) sections.push(currentSection);
-        currentSection = { title: '🔍 Possible Causes', content: [] };
-        if (!lowerLine.match(/^(possible|likely|potential)\s+(causes|explanations)/)) {
-          currentSection.content.push(line);
-        }
-      }
-      else if ((lowerLine.includes('self-care') || lowerLine.includes('treatment') || 
-                lowerLine.includes('recommendations') || lowerLine.includes('at home') ||
-                lowerLine.includes('home remedies') || lowerLine.includes('what you can do') ||
-                lowerLine.includes('steps to take')) && 
-               currentSection.title !== '🩹 Self-Care Recommendations') {
-        if (currentSection.title) sections.push(currentSection);
-        currentSection = { title: '🩹 Self-Care Recommendations', content: [] };
-        if (!lowerLine.match(/^(self-care|treatment|recommendations|at home)/)) {
-          currentSection.content.push(line);
-        }
-      }
-      else if ((lowerLine.includes('see a doctor') || lowerLine.includes('seek medical') || 
-                lowerLine.includes('medical attention') || lowerLine.includes('emergency') ||
-                lowerLine.includes('when to call') || lowerLine.includes('warning signs') ||
-                lowerLine.includes('red flags') || lowerLine.includes('immediately')) && 
-               currentSection.title !== '🚨 When to Seek Medical Care') {
-        if (currentSection.title) sections.push(currentSection);
-        currentSection = { title: '🚨 When to Seek Medical Care', content: [] };
-        if (!lowerLine.match(/^(when to|seek medical|see a doctor|medical attention)/)) {
-          currentSection.content.push(line);
-        }
-      }
-      else if (lowerLine.includes('reminder') && lowerLine.includes('doctor') && 
-               currentSection.title !== '💡 Important Reminder') {
-        if (currentSection.title) sections.push(currentSection);
-        currentSection = { title: '💡 Important Reminder', content: [] };
-        currentSection.content.push(line);
-      }
-
-
-      else {
-        if (!currentSection.title) {
-          currentSection.title = '📋 Analysis';
-        }
-        
-        currentSection.content.push(line);
-      }
-    }
-    
-    if (currentSection.title) sections.push(currentSection);
-    
-    const boldTerms = ['immediately', 'urgent', 'emergency', 'severe', 'serious', 'warning', 'danger', 'critical'];
-    
-    return (
-      <div className="space-y-4">
-        {sections.map((section, sectionIndex) => (
-          <div key={sectionIndex} className="bg-white/50 rounded-lg p-4 border border-gray-200">
-            <h3 className="font-semibold text-dark mb-2 text-sm">{section.title}</h3>
-            <div className="space-y-1">
-              {section.content.map((line, lineIndex) => {
-                if (!line.trim()) return <br key={lineIndex} />;
-                
-                let processedLine = line;
-                boldTerms.forEach(term => {
-                  const regex = new RegExp(`\\b(${term})\\b`, 'gi');
-                  processedLine = processedLine.replace(regex, `<strong class="text-red-600">$1</strong>`);
-                });
-                
-                return (
-                  <p key={lineIndex} className="text-muted text-sm leading-relaxed" 
-                     dangerouslySetInnerHTML={{ __html: processedLine }} />
-                );
-              })}
-            </div>
-          </div>
-        ))}
-      </div>
-    );
-  };
-
   const handleAsk = async () => {
     if (!input.trim()) return;
 
-    const medicalKeywords = [
-      'symptom', 'pain', 'ache', 'fever', 'cough', 'headache', 'nausea', 'vomit', 'dizzy', 'tired', 'fatigue',
-      'sore', 'hurt', 'sick', 'illness', 'infection', 'rash', 'swelling', 'bleeding', 'shortness', 'breath',
-      'chest', 'stomach', 'abdomen', 'back', 'leg', 'arm', 'throat', 'ear', 'eye', 'nose', 'mouth',
-      'temperature', 'cold', 'flu', 'allergy', 'itchy', 'burning', 'tingling', 'numbness', 'weakness',
-      'cramp', 'spasm', 'stiff', 'joint', 'muscle', 'bone', 'skin', 'bump', 'lump', 'bruise',
-      'discharge', 'runny', 'stuffy', 'congestion', 'sneeze', 'wheeze', 'difficulty', 'trouble',
-      'irregular', 'fast', 'slow', 'heart', 'pulse', 'pressure', 'blood', 'urine', 'bowel',
-      'diarrhea', 'constipation', 'appetite', 'weight', 'sleep', 'insomnia', 'anxiety', 'stress',
-      'depression', 'mood', 'memory', 'concentration', 'vision', 'hearing', 'balance', 'coordination'
-    ];
-
-    const inputLower = input.toLowerCase();
-    const isMedicalQuery = medicalKeywords.some(keyword => inputLower.includes(keyword)) ||
-                          inputLower.includes('feel') || inputLower.includes('hurt') || 
-                          inputLower.includes('doctor') || inputLower.includes('medical') ||
-                          inputLower.includes('health') || inputLower.includes('treatment');
-
-    if (!isMedicalQuery) {
+    if (!isMedicalQuery(input)) {
       setIsInvalidInput(true);
       setResponse("❌ I can only help with medical symptoms and health-related questions. Please describe your symptoms or health concerns, and I'll do my best to provide helpful information.");
       setLoading(false);
@@ -161,7 +36,6 @@ const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => 
     }
 
     setIsInvalidInput(false);
-
     setSubmittedInput(input.trim());
     setIsEditing(false);
     setLoading(true);
@@ -169,79 +43,13 @@ const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => 
     setSoapNote("");
 
     try {
-      const res = await client.responses.create({
-        model: "gpt-4o-mini",
-        input: [
-          {
-            role: "system",
-            content:
-              "You are a compassionate medical assistant designed to help people understand their symptoms. You are not a real doctor, but you should be helpful within your limitations. " +
-              "Structure your responses clearly with these sections: " +
-              "1. Possible Causes: 2-3 most likely explanations for the symptoms " +
-              "2. Self-Care Recommendations: Practical steps the person can take " +
-              "3. When to Seek Medical Care: Red flags and when to see a doctor " +
-              "Guidelines: " +
-              "- Keep responses under 200 words total " +
-              "- Write in plain text without any markdown formatting like *, **, ###, or other symbols " +
-              "- Use simple, empathetic language with appropriate emojis to make responses friendly " +
-              "- Clearly organize content into the three sections above " +
-              "- Include specific, actionable advice " +
-              "- Clearly state red flags requiring immediate care " +
-              "- Be supportive but concise " +
-              "- Use emojis sparingly but appropriately (🩺💊🌡️❤️🔴⚠️) " +
-              "- Never use asterisks (*), hashtags (#), or other markdown symbols " +
-              "- Write naturally as if speaking to someone, not as formatted text " +
-              "- Always end with encouragement to seek professional care for proper diagnosis ",
-          },
-          {
-            role: "user",
-            content:
-              input +
-              "\n\nPlease provide a well-structured response (under 200 words) organized into these clear sections: " +
-              "1. Possible Causes: List the 2-3 most likely explanations for these symptoms " +
-              "2. Self-Care Recommendations: Provide specific, practical steps they can take at home " +
-              "3. When to Seek Medical Care: Clearly state red flags and when to see a doctor immediately " +
-              "Make each section clear and easy to identify. " +
-              "After your response, generate a comprehensive SOAP note for healthcare providers. " +
-              "Label it clearly as 'SOAP Note:' and make it detailed and medically precise. " +
-              "For the SOAP note, use this structure:" +
-              "\nSubjective: Include all patient-reported symptoms, duration, severity, and relevant history from the user's input. Add 'Patient reports:' before symptoms." +
-              "\nObjective: Note that this is patient-provided information only. Include any measurements mentioned (temperature, etc.). State 'Physical examination and vital signs to be obtained by healthcare provider.'" +
-              "\nAssessment: List differential diagnoses based on symptoms. Use medical terminology. Include 2-3 most likely conditions." +
-              "\nPlan: Recommend specific diagnostic tests, examinations, treatments, and follow-up care. Include both immediate actions and monitoring recommendations.",
-          },
-        ],
-      });
-
-      type OpenAIResponse = {
-        output_text?: string;
-        output?: Array<{
-          content?: Array<{
-            text?: string;
-          }>;
-        }>;
-      };
-
-      const safeRes = res as OpenAIResponse;
-
-      const fullText =
-        safeRes.output_text?.trim() ||
-        safeRes.output?.[0]?.content?.[0]?.text ||
-        "";
-
-      const [plainAnswer, soapPart] = fullText.split(/SOAP\s*Note:/i);
-
-      const finalResponse =
-        (plainAnswer?.trim() || fullText) +
-        "\n\nReminder: I am not a real doctor. Please consult a healthcare professional for any medical concerns.";
-
-      setResponse(finalResponse);
-
-      if (soapPart) setSoapNote("SOAP Note:\n" + soapPart.trim());
+      const result = await analyzeSymptoms(input);
+      setResponse(result.response);
+      setSoapNote(result.soapNote);
 
       const userId = auth.currentUser?.uid;
       if (userId) {
-        await savePrompt(userId, input.trim(), finalResponse);
+        await savePrompt(userId, input.trim(), result.response);
       }
     } catch (error: unknown) {
       console.error("Error calling OpenAI API:", error);
@@ -277,261 +85,9 @@ const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => 
 
   const handleDownloadSOAP = async () => {
     if (!soapNote) return;
-  
+
     try {
-      const pdfDoc = await PDFDocument.create();
-      let page = pdfDoc.addPage([595, 842]);
-      const { width, height } = page.getSize();
-      const margin = 50;
-      const lineHeight = 16;
-      const maxLineWidth = width - 2 * margin;
-      const minBottomMargin = 80;
-    
-      const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
-      const boldFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
-    
-      let yPosition = height - margin;
-    
-      const checkNewPage = (requiredSpace: number) => {
-        if (yPosition - requiredSpace < minBottomMargin) {
-          page = pdfDoc.addPage([595, 842]);
-          yPosition = height - margin;
-          return true;
-        }
-        return false;
-      };
-
-      const addWrappedText = (text: string, fontSize: number, isBold: boolean = false, leftIndent: number = 0) => {
-        if (!text.trim()) return;
-        
-        const currentFont = isBold ? boldFont : font;
-        const words = text.trim().split(/\s+/);
-        const availableWidth = maxLineWidth - leftIndent;
-        let currentLine = '';
-        
-        for (let i = 0; i < words.length; i++) {
-          const word = words[i];
-          const testLine = currentLine ? `${currentLine} ${word}` : word;
-          const textWidth = currentFont.widthOfTextAtSize(testLine, fontSize);
-          
-          if (textWidth <= availableWidth) {
-            currentLine = testLine;
-          } else {
-            if (currentLine) {
-              checkNewPage(lineHeight + 5);
-              page.drawText(currentLine, {
-                x: margin + leftIndent,
-                y: yPosition,
-                size: fontSize,
-                font: currentFont,
-                color: rgb(0.15, 0.15, 0.15),
-              });
-              yPosition -= lineHeight;
-            }
-            
-            if (currentFont.widthOfTextAtSize(word, fontSize) > availableWidth) {
-              let remainingWord = word;
-              while (remainingWord.length > 0) {
-                let charCount = remainingWord.length;
-                while (charCount > 0 && currentFont.widthOfTextAtSize(remainingWord.substring(0, charCount), fontSize) > availableWidth) {
-                  charCount--;
-                }
-                if (charCount === 0) charCount = 1;
-                
-                checkNewPage(lineHeight + 5);
-                page.drawText(remainingWord.substring(0, charCount), {
-                  x: margin + leftIndent,
-                  y: yPosition,
-                  size: fontSize,
-                  font: currentFont,
-                  color: rgb(0.15, 0.15, 0.15),
-                });
-                yPosition -= lineHeight;
-                remainingWord = remainingWord.substring(charCount);
-              }
-              currentLine = '';
-            } else {
-              currentLine = word;
-            }
-          }
-        }
-        
-        if (currentLine) {
-          checkNewPage(lineHeight + 5);
-          page.drawText(currentLine, {
-            x: margin + leftIndent,
-            y: yPosition,
-            size: fontSize,
-            font: currentFont,
-            color: rgb(0.15, 0.15, 0.15),
-          });
-          yPosition -= lineHeight;
-        }
-      };
-
-      const addSectionHeader = (title: string, withDivider: boolean = true) => {
-        checkNewPage(40);
-        
-        if (withDivider && yPosition < height - margin - 20) {
-          page.drawLine({
-            start: { x: margin, y: yPosition + 5 },
-            end: { x: width - margin, y: yPosition + 5 },
-            thickness: 0.5,
-            color: rgb(0.6, 0.6, 0.6),
-          });
-          yPosition -= 15;
-        }
-        
-        page.drawText(title, {
-          x: margin,
-          y: yPosition,
-          size: 14,
-          font: boldFont,
-          color: rgb(0.1, 0.1, 0.1),
-        });
-        yPosition -= 25;
-      };
-    
-      checkNewPage(100);
-      
-      page.drawRectangle({
-        x: 0,
-        y: yPosition - 10,
-        width: width,
-        height: 60,
-        color: rgb(0.05, 0.25, 0.45),
-      });
-      
-      page.drawText("SYMPTOM-iSENSE MEDICAL REPORT", {
-        x: margin,
-        y: yPosition,
-        size: 18,
-        font: boldFont,
-        color: rgb(1, 1, 1),
-      });
-      
-      page.drawText("Patient-Provided Information for Healthcare Review", {
-        x: margin,
-        y: yPosition - 20,
-        size: 11,
-        font: font,
-        color: rgb(0.9, 0.9, 0.9),
-      });
-      
-      yPosition -= 80;
-      
-      checkNewPage(60);
-      page.drawRectangle({
-        x: margin - 5,
-        y: yPosition - 25,
-        width: maxLineWidth + 10,
-        height: 35,
-        color: rgb(0.97, 0.97, 0.97),
-        borderColor: rgb(0.8, 0.8, 0.8),
-        borderWidth: 1,
-      });
-      
-      page.drawText("Generated: " + new Date().toLocaleDateString() + " at " + new Date().toLocaleTimeString(), {
-        x: margin,
-        y: yPosition - 10,
-        size: 10,
-        font: boldFont,
-        color: rgb(0.4, 0.4, 0.4),
-      });
-      
-      page.drawText("Please review all information with patient during consultation", {
-        x: margin,
-        y: yPosition - 22,
-        size: 9,
-        font: font,
-        color: rgb(0.5, 0.5, 0.5),
-      });
-      
-      yPosition -= 50;
-    
-      const content = soapNote.replace(/^SOAP Note:\s*/i, "").trim();
-      
-      if (!content) {
-        addWrappedText("No SOAP note content available.", 12);
-        yPosition -= 20;
-      } else {
-        const sections = content.split(/(?=^(?:Subjective|Objective|Assessment|Plan):\s*)/im);
-        
-        for (let i = 0; i < sections.length; i++) {
-          const section = sections[i].trim();
-          if (!section) continue;
-          
-          const lines = section.split('\n');
-          const headerLine = lines[0];
-          const contentLines = lines.slice(1);
-          
-          const headerMatch = headerLine.match(/^(Subjective|Objective|Assessment|Plan):\s*(.*)/i);
-          
-          if (headerMatch) {
-            const sectionName = headerMatch[1];
-            const firstLineContent = headerMatch[2];
-            
-            addSectionHeader(sectionName.toUpperCase(), i > 0);
-            
-            if (firstLineContent.trim()) {
-              addWrappedText(firstLineContent.trim(), 11, false, 10);
-              yPosition -= 8;
-            }
-            
-            for (const line of contentLines) {
-              if (line.trim()) {
-                addWrappedText(line.trim(), 11, false, 10);
-                yPosition -= 8;
-              } else {
-                yPosition -= 8;
-              }
-            }
-            
-            yPosition -= 15;
-          } else {
-            addWrappedText(section, 11);
-            yPosition -= 8;
-          }
-        }
-      }
-    
-      const footerY = 30;
-      page.drawLine({
-        start: { x: margin, y: footerY + 15 },
-        end: { x: width - margin, y: footerY + 15 },
-        thickness: 0.5,
-        color: rgb(0.7, 0.7, 0.7),
-      });
-      
-      page.drawText("This document contains patient-reported symptoms and AI-generated analysis.", {
-        x: margin,
-        y: footerY,
-        size: 8,
-        font: font,
-        color: rgb(0.5, 0.5, 0.5),
-      });
-      
-      page.drawText("Not a substitute for professional medical examination and diagnosis.", {
-        x: width - margin - 220,
-        y: footerY,
-        size: 8,
-        font: font,
-        color: rgb(0.5, 0.5, 0.5),
-      });
-    
-      const pdfBytes = await pdfDoc.save();
-      const arrayBuffer = pdfBytes.buffer as ArrayBuffer;
-      const blob = new Blob([arrayBuffer], { type: "application/pdf" });
-      const url = URL.createObjectURL(blob);
-
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = "Detailed_Medical_Report.pdf";
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
-      
+      await generateMedicalReportPDF(soapNote);
     } catch (error) {
       console.error("Error generating PDF:", error);
       alert("There was an error generating the PDF. Please try again.");
@@ -668,19 +224,9 @@ const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => 
               <div className="w-full bg-bg/40 p-4 rounded-md border border-muted/20 mb-4">
                 <h2 className="text-lg font-semibold text-dark mb-2">AI Analysis</h2>
                 <div className="text-muted whitespace-pre-wrap">
-                  {response ? formatResponse(response) : "— Your analysis will appear here —"}
+                  <AIResponseDisplay response={response} />
                 </div>
-                {soapNote && (
-                  <div className="mt-6 text-center border-t border-muted/20 pt-4">
-                    <p className="text-sm text-dark mb-2">A summary for your doctor is ready.</p>
-                    <button
-                      onClick={handleDownloadSOAP}
-                      className="mt-2 px-4 py-2 bg-accent text-bg font-medium rounded-md shadow hover:scale-105 transition-all duration-200"
-                    >
-                      Download Doctor Report (PDF)
-                    </button>
-                  </div>
-                )}
+                <DownloadReportButton onClick={handleDownloadSOAP} hasReport={!!soapNote} />
               </div>
 
               <div className="flex gap-3">
