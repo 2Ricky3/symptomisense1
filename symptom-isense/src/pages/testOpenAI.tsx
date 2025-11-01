@@ -107,7 +107,7 @@ const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => 
 
   return (
     <div className="min-h-screen w-full bg-gradient-to-br from-bg via-bg to-muted flex flex-col items-center justify-start p-4 sm:p-6 lg:p-8">
-      <div className="w-full max-w-6xl flex-grow bg-white/80 backdrop-blur-md rounded-2xl p-6 sm:p-8 flex flex-col">
+      <div className="w-full max-w-6xl flex-grow bg-white/80 backdrop-blur-md rounded-2xl p-6 sm:p-8 flex flex-col" data-aos="fade-up">
         <div className="flex items-center justify-between mb-6">
           <BackButton
             onClick={() => {
@@ -115,8 +115,9 @@ const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => 
               else window.location.href = '/';
             }}
             className="-ml-2"
+            data-aos="fade-right"
           />
-          <h1 className="text-2xl sm:text-3xl font-bold text-dark text-center">
+          <h1 className="text-2xl sm:text-3xl font-bold text-dark text-center" data-aos="fade-down" data-aos-delay="100">
             Symptom Checker
           </h1>
           <div className="w-24"></div> 
@@ -124,7 +125,7 @@ const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => 
         {!submittedInput ? (
           <div className="flex-grow flex flex-col items-center justify-center">
             {!response && (
-              <div className="bg-black shadow-md rounded-lg p-4 mb-6 flex items-center gap-4 transform transition-transform duration-300 hover:-translate-y-1 hover:shadow-lg cursor-pointer w-full max-w-3xl">
+              <div className="bg-black shadow-md rounded-lg p-4 mb-6 flex items-center gap-4 transform transition-transform duration-300 hover:-translate-y-1 hover:shadow-lg cursor-pointer w-full max-w-3xl" data-aos="fade-up" data-aos-delay="200">
                 <div className="text-white text-4xl">
                   <FaUserMd />
                 </div>
@@ -133,7 +134,7 @@ const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => 
                 </p>
               </div>
             )}
-            <FormLabel className="text-left w-full max-w-3xl">
+            <FormLabel className="text-left w-full max-w-3xl" data-aos="fade-up" data-aos-delay="300">
               Describe your symptoms:
               {isEditing && (
                 <span className="ml-2 text-sm font-normal text-blue-600 bg-blue-100 px-2 py-1 rounded">
@@ -155,14 +156,16 @@ const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => 
                     ? 'border-blue-500 border-2 bg-blue-50' 
                     : ''
               }`}
+              data-aos="fade-up"
+              data-aos-delay="350"
             />
             {isInvalidInput && (
-              <p className="text-red-600 text-sm mb-3 max-w-3xl text-center">
+              <p className="text-red-600 text-sm mb-3 max-w-3xl text-center" data-aos="shake">
                 ⚠️ Please enter medical symptoms or health-related questions only
               </p>
             )}
-            <h3 className="text-lg font-medium text-dark mb-3 text-center">Some recommendations to get you started</h3>
-            <div className="flex flex-wrap gap-2 justify-center mb-4">
+            <h3 className="text-lg font-medium text-dark mb-3 text-center" data-aos="fade-up" data-aos-delay="400">Some recommendations to get you started</h3>
+            <div className="flex flex-wrap gap-2 justify-center mb-4" data-aos="fade-up" data-aos-delay="450">
               {recommendations.map((rec, idx) => (
                 <RecommendationChip
                   key={idx}
@@ -185,6 +188,8 @@ const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => 
               <button
                 onClick={() => setShowMore(!showMore)}
                 className="px-4 py-2 rounded-full shadow transition-all duration-200 transform hover:-translate-y-1 hover:shadow-lg bg-white text-black border border-muted/30 flex items-center gap-2"
+                data-aos="fade-up"
+                data-aos-delay="500"
               >
                 {showMore ? (
                   <>
@@ -197,7 +202,7 @@ const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => 
                 )}
               </button>
             </div>
-            <div className="w-full max-w-3xl flex gap-3">
+            <div className="w-full max-w-3xl flex gap-3" data-aos="fade-up" data-aos-delay="550">
               <Button 
                 onClick={handleAsk} 
                 disabled={loading}
@@ -215,25 +220,20 @@ const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => 
             </div>
           </div>
         ) : (
-          <div className="flex-grow flex flex-col items-center gap-6 md:gap-8 min-h-0">
+          <div className="flex-grow flex flex-col items-center gap-6 md:gap-8 min-h-0 w-full">
             <div className="flex flex-col w-full max-w-3xl">
-              <label className="text-dark font-medium mb-2 block text-left">Your input</label>
-              <div className="w-full p-4 border border-muted/30 rounded-md bg-bg/60 text-dark whitespace-pre-wrap mb-4">
+              <label className="text-dark font-medium mb-2 block text-left" data-aos="fade-right">Your input</label>
+              <div className="w-full p-4 border border-muted/30 rounded-md bg-bg/60 text-dark whitespace-pre-wrap mb-4" data-aos="fade-up" data-aos-delay="100">
                 {submittedInput}
               </div>
-              <div className="w-full bg-bg/40 p-4 rounded-md border border-muted/20 mb-4">
-                <h2 className="text-lg font-semibold text-dark mb-2">AI Analysis</h2>
-                <div className="text-muted whitespace-pre-wrap">
-                  <AIResponseDisplay response={response} />
-                </div>
-                <DownloadReportButton onClick={handleDownloadSOAP} hasReport={!!soapNote} />
-              </div>
 
-              <div className="flex gap-3">
+              {/* Action Buttons */}
+              <div className="w-full flex flex-wrap gap-3 mb-6" data-aos="fade-up" data-aos-delay="150">
                 <Button 
                   onClick={handleReset} 
                   disabled={loading}
                   variant="edit"
+                  className="flex-1 min-w-[120px]"
                 >
                   Edit input
                 </Button>
@@ -250,7 +250,7 @@ const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => 
                     }
                   }}
                   disabled={loading}
-                  className="flex items-center justify-center gap-2"
+                  className="flex-1 min-w-[120px] flex items-center justify-center gap-2"
                 >
                   <FaShare className="w-4 h-4" />
                   Share
@@ -262,9 +262,18 @@ const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => 
                   }}
                   disabled={loading}
                   variant="danger"
+                  className="flex-1 min-w-[120px]"
                 >
                   Close
                 </Button>
+              </div>
+              
+              <div className="w-full bg-bg/40 p-4 rounded-md border border-muted/20 mb-6" data-aos="fade-up" data-aos-delay="200">
+                <h2 className="text-lg font-semibold text-dark mb-2">AI Analysis</h2>
+                <div className="text-muted whitespace-pre-wrap">
+                  <AIResponseDisplay response={response} />
+                </div>
+                <DownloadReportButton onClick={handleDownloadSOAP} hasReport={!!soapNote} />
               </div>
             </div>
           </div>

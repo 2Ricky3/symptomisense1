@@ -31,7 +31,7 @@ const processSteps = [
 const LearnMorePage: React.FC<LearnMorePageProps> = ({ onHomeClick }) => {
   return (
     <div className="min-h-screen w-full bg-gradient-to-br from-bg via-bg to-muted flex flex-col items-center justify-start p-4 sm:p-6 lg:p-8">
-      <header className="w-full z-50 sticky top-0">
+      <header className="w-full z-50 sticky top-0" data-aos="fade-down">
         <nav className="flex items-center justify-between p-4 lg:px-6" aria-label="Global">
           <button
             type="button"
@@ -46,21 +46,23 @@ const LearnMorePage: React.FC<LearnMorePageProps> = ({ onHomeClick }) => {
         </nav>
       </header>
 
-      <main className="flex-1 flex flex-col items-center justify-center w-full max-w-6xl bg-white/80 backdrop-blur-md rounded-2xl p-6 sm:p-8">
-        <div className="prose prose-invert max-w-none text-dark" data-aos="fade-up">
-          <h1 className="text-4xl font-extrabold text-primary mb-8 text-center drop-shadow-lg">
+      <main className="flex-1 flex flex-col items-center justify-center w-full max-w-6xl bg-white/80 backdrop-blur-md rounded-2xl p-6 sm:p-8" data-aos="zoom-in">
+        <div className="prose prose-invert max-w-none text-dark">
+          <h1 className="text-4xl font-extrabold text-primary mb-8 text-center drop-shadow-lg" data-aos="fade-up">
             How Symptom-iSense Works
           </h1>
-          <div className="flex justify-center mb-8">
+          <div className="flex justify-center mb-8" data-aos="fade-up" data-aos-delay="100">
             <span className="inline-block w-24 h-1 rounded-full bg-gradient-to-r from-primary to-accent opacity-60" />
           </div>
 
-          <h2 className="text-2xl font-semibold text-dark mt-8 mb-4">Our Process</h2>
+          <h2 className="text-2xl font-semibold text-dark mt-8 mb-4" data-aos="fade-right">Our Process</h2>
           <ul className="space-y-6">
             {processSteps.map((step, idx) => (
               <li
                 key={idx}
-                className="flex flex-col items-center bg-bg/40 rounded-lg p-4 shadow-sm transition-all duration-200 hover:bg-primary/10 hover:scale-[1.03] hover:shadow-lg cursor-pointer"
+                className="flex flex-col items-center bg-bg/40 rounded-lg p-4 shadow-sm transition-all duration-500 ease-out hover:bg-primary/10 hover:scale-[1.02] hover:shadow-xl"
+                data-aos="fade-up"
+                data-aos-delay={200 + idx * 100}
               >
                 <div className="flex items-center mb-2">
                   {step.icon}
@@ -70,7 +72,7 @@ const LearnMorePage: React.FC<LearnMorePageProps> = ({ onHomeClick }) => {
               </li>
             ))}
           </ul>
-          <div className="mt-12 p-6 rounded-xl bg-red-500/10 border border-red-500/20 shadow-lg flex flex-col items-start" data-aos="fade-up" data-aos-delay="100">
+          <div className="mt-12 p-6 rounded-xl bg-red-500/10 border border-red-500/20 shadow-lg flex flex-col items-start" data-aos="fade-up" data-aos-delay="600">
             <div className="flex items-center mb-2">
               <FaExclamationTriangle className="text-red-600 text-2xl mr-2" />
               <h2 className="text-2xl font-bold text-red-800 !mt-0">Legal Disclaimer</h2>

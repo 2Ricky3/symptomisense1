@@ -120,13 +120,13 @@ export const healthcareProviders = {
     },
     {
       name: "Mediclinic",
-      contact: "082 911",
+      contact: "0860 999 911",
       website: "https://www.mediclinic.co.za",
       description: "Private hospital group with nationwide coverage"
     },
     {
       name: "Netcare",
-      contact: "082 911",
+      contact: "082 911 (Emergency) / 011 301 0000",
       website: "https://www.netcare.co.za",
       description: "Leading private healthcare provider in SA"
     },

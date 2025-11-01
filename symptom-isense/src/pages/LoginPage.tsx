@@ -137,66 +137,132 @@ const LoginPage: React.FC<{ onClose?: () => void; onSuccess?: () => void }> = ({
     "text-accent hover:text-bg hover:bg-accent/20 hover:scale-105 transition-all duration-200 rounded px-2 py-1 cursor-pointer";
 
   return (
-    <div className="fixed inset-0 bg-gradient-to-br from-bg via-bg to-muted flex items-center justify-center px-4">
+    <div className="fixed inset-0 bg-[#152026] flex items-center justify-center overflow-hidden">
+      {/* Dark gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-[#152026] via-[#293540] to-[#455059]"></div>
+      
+      {/* Medical Cross Pattern Background */}
+      <div className="absolute inset-0 opacity-5">
+        <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="medical-pattern" width="60" height="60" patternUnits="userSpaceOnUse">
+              {/* Plus/Cross symbols */}
+              <rect x="28" y="24" width="4" height="12" fill="white" />
+              <rect x="24" y="28" width="12" height="4" fill="white" />
+              {/* Small dots */}
+              <circle cx="10" cy="10" r="1.5" fill="white" opacity="0.6" />
+              <circle cx="50" cy="50" r="1.5" fill="white" opacity="0.6" />
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#medical-pattern)" />
+        </svg>
+      </div>
+      
+      {/* Subtle gradient overlays for depth */}
+      <div className="absolute top-0 left-0 w-96 h-96 bg-gray-700/10 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-0 right-0 w-96 h-96 bg-gray-600/15 rounded-full blur-3xl"></div>
+      
       <BackButton
         onClick={onClose || (() => {})}
-        className="absolute top-6 left-6 z-50"
+        className="absolute top-6 left-6 z-50 text-white/90 hover:text-white hover:bg-white/10 transition-all duration-200"
+        data-aos="fade-right"
       />
 
-      <form className="space-y-5 max-w-md w-full text-center" onSubmit={handleSubmit}>
-        <h2 className="text-3xl font-bold text-dark mb-6">
-          {showSignUp
-            ? 'Sign up'
-            : showResetPassword
-            ? 'Reset Password'
-            : 'Login'}
-        </h2>
-
-        {showSignUp && (
-          <div>
-            <FormLabel htmlFor="name">Name</FormLabel>
-            <FormInput
-              type="text"
-              id="name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Your name"
-              required
-            />
+      <div className="relative z-10 w-full max-w-md px-4">
+        {/* Welcome Header */}
+        <div className="text-center mb-8" data-aos="fade-down">
+          <div className="inline-block px-5 py-2 bg-white/10 backdrop-blur-md rounded-full border border-white/20 mb-4 shadow-lg">
+            <p className="text-sm font-semibold text-white/90 tracking-wider uppercase">AI Health Assistant</p>
           </div>
-        )}
-
-        <div>
-          <FormLabel htmlFor="email">Email</FormLabel>
-          <FormInput
-            type="email"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="you@example.com"
-            required
-          />
+          <h1 className="text-5xl font-bold text-white mb-3 leading-tight tracking-tight">
+            <span className="bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent drop-shadow-lg">
+              Symptom-iSense
+            </span>
+          </h1>
+          <p className="text-white/70 font-light text-lg">Intelligent symptom analysis at your fingertips</p>
+          
+          {/* Trust indicators */}
+          <div className="flex items-center justify-center gap-6 mt-6 text-white/60 text-sm" data-aos="fade-up" data-aos-delay="200">
+            <div className="flex items-center gap-2">
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+              </svg>
+              <span>HIPAA Compliant</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+              </svg>
+              <span>Encrypted</span>
+            </div>
+          </div>
         </div>
 
-        {!showResetPassword && (
-          <div>
-            <FormLabel htmlFor="password">Password</FormLabel>
-            <FormInput
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
-              required={!showResetPassword}
-            />
-          </div>
-        )}
+        <form className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl p-10 space-y-6 border border-gray-200/50 relative overflow-hidden" onSubmit={handleSubmit} data-aos="fade-up" data-aos-delay="100">
+          {/* Subtle top accent line */}
+          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#293540] via-[#455059] to-[#293540]"></div>
+            
+            <h2 className="text-3xl font-bold text-[#152026] mb-2 text-center" data-aos="fade-down" data-aos-delay="200">
+              {showSignUp
+                ? 'Create Account'
+                : showResetPassword
+                ? 'Reset Password'
+                : 'Welcome Back'}
+            </h2>
+            
+            <p className="text-[#5C6A73] text-sm text-center mb-6" data-aos="fade-down" data-aos-delay="250">
+              {showSignUp
+                ? 'Join thousands of users managing their health'
+                : showResetPassword
+                ? 'Enter your email to receive reset instructions'
+                : 'Sign in to access your health dashboard'}
+            </p>
 
-        {error && <p className="text-red-500 text-sm">{error}</p>}
-        {message && <p className="text-green-500 text-sm">{message}</p>}
+            {showSignUp && (
+              <div data-aos="fade-up" data-aos-delay="300">
+                <FormLabel htmlFor="name">Name</FormLabel>
+                <FormInput
+                  type="text"
+                  id="name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Your name"
+                  required
+                />
+              </div>
+            )}
 
-        {!showResetPassword && (
-          <div className="mt-6">
+            <div data-aos="fade-up" data-aos-delay={showSignUp ? "350" : "300"}>
+              <FormLabel htmlFor="email">Email</FormLabel>
+              <FormInput
+                type="email"
+                id="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="you@example.com"
+                required
+              />
+            </div>
+
+            {!showResetPassword && (
+              <div data-aos="fade-up" data-aos-delay={showSignUp ? "400" : "350"}>
+                <FormLabel htmlFor="password">Password</FormLabel>
+                <FormInput
+                  type="password"
+                  id="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  required={!showResetPassword}
+                />
+              </div>
+            )}
+
+            {error && <p className="text-red-500 text-sm" data-aos="shake">{error}</p>}
+            {message && <p className="text-green-500 text-sm" data-aos="fade-in">{message}</p>}
+
+            {!showResetPassword && (
+              <div className="mt-6" data-aos="fade-up" data-aos-delay="450">
             <Button
               type="button"
               variant="social"
@@ -214,6 +280,8 @@ const LoginPage: React.FC<{ onClose?: () => void; onSuccess?: () => void }> = ({
             disabled={loading} 
             onClick={handlePasswordReset}
             loading={loading}
+            data-aos="fade-up"
+            data-aos-delay="400"
           >
             Send Reset Email
           </Button>
@@ -225,12 +293,14 @@ const LoginPage: React.FC<{ onClose?: () => void; onSuccess?: () => void }> = ({
             disabled={loading}
             loading={loading}
             className="mt-6"
+            data-aos="fade-up"
+            data-aos-delay="500"
           >
             {showSignUp ? 'Sign Up' : 'Log in'}
           </Button>
         )}
 
-        <div className="mt-4 text-sm text-muted flex flex-col gap-2 items-center">
+        <div className="mt-4 text-sm text-muted flex flex-col gap-2 items-center" data-aos="fade-up" data-aos-delay="550">
           {!showSignUp && !showResetPassword && (
             <button
               type="button"
@@ -287,7 +357,21 @@ const LoginPage: React.FC<{ onClose?: () => void; onSuccess?: () => void }> = ({
             </div>
           )}
         </div>
-      </form>
+        </form>
+        
+        {/* Footer disclaimer */}
+        <div className="mt-6 text-center text-white/50 text-xs" data-aos="fade-up" data-aos-delay="600">
+          <p className="mb-2">
+            By continuing, you agree to our{' '}
+            <button type="button" className="underline hover:text-white/70 transition-colors">Terms of Service</button>
+            {' '}and{' '}
+            <button type="button" className="underline hover:text-white/70 transition-colors">Privacy Policy</button>
+          </p>
+          <p className="text-white/40">
+            © 2025 Symptom-iSense. All rights reserved.
+          </p>
+        </div>
+      </div>
     </div>
   );
 };

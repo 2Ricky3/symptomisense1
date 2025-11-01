@@ -1,6 +1,8 @@
 import { lazy, Suspense, useState, useEffect } from 'react';
 import { onAuthStateChanged, signOut, type User } from 'firebase/auth';
 import { auth } from './services/firebase';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 import './App.css';
 import Loader from './pages/Loader';
 
@@ -24,6 +26,16 @@ function App() {
       setLoading(false);
     });
     return () => unsubscribe();
+  }, []);
+
+  // Initialize AOS
+  useEffect(() => {
+    AOS.init({
+      duration: 800,
+      easing: 'ease-in-out',
+      once: true,
+      mirror: false,
+    });
   }, []);
 
   const handleLogout = async () => {
