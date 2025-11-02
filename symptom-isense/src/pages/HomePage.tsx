@@ -52,7 +52,6 @@ const HomePage: React.FC<HomePageProps> = ({
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-bg via-bg to-muted overflow-auto">
-      {/* Skip to main content link for accessibility */}
       <a 
         href="#main-content" 
         className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-white focus:rounded-md"
@@ -69,12 +68,10 @@ const HomePage: React.FC<HomePageProps> = ({
       />
 
       <main id="main-content" className="flex-1 flex flex-col items-center px-4 pt-20 lg:px-6" role="main">
-        {/* Enhanced Hero Section */}
         <section 
           aria-labelledby="hero-heading" 
           className="w-full max-w-4xl text-center py-8 sm:py-12 md:py-16 mx-auto px-4 relative"
         >
-          {/* Decorative background elements */}
           <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-30">
             <div className="absolute top-10 left-10 w-32 h-32 bg-primary rounded-full blur-3xl"></div>
             <div className="absolute bottom-10 right-10 w-40 h-40 bg-accent rounded-full blur-3xl"></div>
@@ -129,7 +126,6 @@ const HomePage: React.FC<HomePageProps> = ({
           </div>
         </section>
 
-        {/* Premium Gradient Divider with Pattern */}
         <div className="w-full my-16 relative">
           <div className="absolute inset-0 flex items-center" aria-hidden="true">
             <div className="w-full border-t-2 border-gradient-to-r from-transparent via-primary/20 to-transparent"></div>
@@ -147,7 +143,6 @@ const HomePage: React.FC<HomePageProps> = ({
           </div>
         </div>
 
-        {/* Stats Section */}
         <section aria-labelledby="stats-heading" className="w-full max-w-5xl mx-auto mb-16 px-4 sm:px-6">
           <h2 id="stats-heading" className="sr-only">Platform Statistics</h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-8">
@@ -166,7 +161,6 @@ const HomePage: React.FC<HomePageProps> = ({
           </div>
         </section>
 
-        {/* Features Section */}
         <section 
           id="features" 
           aria-labelledby="features-heading" 
@@ -188,7 +182,6 @@ const HomePage: React.FC<HomePageProps> = ({
           </div>
         </section>
 
-        {/* Elegant Dot Pattern Divider */}
         <div className="w-full my-16 px-4">
           <div className="max-w-5xl mx-auto">
             <div className="relative">
@@ -216,7 +209,6 @@ const HomePage: React.FC<HomePageProps> = ({
           </div>
         </div>
 
-        {/* Healthcare Providers Section */}
         <section 
           id="healthcare-providers" 
           aria-labelledby="providers-heading" 
@@ -264,15 +256,12 @@ const HomePage: React.FC<HomePageProps> = ({
             </div>
           </div>
         </section>
-
-        {/* Professional Medical Cross Divider */}
         <div className="w-full my-16">
           <div className="max-w-5xl mx-auto px-4">
             <div className="flex items-center gap-4">
               <div className="flex-1 h-px bg-gradient-to-r from-transparent via-gray-300 to-gray-300"></div>
               <div className="relative">
                 <div className="flex items-center gap-3">
-                  {/* Medical Cross Icon */}
                   <div className="relative w-8 h-8 flex items-center justify-center">
                     <div className="absolute w-6 h-1.5 bg-gradient-to-r from-primary to-accent rounded-full"></div>
                     <div className="absolute w-1.5 h-6 bg-gradient-to-b from-primary to-accent rounded-full"></div>
@@ -311,7 +300,6 @@ const HomePage: React.FC<HomePageProps> = ({
         </section>
       </main>
 
-      {/* Enhanced Footer */}
       <footer className="w-full text-muted text-sm text-center py-6 bg-gradient-to-t from-gray-50 to-transparent mt-auto border-t border-gray-200" role="contentinfo">
         <p className="mb-2">&copy; 2025 Symptom-iSense. All rights reserved.</p>
         <p className="text-xs">Your health information is private and secure.</p>

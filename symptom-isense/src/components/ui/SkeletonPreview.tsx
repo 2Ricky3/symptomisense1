@@ -10,11 +10,6 @@ import {
   SkeletonFeatureCard,
   SkeletonTable,
 } from './Skeleton';
-
-/**
- * Component to preview all skeleton loading states
- * Use this for testing and documentation purposes
- */
 const SkeletonPreview: React.FC = () => {
   return (
     <div className="p-8 space-y-12 bg-gray-50 min-h-screen">

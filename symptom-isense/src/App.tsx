@@ -27,8 +27,6 @@ function App() {
     });
     return () => unsubscribe();
   }, []);
-
-  // Initialize AOS
   useEffect(() => {
     AOS.init({
       duration: 800,

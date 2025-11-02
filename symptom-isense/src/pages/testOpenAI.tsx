@@ -226,8 +226,6 @@ const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => 
               <div className="w-full p-4 border border-muted/30 rounded-md bg-bg/60 text-dark whitespace-pre-wrap mb-4" data-aos="fade-up" data-aos-delay="100">
                 {submittedInput}
               </div>
-
-              {/* Action Buttons */}
               <div className="w-full flex flex-wrap gap-3 mb-6" data-aos="fade-up" data-aos-delay="150">
                 <Button 
                   onClick={handleReset} 

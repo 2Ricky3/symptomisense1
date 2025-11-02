@@ -138,18 +138,14 @@ const LoginPage: React.FC<{ onClose?: () => void; onSuccess?: () => void }> = ({
 
   return (
     <div className="fixed inset-0 bg-[#152026] flex items-center justify-center overflow-hidden">
-      {/* Dark gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-br from-[#152026] via-[#293540] to-[#455059]"></div>
       
-      {/* Medical Cross Pattern Background */}
       <div className="absolute inset-0 opacity-5">
         <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <pattern id="medical-pattern" width="60" height="60" patternUnits="userSpaceOnUse">
-              {/* Plus/Cross symbols */}
               <rect x="28" y="24" width="4" height="12" fill="white" />
               <rect x="24" y="28" width="12" height="4" fill="white" />
-              {/* Small dots */}
               <circle cx="10" cy="10" r="1.5" fill="white" opacity="0.6" />
               <circle cx="50" cy="50" r="1.5" fill="white" opacity="0.6" />
             </pattern>
@@ -158,7 +154,6 @@ const LoginPage: React.FC<{ onClose?: () => void; onSuccess?: () => void }> = ({
         </svg>
       </div>
       
-      {/* Subtle gradient overlays for depth */}
       <div className="absolute top-0 left-0 w-96 h-96 bg-gray-700/10 rounded-full blur-3xl"></div>
       <div className="absolute bottom-0 right-0 w-96 h-96 bg-gray-600/15 rounded-full blur-3xl"></div>
       
@@ -169,7 +164,6 @@ const LoginPage: React.FC<{ onClose?: () => void; onSuccess?: () => void }> = ({
       />
 
       <div className="relative z-10 w-full max-w-md px-4">
-        {/* Welcome Header */}
         <div className="text-center mb-8" data-aos="fade-down">
           <div className="inline-block px-5 py-2 bg-white/10 backdrop-blur-md rounded-full border border-white/20 mb-4 shadow-lg">
             <p className="text-sm font-semibold text-white/90 tracking-wider uppercase">AI Health Assistant</p>
@@ -180,8 +174,6 @@ const LoginPage: React.FC<{ onClose?: () => void; onSuccess?: () => void }> = ({
             </span>
           </h1>
           <p className="text-white/70 font-light text-lg">Intelligent symptom analysis at your fingertips</p>
-          
-          {/* Trust indicators */}
           <div className="flex items-center justify-center gap-6 mt-6 text-white/60 text-sm" data-aos="fade-up" data-aos-delay="200">
             <div className="flex items-center gap-2">
               <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -199,7 +191,6 @@ const LoginPage: React.FC<{ onClose?: () => void; onSuccess?: () => void }> = ({
         </div>
 
         <form className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl p-10 space-y-6 border border-gray-200/50 relative overflow-hidden" onSubmit={handleSubmit} data-aos="fade-up" data-aos-delay="100">
-          {/* Subtle top accent line */}
           <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#293540] via-[#455059] to-[#293540]"></div>
             
             <h2 className="text-3xl font-bold text-[#152026] mb-2 text-center" data-aos="fade-down" data-aos-delay="200">
@@ -359,7 +350,6 @@ const LoginPage: React.FC<{ onClose?: () => void; onSuccess?: () => void }> = ({
         </div>
         </form>
         
-        {/* Footer disclaimer */}
         <div className="mt-6 text-center text-white/50 text-xs" data-aos="fade-up" data-aos-delay="600">
           <p className="mb-2">
             By continuing, you agree to our{' '}

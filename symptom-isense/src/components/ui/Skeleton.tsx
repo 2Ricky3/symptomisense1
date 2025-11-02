@@ -31,7 +31,6 @@ export const Skeleton: React.FC<SkeletonProps> = ({
     none: '',
   };
 
-  // Build width and height classes dynamically
   const widthClass = width ? `[width:${typeof width === 'number' ? `${width}px` : width}]` : '';
   const heightClass = height ? `[height:${typeof height === 'number' ? `${height}px` : height}]` : '';
 
@@ -49,8 +48,6 @@ export const Skeleton: React.FC<SkeletonProps> = ({
     />
   );
 };
-
-// Specialized skeleton components
 export const SkeletonText: React.FC<{ lines?: number; className?: string }> = ({
   lines = 1,
   className,
