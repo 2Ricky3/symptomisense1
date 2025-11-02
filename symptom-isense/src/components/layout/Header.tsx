@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Dialog } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import type { User } from 'firebase/auth';
 import Logo from '../../assets/Logo.png';
-import { FaUserCheck } from 'react-icons/fa';
 import { cn } from '../../utils/classNames';
+import Avatar from '../ui/Avatar';
+import { getUserProfile, type UserProfile } from '../../services/userProfileService';
+import { FaSignOutAlt } from 'react-icons/fa';
 
 interface HeaderProps {
   user: User | null;
@@ -22,6 +24,20 @@ const Header: React.FC<HeaderProps> = ({
   scrollToSection
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      if (user) {
+        const profile = await getUserProfile(user.uid);
+        setUserProfile(profile);
+      } else {
+        setUserProfile(null);
+      }
+    };
+
+    fetchUserProfile();
+  }, [user]);
 
   const textButtonClass =
     "text-accent hover:text-bg hover:bg-accent/20 hover:scale-105 transition-all duration-200 rounded px-2 py-1 cursor-pointer";
@@ -71,15 +87,22 @@ const Header: React.FC<HeaderProps> = ({
             Profile
           </button>
         </div>
-        <div className="hidden lg:flex lg:flex-1 lg:justify-end">
+        <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:items-center lg:gap-3">
           {user ? (
-            <button
-              onClick={onLogoutClick}
-              className="text-sm font-semibold text-dark hover:text-accent hover:underline hover:decoration-accent hover:decoration-2 underline-offset-4 transition-all duration-200 bg-transparent px-2 py-1 flex items-center gap-2 cursor-pointer"
-            >
-              <FaUserCheck className="text-current text-xl" />
-              <span>Log out</span>
-            </button>
+            <>
+              <Avatar
+                avatar={userProfile?.avatar || 'default'}
+                size="sm"
+                className="ring-2 ring-[#152026]/20"
+              />
+              <button
+                onClick={onLogoutClick}
+                className="text-sm font-semibold text-dark hover:text-accent hover:underline hover:decoration-accent hover:decoration-2 underline-offset-4 transition-all duration-200 bg-transparent px-2 py-1 flex items-center gap-2 cursor-pointer"
+              >
+                <span>Log out</span>
+                <FaSignOutAlt className="text-current" />
+              </button>
+            </>
           ) : (
             <button
               onClick={onLoginClick}
@@ -140,9 +163,17 @@ const Header: React.FC<HeaderProps> = ({
               </div>
               <div className="py-6">
                 {user ? (
-                  <button onClick={onLogoutClick} className={cn(textButtonClass, "w-full text-left")}>
-                    Log out
-                  </button>
+                  <div className="flex items-center gap-3">
+                    <Avatar
+                      avatar={userProfile?.avatar || 'default'}
+                      size="md"
+                      className="ring-2 ring-[#152026]/20"
+                    />
+                    <button onClick={onLogoutClick} className={cn(textButtonClass, "flex-1 text-left flex items-center gap-2")}>
+                      <span>Log out</span>
+                      <FaSignOutAlt className="text-current" />
+                    </button>
+                  </div>
                 ) : (
                   <button onClick={onLoginClick} className={cn(textButtonClass, "w-full text-left")}>
                     Log in

@@ -14,3 +14,101 @@ html, body {
   --color-dark: #293540;
   --color-secondary: #4A5568;
 }
+
+@keyframes moveRight {
+  0% {
+    transform: translateX(-200px);
+    opacity: 0;
+  }
+  5% {
+    opacity: 0.6;
+  }
+  95% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateX(calc(100vw + 200px));
+    opacity: 0;
+  }
+}
+
+@keyframes borderExplosionRight {
+  0%, 94% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  95% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(2);
+  }
+}
+
+.border-explosion-right {
+  position: fixed;
+  right: 0;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(20px);
+}
+
+.border-explosion-right-blue {
+  background: radial-gradient(circle, rgba(96, 165, 250, 0.8) 0%, transparent 70%);
+  animation: borderExplosionRight 15s linear infinite;
+  top: 5rem;
+}
+
+.border-explosion-right-purple {
+  background: radial-gradient(circle, rgba(192, 132, 252, 0.8) 0%, transparent 70%);
+  animation: borderExplosionRight 20s linear infinite 2s;
+  top: 8rem;
+}
+
+.border-explosion-right-teal {
+  background: radial-gradient(circle, rgba(45, 212, 191, 0.8) 0%, transparent 70%);
+  animation: borderExplosionRight 18s linear infinite 4s;
+  top: 11rem;
+}
+
+.border-explosion-right-pink {
+  background: radial-gradient(circle, rgba(244, 114, 182, 0.8) 0%, transparent 70%);
+  animation: borderExplosionRight 22s linear infinite 1s;
+  top: 14rem;
+}
+
+.border-explosion-right-indigo {
+  background: radial-gradient(circle, rgba(129, 140, 248, 0.8) 0%, transparent 70%);
+  animation: borderExplosionRight 16s linear infinite 3s;
+  top: 18rem;
+}
+
+.border-explosion-right-cyan {
+  background: radial-gradient(circle, rgba(34, 211, 238, 0.8) 0%, transparent 70%);
+  animation: borderExplosionRight 19s linear infinite 5s;
+  top: 4rem;
+}
+
+.animate-delay-1 {
+  animation-delay: 1s;
+}
+
+.animate-delay-2 {
+  animation-delay: 2s;
+}
+
+.animate-delay-3 {
+  animation-delay: 3s;
+}
+
+.animate-delay-4 {
+  animation-delay: 4s;
+}
+
+.animate-delay-5 {
+  animation-delay: 5s;
+}

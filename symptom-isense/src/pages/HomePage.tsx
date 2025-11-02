@@ -72,6 +72,22 @@ const HomePage: React.FC<HomePageProps> = ({
           aria-labelledby="hero-heading" 
           className="w-full max-w-4xl text-center py-8 sm:py-12 md:py-16 mx-auto px-4 relative"
         >
+          <div className="fixed inset-0 pointer-events-none opacity-30 z-0">
+            <div className="absolute top-20 left-0 w-16 h-16 bg-blue-400 rounded-full blur-xl animate-[moveRight_15s_linear_infinite]"></div>
+            <div className="absolute top-32 left-0 w-24 h-24 bg-purple-400 rounded-lg blur-2xl animate-[moveRight_20s_linear_infinite] animate-delay-2"></div>
+            <div className="absolute top-44 left-0 w-20 h-20 bg-teal-400 rounded-full blur-xl animate-[moveRight_18s_linear_infinite] animate-delay-4"></div>
+            <div className="absolute top-56 left-0 w-28 h-28 bg-pink-400 rounded-lg blur-2xl animate-[moveRight_22s_linear_infinite] animate-delay-1"></div>
+            <div className="absolute top-72 left-0 w-16 h-16 bg-indigo-400 rounded-full blur-xl animate-[moveRight_16s_linear_infinite] animate-delay-3"></div>
+            <div className="absolute top-16 left-0 w-12 h-12 bg-cyan-400 rounded-full blur-lg animate-[moveRight_19s_linear_infinite] animate-delay-5"></div>
+            
+            <div className="border-explosion-right border-explosion-right-blue"></div>
+            <div className="border-explosion-right border-explosion-right-purple"></div>
+            <div className="border-explosion-right border-explosion-right-teal"></div>
+            <div className="border-explosion-right border-explosion-right-pink"></div>
+            <div className="border-explosion-right border-explosion-right-indigo"></div>
+            <div className="border-explosion-right border-explosion-right-cyan"></div>
+          </div>
+
           <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-30">
             <div className="absolute top-10 left-10 w-32 h-32 bg-primary rounded-full blur-3xl"></div>
             <div className="absolute bottom-10 right-10 w-40 h-40 bg-accent rounded-full blur-3xl"></div>
