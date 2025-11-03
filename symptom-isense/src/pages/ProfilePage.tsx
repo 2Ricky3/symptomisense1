@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { db } from "../services/firebase";
 import { collection, getDocs, query, deleteDoc, doc } from "firebase/firestore";
 import type { User } from "firebase/auth";
-import { FaSearch, FaTrash, FaRegFolderOpen, FaHistory, FaFileAlt, FaClock, FaEdit, FaFilter, FaTimes } from "react-icons/fa";
+import { FaSearch, FaTrash, FaRegFolderOpen, FaHistory, FaFileAlt, FaClock, FaEdit, FaFilter, FaTimes, FaChevronUp } from "react-icons/fa";
 import BackButton from "../components/ui/BackButton";
 import Button from "../components/ui/Button";
 import ConfirmationDialog from "../components/ui/ConfirmationDialog";
@@ -39,6 +39,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, onHomeClick }) => {
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [showAvatarSelector, setShowAvatarSelector] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
+  const [displayCount, setDisplayCount] = useState(5);
 
   useEffect(() => {
     console.log("ProfilePage rendered");
@@ -69,6 +70,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, onHomeClick }) => {
           return { ...data, id: doc.id };
         });
 
+        console.log("Total prompts fetched:", fetchedPrompts.length);
         setPrompts(fetchedPrompts);
         setFilteredPrompts(fetchedPrompts);
       } catch (error) {
@@ -99,6 +101,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, onHomeClick }) => {
       return;
     }
     
+    setDisplayCount(5);
     const filtered = prompts.filter((prompt) => {
       const searchTerm = keyword.toLowerCase();
       return (
@@ -112,6 +115,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, onHomeClick }) => {
   const handleFilterClick = (filter: string) => {
     setActiveFilter(filter);
     setKeyword("");
+    setDisplayCount(5);
     if (filter === "7days") filterByTime(7);
     else if (filter === "30days") filterByTime(30);
     else setFilteredPrompts(prompts);
@@ -273,7 +277,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, onHomeClick }) => {
                     {user?.email || 'N/A'}
                   </p>
                   
-                  <div className="grid grid-cols-3 gap-4 mt-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mt-6">
                     <StatCard
                       icon={FaFileAlt}
                       label="Total Checks"
@@ -303,15 +307,16 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, onHomeClick }) => {
         </div>
 
         <div className="w-full max-w-6xl" data-aos="fade-up" data-aos-delay="300">
-          <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8">
-            <div className="flex items-center justify-between mb-6 pb-6 border-b border-gray-200">
+          <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8 overflow-visible">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 pb-6 border-b border-gray-200 gap-4">
               <div>
                 <h2 className="text-2xl font-bold text-[#293540] mb-1">Your Health History</h2>
                 <p className="text-sm text-[#5C6A73]">
-                  {filteredPrompts.length} {filteredPrompts.length === 1 ? 'record' : 'records'} found
+                  Showing {Math.min(displayCount, filteredPrompts.length)} of {filteredPrompts.length} {filteredPrompts.length === 1 ? 'record' : 'records'}
+                  {prompts.length !== filteredPrompts.length && ` (${prompts.length} total)`}
                 </p>
               </div>
-              <div className="flex gap-2">
+              <div className="flex gap-2 w-full sm:w-auto">
                 {(keyword || (activeFilter && activeFilter !== "all")) && (
                   <button
                     onClick={() => {
@@ -319,19 +324,19 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, onHomeClick }) => {
                       handleFilterClick("all");
                       setShowFilters(false);
                     }}
-                    className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg shadow-md hover:shadow-lg hover:bg-red-700 transform hover:-translate-y-0.5 transition-all duration-300"
+                    className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-red-600 text-white rounded-lg shadow-md hover:shadow-lg hover:bg-red-700 transform hover:-translate-y-0.5 transition-all duration-300 text-sm"
                     aria-label="Clear all filters"
                   >
                     <FaTimes />
-                    <span className="hidden sm:inline">Clear</span>
+                    <span className="hidden xs:inline">Clear</span>
                   </button>
                 )}
                 <button
                   onClick={() => setShowFilters(!showFilters)}
-                  className="flex items-center gap-2 px-4 py-2 bg-[#152026] text-white rounded-lg shadow-md hover:shadow-lg hover:bg-[#293540] transform hover:-translate-y-0.5 transition-all duration-300"
+                  className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-[#152026] text-white rounded-lg shadow-md hover:shadow-lg hover:bg-[#293540] transform hover:-translate-y-0.5 transition-all duration-300 text-sm"
                 >
                   <FaFilter />
-                  <span className="hidden sm:inline">Filters</span>
+                  <span className="hidden xs:inline">Filters</span>
                 </button>
               </div>
             </div>
@@ -387,7 +392,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, onHomeClick }) => {
 
                 <div className="mb-4">
                   <label className="text-sm font-medium text-[#293540] mb-2 block">Search by Keyword</label>
-                  <div className="flex gap-2">
+                  <div className="flex flex-col sm:flex-row gap-2">
                     <input
                       type="text"
                       value={keyword}
@@ -398,10 +403,10 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, onHomeClick }) => {
                     />
                     <button
                       onClick={filterByKeyword}
-                      className="px-6 py-2 bg-[#152026] text-white rounded-lg shadow-md hover:shadow-lg hover:bg-[#293540] transform hover:-translate-y-0.5 transition-all duration-300 flex items-center gap-2"
+                      className="w-full sm:w-auto px-6 py-2 bg-[#152026] text-white rounded-lg shadow-md hover:shadow-lg hover:bg-[#293540] transform hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2"
                     >
                       <FaSearch />
-                      <span className="hidden sm:inline">Search</span>
+                      <span>Search</span>
                     </button>
                   </div>
                 </div>
@@ -421,7 +426,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, onHomeClick }) => {
             )}
 
             {filteredPrompts.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-16 px-4" data-aos="zoom-in">
+              <div className="flex flex-col items-center justify-center py-16 px-4">
                 <div className="bg-gradient-to-br from-primary/5 to-accent/5 rounded-full p-8 mb-6">
                   <FaRegFolderOpen className="text-6xl text-[#5C6A73]" />
                 </div>
@@ -433,16 +438,50 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, onHomeClick }) => {
                 </p>
               </div>
             ) : (
-              <div className="space-y-4">
-                {filteredPrompts.map((prompt, idx) => (
-                  <PromptCard
-                    key={prompt.id}
-                    prompt={prompt}
-                    onDelete={handleDeletePrompt}
-                    index={idx}
-                  />
-                ))}
-              </div>
+              <>
+                <div className="grid gap-4 mb-6">
+                  {filteredPrompts.slice(0, displayCount).map((prompt, idx) => {
+                    console.log(`Rendering prompt ${idx + 1}:`, prompt.id, prompt.promptText.substring(0, 30));
+                    return (
+                      <div key={prompt.id} className="w-full min-h-[100px]">
+                        <PromptCard
+                          prompt={prompt}
+                          onDelete={handleDeletePrompt}
+                          index={idx}
+                        />
+                      </div>
+                    );
+                  })}
+                </div>
+                
+                {filteredPrompts.length > displayCount && (
+                  <div className="flex justify-center pt-4 pb-2">
+                    <button
+                      onClick={() => setDisplayCount(prev => prev + 5)}
+                      className="px-6 sm:px-8 py-3 bg-gradient-to-r from-primary to-accent text-white rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center gap-2 sm:gap-3 font-semibold text-sm sm:text-base"
+                    >
+                      <FaHistory className="text-base sm:text-lg" />
+                      <span className="hidden xs:inline">Load More Records</span>
+                      <span className="xs:hidden">More</span>
+                      <span className="bg-white/20 px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm">
+                        {filteredPrompts.length - displayCount}
+                      </span>
+                    </button>
+                  </div>
+                )}
+                
+                {displayCount > 5 && displayCount >= filteredPrompts.length && (
+                  <div className="flex justify-center pt-4 pb-2">
+                    <button
+                      onClick={() => setDisplayCount(5)}
+                      className="px-6 py-2.5 bg-gray-100 text-gray-600 rounded-lg shadow-sm hover:shadow-md hover:bg-gray-200 transform hover:scale-105 transition-all duration-300 flex items-center gap-2 font-medium"
+                    >
+                      <FaChevronUp />
+                      <span>Show Less</span>
+                    </button>
+                  </div>
+                )}
+              </>
             )}
           </div>
         </div>

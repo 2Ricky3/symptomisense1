@@ -21,7 +21,11 @@ const AvatarSelector: React.FC<AvatarSelectorProps> = ({ onSelect, currentAvatar
 
   const handleSelect = (name: string) => {
     setSelected(name);
-    onSelect(name);
+  };
+
+  const handleSave = () => {
+    onSelect(selected);
+    onClose();
   };
 
   return (
@@ -63,18 +67,18 @@ const AvatarSelector: React.FC<AvatarSelectorProps> = ({ onSelect, currentAvatar
           })}
         </div>
 
-        <div className="flex gap-3">
+        <div className="flex gap-3 justify-center">
           <button
             onClick={onClose}
-            className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+            className="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-all duration-300 shadow-sm hover:shadow-md transform hover:scale-105 font-semibold"
           >
             Cancel
           </button>
           <button
-            onClick={onClose}
-            className="flex-1 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
+            onClick={handleSave}
+            className="px-8 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105 font-semibold"
           >
-            Done
+            Save Avatar
           </button>
         </div>
       </div>

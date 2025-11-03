@@ -120,6 +120,7 @@ const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => 
           </h1>
           <div className="w-24"></div> 
         </div>
+
         {!submittedInput ? (
           <div className="flex-grow flex flex-col items-center justify-center">
             {!response && (
@@ -162,49 +163,63 @@ const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => 
                 ⚠️ Please enter medical symptoms or health-related questions only
               </p>
             )}
-            <h3 className="text-lg font-medium text-dark mb-3 text-center" data-aos="fade-up" data-aos-delay="400">Some recommendations to get you started</h3>
-            <div className="flex flex-wrap gap-2 justify-center mb-4" data-aos="fade-up" data-aos-delay="450">
-              {recommendations.map((rec, idx) => (
-                <RecommendationChip
-                  key={idx}
-                  recommendation={rec}
-                  isSelected={input === rec}
-                  onClick={() => setInput(rec)}
-                />
-              ))}
-
-              {showMore &&
-                extraRecommendations.map((rec, idx) => (
+            <h3 className="text-base sm:text-lg font-medium text-dark mb-3 text-center" data-aos="fade-up" data-aos-delay="400">Some recommendations to get you started</h3>
+            <div className="w-full max-w-4xl mb-4" data-aos="fade-up" data-aos-delay="450">
+              <div className="flex flex-wrap gap-2 justify-center">
+                {recommendations.map((rec, idx) => (
                   <RecommendationChip
-                    key={`extra-${idx}`}
+                    key={idx}
                     recommendation={rec}
                     isSelected={input === rec}
                     onClick={() => setInput(rec)}
                   />
                 ))}
 
-              <button
-                onClick={() => setShowMore(!showMore)}
-                className="px-4 py-2 rounded-full shadow transition-all duration-200 transform hover:-translate-y-1 hover:shadow-lg bg-white text-black border border-muted/30 flex items-center gap-2"
-                data-aos="fade-up"
-                data-aos-delay="500"
-              >
-                {showMore ? (
-                  <>
-                    Show Less <span className="text-lg">▲</span>
-                  </>
-                ) : (
-                  <>
-                    Show More Options <span className="text-lg">▼</span>
-                  </>
-                )}
-              </button>
+                <div 
+                  className={`w-full flex flex-wrap gap-2 justify-center transition-all duration-500 ease-in-out origin-top overflow-hidden ${
+                    showMore 
+                      ? 'max-h-[1000px] opacity-100 scale-y-100' 
+                      : 'max-h-0 opacity-0 scale-y-95 pointer-events-none'
+                  }`}
+                >
+                  {extraRecommendations.map((rec, idx) => (
+                    <RecommendationChip
+                      key={`extra-${idx}`}
+                      recommendation={rec}
+                      isSelected={input === rec}
+                      onClick={() => setInput(rec)}
+                    />
+                  ))}
+                </div>
+
+                <button
+                  onClick={() => setShowMore(!showMore)}
+                  className="px-3 sm:px-4 py-2 rounded-full shadow transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg bg-white text-black border border-muted/30 flex items-center gap-2 text-sm sm:text-base mt-2"
+                  data-aos="fade-up"
+                  data-aos-delay="500"
+                >
+                  {showMore ? (
+                    <>
+                      <span className="hidden xs:inline">Show Less</span>
+                      <span className="xs:hidden">Less</span>
+                      <span className={`text-lg transition-transform duration-300 inline-block ${showMore ? 'rotate-0' : 'rotate-180'}`}>▲</span>
+                    </>
+                  ) : (
+                    <>
+                      <span className="hidden xs:inline">Show More Options</span>
+                      <span className="xs:hidden">More</span>
+                      <span className={`text-lg transition-transform duration-300 inline-block ${showMore ? 'rotate-180' : 'rotate-0'}`}>▼</span>
+                    </>
+                  )}
+                </button>
+              </div>
             </div>
-            <div className="w-full max-w-3xl flex gap-3" data-aos="fade-up" data-aos-delay="550">
+            <div className="w-full max-w-3xl flex flex-col sm:flex-row gap-3" data-aos="fade-up" data-aos-delay="550">
               <Button 
                 onClick={handleAsk} 
                 disabled={loading}
                 loading={loading}
+                className="flex-1 w-full"
               >
                 Get Analysis
               </Button>
@@ -214,6 +229,7 @@ const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => 
                 title="Clear input"
                 icon={<FaTrash />}
                 variant="danger"
+                className="w-full sm:w-auto"
               />
             </div>
           </div>
@@ -224,12 +240,12 @@ const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => 
               <div className="w-full p-4 border border-muted/30 rounded-md bg-bg/60 text-dark whitespace-pre-wrap mb-4" data-aos="fade-up" data-aos-delay="100">
                 {submittedInput}
               </div>
-              <div className="w-full flex flex-wrap gap-3 mb-6" data-aos="fade-up" data-aos-delay="150">
+              <div className="w-full flex flex-col sm:flex-row flex-wrap gap-3 mb-6" data-aos="fade-up" data-aos-delay="150">
                 <Button 
                   onClick={handleReset} 
                   disabled={loading}
                   variant="edit"
-                  className="flex-1 min-w-[120px]"
+                  className="flex-1 min-w-[200px]"
                 >
                   Edit input
                 </Button>
@@ -246,7 +262,7 @@ const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => 
                     }
                   }}
                   disabled={loading}
-                  className="flex-1 min-w-[120px] flex items-center justify-center gap-2"
+                  className="flex-1 min-w-[200px] flex items-center justify-center gap-2"
                 >
                   <FaShare className="w-4 h-4" />
                   Share
@@ -258,7 +274,7 @@ const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => 
                   }}
                   disabled={loading}
                   variant="danger"
-                  className="flex-1 min-w-[120px]"
+                  className="flex-1 min-w-[200px]"
                 >
                   Close
                 </Button>

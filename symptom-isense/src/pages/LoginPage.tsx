@@ -177,30 +177,31 @@ const LoginPage: React.FC<{ onClose?: () => void; onSuccess?: (isNewSignUp?: boo
       
       <BackButton
         onClick={onClose || (() => {})}
-        className="absolute top-6 left-6 z-50 text-white/90 hover:text-white hover:bg-white/10 transition-all duration-200"
+        className="absolute top-4 left-4 sm:top-6 sm:left-6 z-50 text-white/90 hover:text-white hover:bg-white/10 transition-all duration-200"
         data-aos="fade-right"
       />
 
-      <div className="relative z-10 w-full max-w-md px-4">
-        <div className="text-center mb-8" data-aos="fade-down">
-          <div className="inline-block px-5 py-2 bg-white/10 backdrop-blur-md rounded-full border border-white/20 mb-4 shadow-lg">
-            <p className="text-sm font-semibold text-white/90 tracking-wider uppercase">AI Health Assistant</p>
+      <div className="relative z-10 w-full max-w-md px-4 py-6 sm:py-0">
+        <div className="text-center mb-4 sm:mb-6" data-aos="fade-down">
+          <div className="inline-block px-4 py-1.5 sm:px-5 sm:py-2 bg-white/10 backdrop-blur-md rounded-full border border-white/20 mb-3 sm:mb-4 shadow-lg">
+            <p className="text-xs sm:text-sm font-semibold text-white/90 tracking-wider uppercase">AI Health Assistant</p>
           </div>
-          <h1 className="text-5xl font-bold text-white mb-3 leading-tight tracking-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-2 sm:mb-3 leading-tight tracking-tight">
             <span className="bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent drop-shadow-lg">
               Symptom-iSense
             </span>
           </h1>
-          <p className="text-white/70 font-light text-lg">Intelligent symptom analysis at your fingertips</p>
-          <div className="flex items-center justify-center gap-6 mt-6 text-white/60 text-sm" data-aos="fade-up" data-aos-delay="200">
-            <div className="flex items-center gap-2">
-              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+          <p className="text-white/70 font-light text-sm sm:text-base md:text-lg px-2">Intelligent symptom analysis at your fingertips</p>
+          <div className="flex items-center justify-center gap-4 sm:gap-6 mt-4 sm:mt-6 text-white/60 text-xs sm:text-sm" data-aos="fade-up" data-aos-delay="200">
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
               </svg>
-              <span>HIPAA Compliant</span>
+              <span className="hidden xs:inline">HIPAA Compliant</span>
+              <span className="xs:hidden">Secure</span>
             </div>
-            <div className="flex items-center gap-2">
-              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
               </svg>
               <span>Encrypted</span>
@@ -208,10 +209,10 @@ const LoginPage: React.FC<{ onClose?: () => void; onSuccess?: (isNewSignUp?: boo
           </div>
         </div>
 
-        <form className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl p-10 space-y-6 border border-gray-200/50 relative overflow-hidden" onSubmit={handleSubmit} data-aos="fade-up" data-aos-delay="100">
+        <form className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl p-5 sm:p-7 md:p-9 space-y-4 sm:space-y-5 border border-gray-200/50 relative overflow-hidden" onSubmit={handleSubmit} data-aos="fade-up" data-aos-delay="100">
           <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#293540] via-[#455059] to-[#293540]"></div>
             
-            <h2 className="text-3xl font-bold text-[#152026] mb-2 text-center" data-aos="fade-down" data-aos-delay="200">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-[#152026] mb-1.5 sm:mb-2 text-center" data-aos="fade-down" data-aos-delay="200">
               {showSignUp
                 ? 'Create Account'
                 : showResetPassword
@@ -219,7 +220,7 @@ const LoginPage: React.FC<{ onClose?: () => void; onSuccess?: (isNewSignUp?: boo
                 : 'Welcome Back'}
             </h2>
             
-            <p className="text-[#5C6A73] text-sm text-center mb-6" data-aos="fade-down" data-aos-delay="250">
+            <p className="text-[#5C6A73] text-xs sm:text-sm text-center mb-4 sm:mb-5 px-2" data-aos="fade-down" data-aos-delay="250">
               {showSignUp
                 ? 'Join thousands of users managing their health'
                 : showResetPassword
@@ -267,18 +268,18 @@ const LoginPage: React.FC<{ onClose?: () => void; onSuccess?: (isNewSignUp?: boo
               </div>
             )}
 
-            {error && <p className="text-red-500 text-sm" data-aos="shake">{error}</p>}
-            {message && <p className="text-green-500 text-sm" data-aos="fade-in">{message}</p>}
+            {error && <p className="text-red-500 text-xs sm:text-sm px-2" data-aos="shake">{error}</p>}
+            {message && <p className="text-green-500 text-xs sm:text-sm px-2" data-aos="fade-in">{message}</p>}
 
             {!showResetPassword && (
-              <div className="mt-6" data-aos="fade-up" data-aos-delay="450">
+              <div className="mt-4 sm:mt-5" data-aos="fade-up" data-aos-delay="450">
             <Button
               type="button"
               variant="social"
               onClick={handleSocialLogin}
             >
-              <FaGoogle className="h-5 w-5" />
-              Continue with Google
+              <FaGoogle className="h-4 w-4 sm:h-5 sm:w-5" />
+              <span className="text-sm sm:text-base">Continue with Google</span>
             </Button>
           </div>
         )}
@@ -292,7 +293,7 @@ const LoginPage: React.FC<{ onClose?: () => void; onSuccess?: (isNewSignUp?: boo
             data-aos="fade-up"
             data-aos-delay="400"
           >
-            Send Reset Email
+            <span className="text-sm sm:text-base">Send Reset Email</span>
           </Button>
         )}
 
@@ -301,15 +302,15 @@ const LoginPage: React.FC<{ onClose?: () => void; onSuccess?: (isNewSignUp?: boo
             type="submit" 
             disabled={loading}
             loading={loading}
-            className="mt-6"
+            className="mt-4 sm:mt-5"
             data-aos="fade-up"
             data-aos-delay="500"
           >
-            {showSignUp ? 'Sign Up' : 'Log in'}
+            <span className="text-sm sm:text-base">{showSignUp ? 'Sign Up' : 'Log in'}</span>
           </Button>
         )}
 
-        <div className="mt-4 text-sm text-muted flex flex-col gap-2 items-center" data-aos="fade-up" data-aos-delay="550">
+        <div className="mt-3 sm:mt-4 text-xs sm:text-sm text-muted flex flex-col gap-1.5 sm:gap-2 items-center" data-aos="fade-up" data-aos-delay="550">
           {!showSignUp && !showResetPassword && (
             <button
               type="button"
@@ -339,9 +340,9 @@ const LoginPage: React.FC<{ onClose?: () => void; onSuccess?: (isNewSignUp?: boo
           )}
 
           {!showResetPassword && (
-            <div className="mt-2">
+            <div className="mt-1 sm:mt-2">
               {showSignUp ? (
-                <span>
+                <span className="text-xs sm:text-sm">
                   Already have an account?{' '}
                   <button
                     type="button"
@@ -352,7 +353,7 @@ const LoginPage: React.FC<{ onClose?: () => void; onSuccess?: (isNewSignUp?: boo
                   </button>
                 </span>
               ) : (
-                <span>
+                <span className="text-xs sm:text-sm">
                   Don't have an account?{' '}
                   <button
                     type="button"
@@ -368,8 +369,8 @@ const LoginPage: React.FC<{ onClose?: () => void; onSuccess?: (isNewSignUp?: boo
         </div>
         </form>
         
-        <div className="mt-6 text-center text-white/50 text-xs" data-aos="fade-up" data-aos-delay="600">
-          <p className="mb-2">
+        <div className="mt-4 sm:mt-6 text-center text-white/50 text-[10px] sm:text-xs px-4" data-aos="fade-up" data-aos-delay="600">
+          <p className="mb-1.5 sm:mb-2">
             By continuing, you agree to our{' '}
             <button type="button" className="underline hover:text-white/70 transition-colors">Terms of Service</button>
             {' '}and{' '}

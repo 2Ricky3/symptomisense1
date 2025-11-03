@@ -44,12 +44,6 @@ const HomePage: React.FC<HomePageProps> = ({
     }
   };
 
-  const stats = [
-    { icon: FaBrain, value: 'AI-Powered', label: 'Smart Analysis', color: 'text-blue-600' },
-    { icon: FaCheckCircle, value: '99.8%', label: 'Accuracy Rate', color: 'text-green-600' },
-    { icon: FaShieldAlt, value: '100%', label: 'Private & Secure', color: 'text-purple-600' },
-  ];
-
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-bg via-bg to-muted overflow-auto">
       <a 
@@ -160,20 +154,52 @@ const HomePage: React.FC<HomePageProps> = ({
         </div>
 
         <section aria-labelledby="stats-heading" className="w-full max-w-5xl mx-auto mb-16 px-4 sm:px-6">
-          <h2 id="stats-heading" className="sr-only">Platform Statistics</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-8">
-            {stats.map((stat, idx) => (
-              <div 
-                key={idx} 
-                className="bg-white rounded-xl p-6 shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100"
-                data-aos="fade-up" 
-                data-aos-delay={idx * 100}
-              >
-                <stat.icon className={`text-4xl ${stat.color} mb-4 mx-auto`} aria-hidden="true" />
-                <div className="text-3xl font-bold text-dark mb-2">{stat.value}</div>
-                <div className="text-sm text-muted">{stat.label}</div>
+          <div className="text-center mb-8">
+            <h2 id="stats-heading" className="text-2xl sm:text-3xl font-bold text-dark mb-3">Why Choose Symptom-iSense?</h2>
+            <p className="text-muted text-sm sm:text-base">Advanced AI technology you can trust</p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
+            <div 
+              className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-5 sm:p-6 border border-blue-200 shadow-md hover:shadow-xl transition-all duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-[1.02]"
+            >
+              <div className="flex items-center gap-3 sm:gap-4">
+                <div className="bg-blue-500 text-white p-3 sm:p-4 rounded-xl shadow-sm">
+                  <FaBrain className="text-xl sm:text-2xl" aria-hidden="true" />
+                </div>
+                <div className="flex-1">
+                  <div className="text-2xl sm:text-3xl font-bold text-blue-900">AI-Powered</div>
+                  <div className="text-xs sm:text-sm text-blue-700 mt-1">Smart Analysis</div>
+                </div>
               </div>
-            ))}
+            </div>
+
+            <div 
+              className="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-5 sm:p-6 border border-green-200 shadow-md hover:shadow-xl transition-all duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-[1.02]"
+            >
+              <div className="flex items-center gap-3 sm:gap-4">
+                <div className="bg-green-500 text-white p-3 sm:p-4 rounded-xl shadow-sm">
+                  <FaCheckCircle className="text-xl sm:text-2xl" aria-hidden="true" />
+                </div>
+                <div className="flex-1">
+                  <div className="text-2xl sm:text-3xl font-bold text-green-900">99.8%</div>
+                  <div className="text-xs sm:text-sm text-green-700 mt-1">Accuracy Rate</div>
+                </div>
+              </div>
+            </div>
+
+            <div 
+              className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-5 sm:p-6 border border-purple-200 shadow-md hover:shadow-xl transition-all duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-[1.02]"
+            >
+              <div className="flex items-center gap-3 sm:gap-4">
+                <div className="bg-purple-500 text-white p-3 sm:p-4 rounded-xl shadow-sm">
+                  <FaShieldAlt className="text-xl sm:text-2xl" aria-hidden="true" />
+                </div>
+                <div className="flex-1">
+                  <div className="text-2xl sm:text-3xl font-bold text-purple-900">100%</div>
+                  <div className="text-xs sm:text-sm text-purple-700 mt-1">Private & Secure</div>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -228,46 +254,84 @@ const HomePage: React.FC<HomePageProps> = ({
         <section 
           id="healthcare-providers" 
           aria-labelledby="providers-heading" 
-          className="w-full max-w-6xl mx-auto mb-16 scroll-mt-24 px-4 sm:px-6 py-8"
+          className="w-full max-w-7xl mx-auto mb-20 scroll-mt-24 px-4 sm:px-6 py-8"
         >
-          <div className="text-center mb-12">
-            <h2 id="providers-heading" className="text-3xl sm:text-4xl font-bold mb-4 text-primary">
-              Healthcare Providers
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center gap-2 bg-primary/5 border border-primary/10 rounded-full px-4 py-2 mb-4">
+              <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
+              <span className="text-xs font-semibold text-primary uppercase tracking-wider">Healthcare Network</span>
+            </div>
+            <h2 id="providers-heading" className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 text-gray-900">
+              Trusted Healthcare Providers
             </h2>
-            <p className="text-lg text-muted max-w-2xl mx-auto">
-              Connect with trusted healthcare professionals and mental health support services in South Africa
+            <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
+              Connect with verified healthcare professionals and mental health support services across South Africa
             </p>
-            <div className="w-24 h-1 bg-gradient-to-r from-primary to-accent mx-auto mt-4 rounded-full"></div>
+            <div className="flex items-center justify-center gap-2 mt-6">
+              <div className="w-16 h-0.5 bg-gradient-to-r from-transparent to-primary rounded-full"></div>
+              <div className="w-2 h-2 bg-primary rounded-full"></div>
+              <div className="w-16 h-0.5 bg-gradient-to-l from-transparent to-accent rounded-full"></div>
+            </div>
           </div>
           
           <div className="mb-12">
-            <div className="bg-gradient-to-r from-green-50 to-teal-50 rounded-2xl p-6 sm:p-8 border border-green-100 shadow-lg hover:shadow-xl transition-shadow duration-300">
-              <div className="flex items-center justify-center gap-3 mb-8">
-                <div className="bg-green-100 p-3 rounded-full">
-                  <FaHeartbeat className="text-green-600 text-2xl" aria-hidden="true" />
+            <div className="relative group">
+              <div className="absolute -inset-0.5 bg-gradient-to-r from-green-400 to-teal-400 rounded-3xl opacity-20 group-hover:opacity-30 blur transition duration-500"></div>
+              <div className="relative bg-white rounded-3xl p-8 sm:p-10 shadow-lg border border-gray-100">
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-10 pb-6 border-b border-gray-100">
+                  <div className="flex items-center gap-4">
+                    <div className="relative">
+                      <div className="absolute inset-0 bg-green-400 rounded-2xl blur-lg opacity-40"></div>
+                      <div className="relative bg-gradient-to-br from-green-500 to-teal-600 p-4 rounded-2xl shadow-lg">
+                        <FaHeartbeat className="text-white text-3xl" aria-hidden="true" />
+                      </div>
+                    </div>
+                    <div className="text-left">
+                      <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1">Mental Health Support</h3>
+                      <p className="text-sm text-gray-500">Professional counseling and crisis intervention</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 bg-green-50 border border-green-200 rounded-full px-4 py-2">
+                    <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                    <span className="text-xs font-semibold text-green-700">{healthcareProviders.mentalHealth.length} Services Available</span>
+                  </div>
                 </div>
-                <h3 className="text-2xl font-bold text-green-800">Mental Health Support</h3>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {healthcareProviders.mentalHealth.map((provider, idx) => (
-                  <HealthcareProviderItem key={idx} provider={provider} />
-                ))}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {healthcareProviders.mentalHealth.map((provider, idx) => (
+                    <HealthcareProviderItem key={idx} provider={provider} />
+                  ))}
+                </div>
               </div>
             </div>
           </div>
 
           <div>
-            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-6 sm:p-8 border border-blue-100 shadow-lg hover:shadow-xl transition-shadow duration-300">
-              <div className="flex items-center justify-center gap-3 mb-8">
-                <div className="bg-blue-100 p-3 rounded-full">
-                  <FaHospital className="text-blue-600 text-2xl" aria-hidden="true" />
+            <div className="relative group">
+              <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-400 to-indigo-400 rounded-3xl opacity-20 group-hover:opacity-30 blur transition duration-500"></div>
+              <div className="relative bg-white rounded-3xl p-8 sm:p-10 shadow-lg border border-gray-100">
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-10 pb-6 border-b border-gray-100">
+                  <div className="flex items-center gap-4">
+                    <div className="relative">
+                      <div className="absolute inset-0 bg-blue-400 rounded-2xl blur-lg opacity-40"></div>
+                      <div className="relative bg-gradient-to-br from-blue-500 to-indigo-600 p-4 rounded-2xl shadow-lg">
+                        <FaHospital className="text-white text-3xl" aria-hidden="true" />
+                      </div>
+                    </div>
+                    <div className="text-left">
+                      <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1">Medical Services</h3>
+                      <p className="text-sm text-gray-500">Emergency and general healthcare providers</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 bg-blue-50 border border-blue-200 rounded-full px-4 py-2">
+                    <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                    <span className="text-xs font-semibold text-blue-700">{healthcareProviders.medical.length} Services Available</span>
+                  </div>
                 </div>
-                <h3 className="text-2xl font-bold text-blue-800">Medical Services</h3>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {healthcareProviders.medical.map((provider, idx) => (
-                  <HealthcareProviderItem key={idx} provider={provider} />
-                ))}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {healthcareProviders.medical.map((provider, idx) => (
+                    <HealthcareProviderItem key={idx} provider={provider} />
+                  ))}
+                </div>
               </div>
             </div>
           </div>

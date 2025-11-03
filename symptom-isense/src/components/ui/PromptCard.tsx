@@ -15,7 +15,7 @@ interface PromptCardProps {
   index: number;
 }
 
-const PromptCard: React.FC<PromptCardProps> = ({ prompt, onDelete, index }) => {
+const PromptCard: React.FC<PromptCardProps> = ({ prompt, onDelete }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
 
@@ -50,9 +50,7 @@ ${prompt.responseText}
 
   return (
     <div
-      className="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 border border-gray-100 overflow-hidden"
-      data-aos="fade-up"
-      data-aos-delay={Math.min(100 + index * 50, 400)}
+      className="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 border border-gray-100 overflow-hidden w-full"
     >
       <div className="bg-gradient-to-r from-primary/5 to-accent/5 px-6 py-4 border-b border-gray-100">
         <div className="flex items-start justify-between gap-4">
