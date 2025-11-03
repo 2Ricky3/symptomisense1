@@ -37,7 +37,7 @@ SymptomiSense is a modern symptom tracking and health monitoring application bui
 ### 1. Clone the Repository
 ```bash
 git clone https://github.com/2Ricky3/symptomisense1.git
-cd symptomisense1
+cd symptom-isense
 ```
 
 ### 2. Install Dependencies
@@ -50,7 +50,13 @@ yarn install
 ### 3. Environment Setup
 Create a `.env` file in the root directory and add your configuration variables:
 ```env
-# Add your environment variables here
+VITE_FIREBASE_API_KEY=your_firebase_api_key_here
+VITE_FIREBASE_AUTH_DOMAIN=your_project_id.firebaseapp.com
+VITE_FIREBASE_PROJECT_ID=your_project_id
+VITE_FIREBASE_STORAGE_BUCKET=your_project_id.appspot.com
+VITE_FIREBASE_MESSAGING_SENDER_ID=your_messaging_sender_id
+VITE_FIREBASE_APP_ID=your_firebase_app_id
+VITE_FIREBASE_MEASUREMENT_ID=your_measurement_id
 ```
 
 ## 🏃 Running the App
@@ -112,6 +118,16 @@ Check out the live application: [https://symptomisense1.vercel.app](https://symp
 - **Performance**: Optimizing for fast load times and smooth interactions
 - **Data Visualization**: Creating meaningful and easy-to-understand health insights
 - **Accessibility**: Making the app usable for all users, including those with disabilities
+
+
+### Mockups
+<img width="1920" height="1440" alt="201shots_so" src="https://github.com/user-attachments/assets/b96a2101-2c9d-4fd1-9ff4-bd2b6d65d96e" />
+<img width="1920" height="1440" alt="327shots_so" src="https://github.com/user-attachments/assets/4d5a0cf2-0fa8-46f3-b6d8-4cf08e991b5a" />
+<img width="1920" height="1440" alt="772shots_so" src="https://github.com/user-attachments/assets/f92fc88c-1dc1-4107-b69e-f3a76415d5a2" />
+<img width="1920" height="1440" alt="443shots_so" src="https://github.com/user-attachments/assets/5b542af6-726b-4153-9858-199b59a4e44f" />
+<img width="1920" height="1440" alt="872shots_so" src="https://github.com/user-attachments/assets/67369cf3-8424-4456-a575-582492f4f266" />
+<img width="1920" height="1440" alt="371shots_so" src="https://github.com/user-attachments/assets/9e0d4933-2aa0-44a9-bd2a-7c413e4f2d33" />
+
 
 ## 🚀 Future Improvements
 SymptomiSense is continuously evolving. Planned enhancements include:
