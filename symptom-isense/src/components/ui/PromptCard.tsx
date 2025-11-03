@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import { FaTrash, FaChevronDown, FaChevronUp, FaClock, FaFileAlt } from 'react-icons/fa';
+import { FaTrash, FaChevronDown, FaChevronUp, FaClock, FaFileAlt, FaFilePdf } from 'react-icons/fa';
 import Button from './Button';
+import { generateMedicalReportPDF } from '../../services/pdfService';
 
 interface PromptCardProps {
   prompt: {
     id: string;
     promptText: string;
     responseText: string;
+    soapNote?: string;
     createdAt?: { toDate: () => Date };
   };
   onDelete: (id: string) => void;
@@ -15,10 +17,35 @@ interface PromptCardProps {
 
 const PromptCard: React.FC<PromptCardProps> = ({ prompt, onDelete, index }) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
 
   const truncateText = (text: string, maxLength: number) => {
     if (text.length <= maxLength) return text;
     return text.substring(0, maxLength) + '...';
+  };
+
+  const handleDownloadPDF = async () => {
+    setIsDownloading(true);
+    try {
+      let soapContent: string;
+      
+      if (prompt.soapNote && prompt.soapNote.trim()) {
+        soapContent = prompt.soapNote;
+      } else {
+        soapContent = `
+Subjective: ${prompt.promptText}
+
+Assessment: 
+${prompt.responseText}
+        `.trim();
+      }
+      
+      await generateMedicalReportPDF(soapContent);
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+    } finally {
+      setIsDownloading(false);
+    }
   };
 
   return (
@@ -84,13 +111,26 @@ const PromptCard: React.FC<PromptCardProps> = ({ prompt, onDelete, index }) => {
             {isExpanded ? 'Show Less' : 'Read More'}
           </button>
           
-          <Button
-            variant="danger"
-            onClick={() => onDelete(prompt.id)}
-            className="px-4 py-2 text-sm flex items-center gap-2"
-          >
-            <FaTrash className="text-xs" /> Delete
-          </Button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleDownloadPDF}
+              disabled={isDownloading}
+              className="px-4 py-2 text-sm flex items-center gap-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg shadow-md hover:shadow-lg hover:from-blue-700 hover:to-blue-800 transform hover:-translate-y-0.5 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+              title="Download as PDF"
+            >
+              <FaFilePdf className="text-sm" /> 
+              <span className="hidden sm:inline">{isDownloading ? 'Generating...' : 'PDF'}</span>
+            </button>
+            
+            <Button
+              variant="danger"
+              onClick={() => onDelete(prompt.id)}
+              className="px-4 py-2 text-sm flex items-center gap-2"
+            >
+              <FaTrash className="text-xs" /> 
+              <span className="hidden sm:inline">Delete</span>
+            </Button>
+          </div>
         </div>
       </div>
     </div>

@@ -6,6 +6,7 @@ export interface UserProfile {
   email: string;
   displayName?: string;
   avatar?: string;
+  onboardingCompleted?: boolean;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -29,11 +30,13 @@ export const createUserProfile = async (uid: string, email: string): Promise<voi
       uid,
       email,
       avatar: 'default',
+      onboardingCompleted: false,
       createdAt: new Date(),
       updatedAt: new Date(),
     });
   } catch (error) {
     console.error('Error creating user profile:', error);
+    throw error;
   }
 };
 

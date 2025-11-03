@@ -1,10 +1,12 @@
 import { lazy, Suspense, useState, useEffect } from 'react';
 import { onAuthStateChanged, signOut, type User } from 'firebase/auth';
 import { auth } from './services/firebase';
+import { getUserProfile, updateUserProfile } from './services/userProfileService';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import './App.css';
-import Loader from './pages/Loader';
+import LoadingScreen from './components/ui/LoadingScreen';
+import Onboarding from './components/ui/Onboarding';
 
 const HomePage = lazy(() => import('./pages/HomePage'));
 const LoginPage = lazy(() => import('./pages/LoginPage'));
@@ -19,14 +21,26 @@ function App() {
   const [loginReturnTo, setLoginReturnTo] = useState<PageRoute | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [showOnboarding, setShowOnboarding] = useState(false);
+  const [pendingOnboarding, setPendingOnboarding] = useState(false);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
+      
+      if (currentUser && pendingOnboarding) {
+        const profile = await getUserProfile(currentUser.uid);
+        
+        if (!profile || profile.onboardingCompleted === false) {
+          setShowOnboarding(true);
+          setPendingOnboarding(false);
+        }
+      }
+      
       setLoading(false);
     });
     return () => unsubscribe();
-  }, []);
+  }, [pendingOnboarding]);
   useEffect(() => {
     AOS.init({
       duration: 800,
@@ -41,20 +55,27 @@ function App() {
     setPage('home');
   };
 
+  const handleOnboardingComplete = async () => {
+    if (user) {
+      await updateUserProfile(user.uid, { onboardingCompleted: true });
+      setShowOnboarding(false);
+    }
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
 
   return (
-    <Suspense
-      fallback={
-        <div className="min-h-screen w-full bg-gradient-to-br from-bg via-bg to-muted flex items-center justify-center p-4 sm:p-6 lg:p-8">
-          <div className="bg-white/90 backdrop-blur-md rounded-2xl shadow-xl p-12 sm:p-16 flex flex-col items-center max-w-2xl w-full">
-            <Loader />
-            <p className="mt-6 text-muted text-lg text-center">Loading, please wait...</p>
-          </div>
-        </div>
-      }
+    <>
+      {showOnboarding && user && (
+        <Onboarding
+          onComplete={handleOnboardingComplete}
+          userName={user.displayName || user.email?.split('@')[0]}
+        />
+      )}
+      <Suspense
+      fallback={<LoadingScreen message="Loading, please wait..." />}
     >
       {page === 'home' && (
         <HomePage
@@ -85,7 +106,10 @@ function App() {
       {page === 'login' && (
         <LoginPage
           onClose={() => setPage('home')}
-          onSuccess={() => {
+          onSuccess={(newSignUp = false) => {
+            if (newSignUp) {
+              setPendingOnboarding(true);
+            }
             if (loginReturnTo) setPage(loginReturnTo);
             else setPage('home');
             setLoginReturnTo(null);
@@ -96,6 +120,7 @@ function App() {
       {page === 'learnMore' && <LearnMorePage onHomeClick={() => setPage('home')} />}
       {page === 'profile' && user && <ProfilePage user={user} onHomeClick={() => setPage('home')} />}
     </Suspense>
+    </>
   );
 }
 

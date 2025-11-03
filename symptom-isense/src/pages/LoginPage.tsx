@@ -15,10 +15,11 @@ import Button from '../components/ui/Button';
 import BackButton from '../components/ui/BackButton';
 import FormInput from '../components/forms/FormInput';
 import FormLabel from '../components/forms/FormLabel';
+import { createUserProfile } from '../services/userProfileService';
 
 type ErrorLike = { code?: unknown; message?: unknown } & Record<string, unknown>;
 
-const LoginPage: React.FC<{ onClose?: () => void; onSuccess?: () => void }> = ({ onClose, onSuccess }) => {
+const LoginPage: React.FC<{ onClose?: () => void; onSuccess?: (isNewSignUp?: boolean) => void }> = ({ onClose, onSuccess }) => {
   const [showSignUp, setShowSignUp] = useState(false);
   const [showResetPassword, setShowResetPassword] = useState(false);
   const [email, setEmail] = useState('');
@@ -36,13 +37,22 @@ const LoginPage: React.FC<{ onClose?: () => void; onSuccess?: () => void }> = ({
 
     try {
       if (showSignUp) {
-        await createUserWithEmailAndPassword(auth, email, password);
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        
+        try {
+          await createUserProfile(userCredential.user.uid, email);
+        } catch {
+          setError('Account created but profile setup failed. Please disable your ad blocker and try logging in again.');
+        }
+        
+        if (onSuccess) onSuccess(true);
+        else if (onClose) onClose();
       } else {
         await signInWithEmailAndPassword(auth, email, password);
+        
+        if (onSuccess) onSuccess(false);
+        else if (onClose) onClose();
       }
-
-      if (onSuccess) onSuccess();
-      else if (onClose) onClose();
     } catch (err: unknown) {
       const code = extractAuthCode(err);
       if (code && errorMessages[code]) {
@@ -114,13 +124,21 @@ const LoginPage: React.FC<{ onClose?: () => void; onSuccess?: () => void }> = ({
 
       const isNewUser = (result as UserCredential & { additionalUserInfo?: { isNewUser: boolean } }).additionalUserInfo?.isNewUser;
       if (isNewUser) {
-        setMessage('Account created successfully!');
+        try {
+          await createUserProfile(result.user.uid, result.user.email || '');
+          setMessage('Account created successfully!');
+        } catch {
+          setError('Account created but profile setup failed. Please disable your ad blocker and try logging in again.');
+        }
+        
+        if (onSuccess) onSuccess(true);
+        else if (onClose) onClose();
       } else {
         setMessage('Logged in successfully!');
+        
+        if (onSuccess) onSuccess(false);
+        else if (onClose) onClose();
       }
-
-      if (onSuccess) onSuccess();
-      else if (onClose) onClose();
     } catch (err: unknown) {
       const code = extractAuthCode(err);
       if (code && errorMessages[code]) {

@@ -13,7 +13,7 @@ import IconButton from "../components/ui/IconButton";
 import RecommendationChip from "../components/ui/RecommendationChip";
 import AIResponseDisplay from "../components/ui/AIResponseDisplay";
 import DownloadReportButton from "../components/ui/DownloadReportButton";
-import Loader from "./Loader";
+import LoadingScreen from "../components/ui/LoadingScreen";
 
 const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => {
   const [input, setInput] = useState("");
@@ -49,7 +49,7 @@ const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => 
 
       const userId = auth.currentUser?.uid;
       if (userId) {
-        await savePrompt(userId, input.trim(), result.response);
+        await savePrompt(userId, input.trim(), result.response, result.soapNote);
       }
     } catch (error: unknown) {
       console.error("Error calling OpenAI API:", error);
@@ -96,12 +96,10 @@ const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => 
 
   if (loading) {
     return (
-      <div className="min-h-screen w-full bg-gradient-to-br from-bg via-bg to-muted flex items-center justify-center p-4 sm:p-6 lg:p-8">
-        <div className="bg-white/90 backdrop-blur-md rounded-2xl shadow-xl p-8 flex flex-col items-center">
-          <Loader />
-          <p className="mt-4 text-muted">AI is analyzing your symptoms...</p>
-        </div>
-      </div>
+      <LoadingScreen 
+        message="AI is analyzing your symptoms..." 
+        submessage="This may take a few moments"
+      />
     );
   }
 

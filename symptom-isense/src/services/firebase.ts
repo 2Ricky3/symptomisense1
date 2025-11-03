@@ -16,12 +16,13 @@ const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 
-export const savePrompt = async (userId: string, promptText: string, responseText: string) => {
+export const savePrompt = async (userId: string, promptText: string, responseText: string, soapNote?: string) => {
   try {
     const promptRef = collection(doc(collection(db, "users"), userId), "prompts");
     await addDoc(promptRef, {
       promptText,
       responseText,
+      soapNote: soapNote || "",
       createdAt: serverTimestamp(),
     });
   } catch (error) {

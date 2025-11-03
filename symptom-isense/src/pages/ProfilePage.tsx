@@ -18,6 +18,7 @@ interface Prompt {
   id: string;
   promptText: string;
   responseText: string;
+  soapNote?: string;
   createdAt?: { toDate: () => Date };
 }
 
@@ -419,7 +420,6 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, onHomeClick }) => {
               </div>
             )}
 
-            {/* Prompts List */}
             {filteredPrompts.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-16 px-4" data-aos="zoom-in">
                 <div className="bg-gradient-to-br from-primary/5 to-accent/5 rounded-full p-8 mb-6">
