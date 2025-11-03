@@ -42,9 +42,6 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, onHomeClick }) => {
   const [displayCount, setDisplayCount] = useState(5);
 
   useEffect(() => {
-    console.log("ProfilePage rendered");
-    console.log("User:", user);
-
     if (!user) {
       navigate("/login", { replace: true });
       return;
@@ -70,7 +67,6 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, onHomeClick }) => {
           return { ...data, id: doc.id };
         });
 
-        console.log("Total prompts fetched:", fetchedPrompts.length);
         setPrompts(fetchedPrompts);
         setFilteredPrompts(fetchedPrompts);
       } catch (error) {
@@ -441,7 +437,6 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, onHomeClick }) => {
               <>
                 <div className="grid gap-4 mb-6">
                   {filteredPrompts.slice(0, displayCount).map((prompt, idx) => {
-                    console.log(`Rendering prompt ${idx + 1}:`, prompt.id, prompt.promptText.substring(0, 30));
                     return (
                       <div key={prompt.id} className="w-full min-h-[100px]">
                         <PromptCard
