@@ -3,7 +3,10 @@
   base = "symptom-isense"
   command = "npm run build"
   functions = "netlify/functions"
-  publish = "symptom-isense/dist"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"
 
   ## Uncomment to use this redirect for Single Page Applications like create-react-app.
   ## Not needed for static site generators.
