@@ -214,12 +214,12 @@ const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => 
                 </button>
               </div>
             </div>
-            <div className="w-full max-w-3xl flex flex-col sm:flex-row gap-3 mb-6" data-aos="fade-up" data-aos-delay="550">
+            <div className="w-full max-w-3xl flex flex-col sm:flex-row gap-3 mb-6 px-2 sm:px-0" data-aos="fade-up" data-aos-delay="550">
               <Button 
                 onClick={handleAsk} 
                 disabled={loading}
                 loading={loading}
-                className="flex-1 w-full min-h-[48px] text-base sm:text-lg"
+                className="flex-1 w-full min-h-[52px] text-sm sm:text-base md:text-lg px-4 sm:px-6"
               >
                 Get Analysis
               </Button>
@@ -229,7 +229,7 @@ const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => 
                 title="Clear input"
                 icon={<FaTrash />}
                 variant="danger"
-                className="w-full sm:w-auto min-h-[48px]"
+                className="w-full sm:w-auto min-h-[52px] min-w-[52px]"
               />
             </div>
           </div>
@@ -240,12 +240,12 @@ const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => 
               <div className="w-full p-4 border border-muted/30 rounded-md bg-bg/60 text-dark whitespace-pre-wrap mb-4" data-aos="fade-up" data-aos-delay="100">
                 {submittedInput}
               </div>
-              <div className="w-full flex flex-col sm:flex-row flex-wrap gap-3 mb-6" data-aos="fade-up" data-aos-delay="150">
+              <div className="w-full flex flex-col sm:flex-row flex-wrap gap-3 mb-6 px-2 sm:px-0" data-aos="fade-up" data-aos-delay="150">
                 <Button 
                   onClick={handleReset} 
                   disabled={loading}
                   variant="edit"
-                  className="flex-1 min-w-[200px]"
+                  className="flex-1 min-w-0 sm:min-w-[180px] text-sm sm:text-base"
                 >
                   Edit input
                 </Button>
@@ -262,10 +262,10 @@ const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => 
                     }
                   }}
                   disabled={loading}
-                  className="flex-1 min-w-[200px] flex items-center justify-center gap-2"
+                  className="flex-1 min-w-0 sm:min-w-[180px] flex items-center justify-center gap-2 text-sm sm:text-base"
                 >
-                  <FaShare className="w-4 h-4" />
-                  Share
+                  <FaShare className="w-3 h-3 sm:w-4 sm:h-4" />
+                  <span>Share</span>
                 </Button>
                 <Button 
                   onClick={() => {
@@ -274,7 +274,7 @@ const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => 
                   }}
                   disabled={loading}
                   variant="danger"
-                  className="flex-1 min-w-[200px]"
+                  className="flex-1 min-w-0 sm:min-w-[180px] text-sm sm:text-base"
                 >
                   Close
                 </Button>

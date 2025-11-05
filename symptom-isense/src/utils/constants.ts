@@ -13,23 +13,23 @@ export const firebaseErrorMessages: Record<string, string> = {
 };
 
 export const buttonStyles = {
-  primary: "w-full rounded-md px-5 py-3 text-base font-semibold text-dark bg-bg border border-muted/30 shadow-md " +
+  primary: "w-full rounded-md px-4 sm:px-5 py-3 min-h-[48px] text-sm sm:text-base font-semibold text-dark bg-bg border border-muted/30 shadow-md " +
     "transition-all duration-300 transform hover:bg-dark hover:text-bg hover:shadow-lg hover:scale-105 cursor-pointer " +
-    "disabled:opacity-50 disabled:cursor-not-allowed",
+    "disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 touch-manipulation",
   
-  secondary: "text-accent hover:text-bg hover:bg-accent/20 hover:scale-105 transition-all duration-200 rounded px-2 py-1 cursor-pointer",
+  secondary: "text-accent hover:text-bg hover:bg-accent/20 hover:scale-105 transition-all duration-200 rounded px-2 py-1 cursor-pointer min-h-[44px] touch-manipulation",
   
-  small: "text-accent hover:text-bg hover:bg-accent/20 hover:scale-105 transition-all duration-200 rounded px-2 py-1 cursor-pointer text-sm hover:underline hover:decoration-accent hover:decoration-2 underline-offset-4",
+  small: "text-accent hover:text-bg hover:bg-accent/20 hover:scale-105 transition-all duration-200 rounded px-2 py-1 cursor-pointer text-xs sm:text-sm hover:underline hover:decoration-accent hover:decoration-2 underline-offset-4 min-h-[44px] touch-manipulation",
   
-  edit: "rounded-md px-4 py-2 text-sm font-medium text-dark bg-bg border border-muted/30 shadow-md " +
+  edit: "rounded-md px-3 sm:px-4 py-2 sm:py-3 min-h-[48px] text-xs sm:text-sm font-medium text-dark bg-bg border border-muted/30 shadow-md " +
     "transition-all duration-300 transform hover:bg-dark hover:text-bg hover:shadow-lg hover:scale-105 cursor-pointer " +
-    "disabled:opacity-50 disabled:cursor-not-allowed text-sm",
+    "disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 touch-manipulation",
   
-  social: "w-full rounded-md px-5 py-3 text-base font-semibold text-dark bg-white border border-muted/30 shadow-md flex items-center justify-center gap-2 transition-all duration-300 transform hover:bg-gray-100 hover:shadow-lg hover:scale-105 cursor-pointer",
+  social: "w-full rounded-md px-4 sm:px-5 py-3 min-h-[48px] text-sm sm:text-base font-semibold text-dark bg-white border border-muted/30 shadow-md flex items-center justify-center gap-2 transition-all duration-300 transform hover:bg-gray-100 hover:shadow-lg hover:scale-105 cursor-pointer active:scale-95 touch-manipulation",
   
-  danger: "px-4 py-2 bg-red-600 text-white rounded-md shadow hover:bg-red-700 transition-all duration-200 cursor-pointer",
+  danger: "px-3 sm:px-4 py-2 sm:py-3 min-h-[48px] text-xs sm:text-sm bg-red-600 text-white rounded-md shadow hover:bg-red-700 transition-all duration-200 cursor-pointer active:scale-95 touch-manipulation",
 
-  checkSymptoms: "rounded-md px-6 py-3 text-base font-semibold text-[var(--color-bg)] bg-[var(--color-dark)] border border-[var(--color-dark)] shadow-md transition-all duration-300 transform hover:bg-[var(--color-accent)] hover:shadow-lg hover:scale-105 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+  checkSymptoms: "rounded-md px-4 sm:px-6 py-3 min-h-[48px] text-sm sm:text-base font-semibold text-[var(--color-bg)] bg-[var(--color-dark)] border border-[var(--color-dark)] shadow-md transition-all duration-300 transform hover:bg-[var(--color-accent)] hover:shadow-lg hover:scale-105 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 touch-manipulation"
 };
 
 export const features = [
