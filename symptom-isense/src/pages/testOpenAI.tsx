@@ -3,7 +3,7 @@ import { savePrompt, auth } from "../services/firebase";
 import { analyzeSymptoms } from "../services/openAiService";
 import { generateMedicalReportPDF } from "../services/pdfService";
 import { isMedicalQuery } from "../utils/medicalKeywords";
-import { FaUserMd, FaTrash, FaShare } from "react-icons/fa";
+import { FaUserMd, FaTrash, FaShare, FaPaperPlane } from "react-icons/fa";
 import { recommendations, extraRecommendations } from "../utils/constants";
 import Button from "../components/ui/Button";
 import BackButton from "../components/ui/BackButton";
@@ -219,9 +219,11 @@ const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => 
                 onClick={handleAsk} 
                 disabled={loading}
                 loading={loading}
-                className="flex-1 w-full min-h-[52px] text-sm sm:text-base md:text-lg px-4 sm:px-6"
+                className="flex-1 w-full min-h-[52px] text-sm sm:text-base md:text-lg px-4 sm:px-6 flex items-center justify-center gap-2"
               >
-                Get Analysis
+                <span className="hidden sm:inline">Get Analysis</span>
+                <FaPaperPlane className="sm:hidden text-lg" />
+                <span className="sm:hidden">Send</span>
               </Button>
               <IconButton
                 onClick={handleClearAll}
