@@ -222,18 +222,18 @@ const HomePage: React.FC<HomePageProps> = ({
         </section>
         <div className="w-full my-16">
           <div className="max-w-5xl mx-auto px-4">
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 sm:gap-4">
               <div className="flex-1 h-px bg-gradient-to-r from-transparent via-gray-300 to-gray-300"></div>
-              <div className="relative">
-                <div className="flex items-center gap-3">
-                  <div className="relative w-8 h-8 flex items-center justify-center">
-                    <div className="absolute w-6 h-1.5 bg-gradient-to-r from-primary to-accent rounded-full"></div>
-                    <div className="absolute w-1.5 h-6 bg-gradient-to-b from-primary to-accent rounded-full"></div>
+              <div className="relative flex-shrink-0">
+                <div className="flex items-center gap-1 sm:gap-3">
+                  <div className="relative w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center">
+                    <div className="absolute w-4 h-1 sm:w-6 sm:h-1.5 bg-gradient-to-r from-primary to-accent rounded-full"></div>
+                    <div className="absolute w-1 h-4 sm:w-1.5 sm:h-6 bg-gradient-to-b from-primary to-accent rounded-full"></div>
                   </div>
-                  <span className="text-xs font-semibold text-muted uppercase tracking-widest px-2">Questions?</span>
-                  <div className="relative w-8 h-8 flex items-center justify-center">
-                    <div className="absolute w-6 h-1.5 bg-gradient-to-r from-accent to-primary rounded-full"></div>
-                    <div className="absolute w-1.5 h-6 bg-gradient-to-b from-accent to-primary rounded-full"></div>
+                  <span className="text-[10px] sm:text-xs font-semibold text-muted uppercase tracking-widest px-1 sm:px-2 whitespace-nowrap">Questions?</span>
+                  <div className="relative w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center">
+                    <div className="absolute w-4 h-1 sm:w-6 sm:h-1.5 bg-gradient-to-r from-accent to-primary rounded-full"></div>
+                    <div className="absolute w-1 h-4 sm:w-1.5 sm:h-6 bg-gradient-to-b from-accent to-primary rounded-full"></div>
                   </div>
                 </div>
               </div>
