@@ -389,14 +389,29 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, onHomeClick }) => {
                 <div className="mb-4">
                   <label className="text-sm font-medium text-[#293540] mb-2 block">Search by Keyword</label>
                   <div className="flex flex-col sm:flex-row gap-2">
-                    <input
-                      type="text"
-                      value={keyword}
-                      onChange={(e) => setKeyword(e.target.value)}
-                      onKeyPress={(e) => e.key === 'Enter' && filterByKeyword()}
-                      placeholder="Search symptoms, conditions..."
-                      className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#152026] focus:border-transparent transition-all duration-300 ease-in-out"
-                    />
+                    <div className="relative flex-1">
+                      <input
+                        type="text"
+                        value={keyword}
+                        onChange={(e) => setKeyword(e.target.value)}
+                        onKeyPress={(e) => e.key === 'Enter' && filterByKeyword()}
+                        placeholder="Search symptoms, conditions..."
+                        className="w-full px-4 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#152026] focus:border-transparent transition-all duration-300 ease-in-out"
+                      />
+                      {keyword && (
+                        <button
+                          onClick={() => {
+                            setKeyword("");
+                            setFilteredPrompts(prompts);
+                            setActiveFilter(null);
+                          }}
+                          className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-all duration-200"
+                          aria-label="Clear search"
+                        >
+                          <FaTimes className="text-sm" />
+                        </button>
+                      )}
+                    </div>
                     <button
                       onClick={filterByKeyword}
                       className="w-full sm:w-auto px-6 py-2 bg-[#152026] text-white rounded-lg shadow-md hover:shadow-lg hover:bg-[#293540] transform hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2"
@@ -453,12 +468,12 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, onHomeClick }) => {
                   <div className="flex justify-center pt-4 pb-2">
                     <button
                       onClick={() => setDisplayCount(prev => prev + 5)}
-                      className="px-6 sm:px-8 py-3 bg-gradient-to-r from-primary to-accent text-white rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center gap-2 sm:gap-3 font-semibold text-sm sm:text-base"
+                      className="px-3 sm:px-4 py-2 rounded-full shadow transition-all duration-200 transform hover:-translate-y-1 hover:shadow-lg bg-white text-black border border-muted/30 flex items-center gap-2 text-xs sm:text-sm"
                     >
                       <FaHistory className="text-base sm:text-lg" />
                       <span className="hidden xs:inline">Load More Records</span>
                       <span className="xs:hidden">More</span>
-                      <span className="bg-white/20 px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm">
+                      <span className="bg-gray-100 px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-bold">
                         {filteredPrompts.length - displayCount}
                       </span>
                     </button>
@@ -469,7 +484,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, onHomeClick }) => {
                   <div className="flex justify-center pt-4 pb-2">
                     <button
                       onClick={() => setDisplayCount(5)}
-                      className="px-6 py-2.5 bg-gray-100 text-gray-600 rounded-lg shadow-sm hover:shadow-md hover:bg-gray-200 transform hover:scale-105 transition-all duration-300 flex items-center gap-2 font-medium"
+                      className="px-3 sm:px-4 py-2 rounded-full shadow transition-all duration-200 transform hover:-translate-y-1 hover:shadow-lg bg-white text-black border border-muted/30 flex items-center gap-2 text-xs sm:text-sm"
                     >
                       <FaChevronUp />
                       <span>Show Less</span>

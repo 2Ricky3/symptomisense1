@@ -104,9 +104,9 @@ const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => 
   }
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-bg via-bg to-muted flex flex-col items-center justify-start p-4 sm:p-6 lg:p-8">
-      <div className="w-full max-w-6xl flex-grow bg-white/80 backdrop-blur-md rounded-2xl p-6 sm:p-8 flex flex-col" data-aos="fade-up">
-        <div className="flex items-center justify-between mb-6">
+    <div className="min-h-screen w-full bg-gradient-to-br from-bg via-bg to-muted flex flex-col items-center justify-start p-3 sm:p-4 md:p-6 lg:p-8">
+      <div className="w-full max-w-6xl flex-grow bg-white/80 backdrop-blur-md rounded-2xl p-4 sm:p-6 md:p-8 flex flex-col" data-aos="fade-up">
+        <div className="flex items-center justify-between mb-4 sm:mb-6">
           <BackButton
             onClick={() => {
               if (onHomeClick) onHomeClick();
@@ -115,20 +115,20 @@ const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => 
             className="-ml-2"
             data-aos="fade-right"
           />
-          <h1 className="text-2xl sm:text-3xl font-bold text-dark text-center" data-aos="fade-down" data-aos-delay="100">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-dark text-center flex-1 px-2" data-aos="fade-down" data-aos-delay="100">
             Symptom Checker
           </h1>
-          <div className="w-24"></div> 
+          <div className="w-8 sm:w-24"></div> 
         </div>
 
         {!submittedInput ? (
           <div className="flex-grow flex flex-col items-center justify-center">
             {!response && (
-              <div className="bg-black shadow-md rounded-lg p-4 mb-6 flex items-center gap-4 transform transition-transform duration-300 hover:-translate-y-1 hover:shadow-lg cursor-pointer w-full max-w-3xl" data-aos="fade-up" data-aos-delay="200">
-                <div className="text-white text-4xl">
+              <div className="bg-black shadow-md rounded-lg p-3 sm:p-4 mb-4 sm:mb-6 flex items-start sm:items-center gap-3 sm:gap-4 transform transition-transform duration-300 hover:-translate-y-1 hover:shadow-lg cursor-pointer w-full max-w-3xl" data-aos="fade-up" data-aos-delay="200">
+                <div className="text-white text-2xl sm:text-3xl md:text-4xl flex-shrink-0">
                   <FaUserMd />
                 </div>
-                <p className="text-sm text-white">
+                <p className="text-xs sm:text-sm text-white leading-relaxed">
                   Please describe your symptoms in as much detail as possible. Include information such as temperature, duration, and any other relevant details to help us provide better insights.
                 </p>
               </div>
@@ -194,7 +194,7 @@ const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => 
 
                 <button
                   onClick={() => setShowMore(!showMore)}
-                  className="px-3 sm:px-4 py-2 rounded-full shadow transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg bg-white text-black border border-muted/30 flex items-center gap-2 text-sm sm:text-base mt-2"
+                  className="px-3 sm:px-4 py-2 rounded-full shadow transition-all duration-200 transform hover:-translate-y-1 hover:shadow-lg bg-white text-black border border-muted/30 flex items-center gap-2 text-xs sm:text-sm mt-2"
                   data-aos="fade-up"
                   data-aos-delay="500"
                 >
@@ -214,12 +214,12 @@ const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => 
                 </button>
               </div>
             </div>
-            <div className="w-full max-w-3xl flex flex-col sm:flex-row gap-3" data-aos="fade-up" data-aos-delay="550">
+            <div className="w-full max-w-3xl flex flex-col sm:flex-row gap-3 mb-6" data-aos="fade-up" data-aos-delay="550">
               <Button 
                 onClick={handleAsk} 
                 disabled={loading}
                 loading={loading}
-                className="flex-1 w-full"
+                className="flex-1 w-full min-h-[48px] text-base sm:text-lg"
               >
                 Get Analysis
               </Button>
@@ -229,7 +229,7 @@ const TestOpenAI: React.FC<{ onHomeClick?: () => void }> = ({ onHomeClick }) => 
                 title="Clear input"
                 icon={<FaTrash />}
                 variant="danger"
-                className="w-full sm:w-auto"
+                className="w-full sm:w-auto min-h-[48px]"
               />
             </div>
           </div>
