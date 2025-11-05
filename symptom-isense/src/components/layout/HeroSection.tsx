@@ -58,18 +58,18 @@ const HeroSection: React.FC<HeroSectionProps> = ({
           Get instant, accurate health insights and connect with trusted healthcare professionals
         </p>
 
-        <div className="flex flex-col gap-4 justify-center items-center mb-8" data-aos="fade-up" data-aos-delay="300">
+        <div className="flex flex-col gap-4 justify-center items-center mb-8 w-full max-w-md mx-auto px-4" data-aos="fade-up" data-aos-delay="300">
           <Button
             variant="checkSymptoms"
             onClick={onCheckSymptomsClick}
-            className="text-lg px-8 py-4 shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300"
+            className="w-full text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300"
             aria-label="Start checking your symptoms"
           >
             Check Symptoms Now
           </Button>
           <button
             onClick={onLearnMoreClick}
-            className="text-base font-semibold text-dark hover:text-accent hover:underline transition-all duration-200 cursor-pointer group flex items-center gap-2"
+            className="text-sm sm:text-base font-semibold text-dark hover:text-accent hover:underline transition-all duration-200 cursor-pointer group flex items-center gap-2"
             aria-label="Learn more about Symptom-iSense"
           >
             Learn more 
@@ -77,11 +77,11 @@ const HeroSection: React.FC<HeroSectionProps> = ({
           </button>
         </div>
 
-        <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 border border-blue-200 rounded-full text-sm text-blue-800 shadow-sm">
-          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+        <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-2 bg-blue-50 border border-blue-200 rounded-full text-xs sm:text-sm text-blue-800 shadow-sm max-w-full mx-auto">
+          <svg className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
             <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
           </svg>
-          <span>💡 Tip: Describe your symptoms in detail for best results</span>
+          <span className="text-center break-words">💡 Tip: Describe your symptoms in detail for best results</span>
         </div>
       </div>
     </section>

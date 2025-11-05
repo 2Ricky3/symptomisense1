@@ -29,7 +29,7 @@ export const buttonStyles = {
   
   danger: "px-4 py-2 bg-red-600 text-white rounded-md shadow hover:bg-red-700 transition-all duration-200 cursor-pointer",
 
-  checkSymptoms: "rounded-md px-6 py-3 text-base font-semibold text-[var(--color-bg)] bg-[var(--color-dark)] border border-[var(--color-dark)] shadow-md transition-all duration-300 transform hover:bg-[var(--color-accent)] hover:shadow-lg hover:scale-105 cursor-pointer"
+  checkSymptoms: "rounded-md px-6 py-3 text-base font-semibold text-[var(--color-bg)] bg-[var(--color-dark)] border border-[var(--color-dark)] shadow-md transition-all duration-300 transform hover:bg-[var(--color-accent)] hover:shadow-lg hover:scale-105 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
 };
 
 export const features = [
