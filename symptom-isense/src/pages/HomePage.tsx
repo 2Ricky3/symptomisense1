@@ -58,6 +58,7 @@ const HomePage: React.FC<HomePageProps> = ({
         onLoginClick={onLoginClick}
         onLogoutClick={onLogoutClick}
         onProfileClick={onProfileClick}
+        onCheckSymptomsClick={onCheckSymptomsClick}
         scrollToSection={scrollToSection}
       />
 

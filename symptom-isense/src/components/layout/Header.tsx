@@ -12,6 +12,7 @@ interface HeaderProps {
   onLoginClick?: () => void;
   onLogoutClick?: () => void;
   onProfileClick?: () => void;
+  onCheckSymptomsClick?: () => void;
   scrollToSection: (id: string) => void;
 }
 
@@ -20,6 +21,7 @@ const Header: React.FC<HeaderProps> = ({
   onLoginClick,
   onLogoutClick,
   onProfileClick,
+  onCheckSymptomsClick,
   scrollToSection
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
@@ -127,6 +129,17 @@ const Header: React.FC<HeaderProps> = ({
             </button>
           </div>
           <div className="flow-root">
+            <div className="mb-6">
+              <button
+                className="flex items-center justify-center w-full rounded-xl px-4 py-4 bg-gradient-to-r from-[#152026] to-[#293540] hover:from-[#293540] hover:to-[#455059] text-white font-bold text-base shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] cursor-pointer mb-4"
+                onClick={() => {
+                  if (onCheckSymptomsClick) onCheckSymptomsClick();
+                  setMobileMenuOpen(false);
+                }}
+              >
+                <span>🩺 Check Symptoms Now</span>
+              </button>
+            </div>
             <div className="space-y-1 mb-6">
               <button
                 className="flex items-center w-full rounded-xl px-4 py-3.5 text-base font-semibold text-gray-900 hover:bg-gradient-to-r hover:from-primary/10 hover:to-accent/10 hover:text-primary transition-all duration-200 cursor-pointer group"
