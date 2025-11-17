@@ -50,7 +50,7 @@ export const generateMedicalReportPDF = async (soapNote: string): Promise<void> 
             y: yPosition,
             size: fontSize,
             font: currentFont,
-            color: rgb(0.15, 0.15, 0.15),
+            color: rgb(0.161, 0.208, 0.251), 
           });
           yPosition -= lineHeight;
         }
@@ -74,7 +74,7 @@ export const generateMedicalReportPDF = async (soapNote: string): Promise<void> 
               y: yPosition,
               size: fontSize,
               font: currentFont,
-              color: rgb(0.15, 0.15, 0.15),
+              color: rgb(0.161, 0.208, 0.251), 
             });
             yPosition -= lineHeight;
             remainingWord = remainingWord.substring(charCount);
@@ -93,97 +93,214 @@ export const generateMedicalReportPDF = async (soapNote: string): Promise<void> 
         y: yPosition,
         size: fontSize,
         font: currentFont,
-        color: rgb(0.15, 0.15, 0.15),
+        color: rgb(0.161, 0.208, 0.251), 
       });
       yPosition -= lineHeight;
     }
   };
 
   const addSectionHeader = (title: string, withDivider: boolean = true): void => {
-    checkNewPage(40);
+    checkNewPage(50);
 
     if (withDivider && yPosition < height - margin - 20) {
+    
       page.drawLine({
-        start: { x: margin, y: yPosition + 5 },
-        end: { x: width - margin, y: yPosition + 5 },
-        thickness: 0.5,
-        color: rgb(0.6, 0.6, 0.6),
+        start: { x: margin, y: yPosition + 8 },
+        end: { x: width - margin, y: yPosition + 8 },
+        thickness: 1,
+        color: rgb(0.85, 0.87, 0.89),
       });
-      yPosition -= 15;
+      yPosition -= 18;
     }
 
+    page.drawRectangle({
+      x: margin - 5,
+      y: yPosition - 5,
+      width: 4,
+      height: 20,
+      color: rgb(0.361, 0.416, 0.451), 
+    });
+
+
+    page.drawRectangle({
+      x: margin - 5,
+      y: yPosition - 5,
+      width: maxLineWidth + 10,
+      height: 22,
+      color: rgb(0.97, 0.98, 0.99),
+    });
+
     page.drawText(title, {
-      x: margin,
+      x: margin + 8,
       y: yPosition,
       size: 14,
       font: boldFont,
-      color: rgb(0.1, 0.1, 0.1),
+      color: rgb(0.082, 0.125, 0.149), 
     });
-    yPosition -= 25;
+    yPosition -= 30;
   };
 
-  checkNewPage(100);
+  checkNewPage(120);
+
 
   page.drawRectangle({
     x: 0,
     y: yPosition - 10,
     width: width,
-    height: 60,
-    color: rgb(0.05, 0.25, 0.45),
+    height: 70,
+    color: rgb(0.082, 0.125, 0.149), 
   });
 
-  page.drawText("SYMPTOM-iSENSE MEDICAL REPORT", {
+  
+  page.drawRectangle({
+    x: 0,
+    y: yPosition + 60,
+    width: width,
+    height: 4,
+    color: rgb(0.361, 0.416, 0.451), 
+  });
+
+  
+  page.drawRectangle({
     x: margin,
-    y: yPosition,
-    size: 18,
+    y: yPosition + 20,
+    width: 32,
+    height: 32,
+    color: rgb(0.361, 0.416, 0.451), 
+  });
+
+  page.drawRectangle({
+    x: margin + 3,
+    y: yPosition + 23,
+    width: 26,
+    height: 26,
+    color: rgb(0.271, 0.314, 0.349), 
+  });
+
+  
+  page.drawRectangle({
+    x: margin + 13,
+    y: yPosition + 26,
+    width: 6,
+    height: 20,
+    color: rgb(1, 1, 1),
+  });
+  page.drawRectangle({
+    x: margin + 6,
+    y: yPosition + 33,
+    width: 20,
+    height: 6,
+    color: rgb(1, 1, 1),
+  });
+
+  page.drawText("SYMPTOM-iSENSE", {
+    x: margin + 45,
+    y: yPosition + 32,
+    size: 20,
     font: boldFont,
     color: rgb(1, 1, 1),
   });
 
-  page.drawText("Patient-Provided Information for Healthcare Review", {
-    x: margin,
-    y: yPosition - 20,
-    size: 11,
+  page.drawText("MEDICAL REPORT", {
+    x: margin + 45,
+    y: yPosition + 14,
+    size: 12,
     font: font,
-    color: rgb(0.9, 0.9, 0.9),
+    color: rgb(0.8, 0.85, 0.9),
   });
 
-  yPosition -= 80;
+  page.drawText("Patient-Reported Assessment & Clinical Documentation", {
+    x: margin,
+    y: yPosition - 5,
+    size: 10,
+    font: font,
+    color: rgb(0.85, 0.9, 0.95),
+  });
 
-  checkNewPage(60);
+  yPosition -= 95;
+
+  checkNewPage(75);
+  
+  
   page.drawRectangle({
     x: margin - 5,
-    y: yPosition - 25,
+    y: yPosition - 45,
     width: maxLineWidth + 10,
-    height: 35,
-    color: rgb(0.97, 0.97, 0.97),
-    borderColor: rgb(0.8, 0.8, 0.8),
-    borderWidth: 1,
+    height: 50,
+    color: rgb(0.98, 0.99, 1),
+    borderColor: rgb(0.271, 0.314, 0.349), 
+    borderWidth: 2,
   });
 
-  page.drawText(
-    "Generated: " +
-      new Date().toLocaleDateString() +
-      " at " +
-      new Date().toLocaleTimeString(),
-    {
-      x: margin,
-      y: yPosition - 10,
-      size: 10,
-      font: boldFont,
-      color: rgb(0.4, 0.4, 0.4),
-    }
-  );
+
+  page.drawRectangle({
+    x: margin - 5,
+    y: yPosition - 45,
+    width: 5,
+    height: 50,
+    color: rgb(0.361, 0.416, 0.451), 
+  });
+
+
+  page.drawRectangle({
+    x: margin + 5,
+    y: yPosition - 20,
+    width: 10,
+    height: 10,
+    borderColor: rgb(0.361, 0.416, 0.451),
+    borderWidth: 1.5,
+  });
+
+  page.drawLine({
+    start: { x: margin + 10, y: yPosition - 15 },
+    end: { x: margin + 10, y: yPosition - 18 },
+    thickness: 1.5,
+    color: rgb(0.361, 0.416, 0.451),
+  });
+
+  page.drawLine({
+    start: { x: margin + 10, y: yPosition - 15 },
+    end: { x: margin + 13, y: yPosition - 15 },
+    thickness: 1.5,
+    color: rgb(0.361, 0.416, 0.451),
+  });
+
+  const dateText = "Generated: " + new Date().toLocaleDateString() + " at " + new Date().toLocaleTimeString();
+  page.drawText(dateText, {
+    x: margin + 22,
+    y: yPosition - 18,
+    size: 10,
+    font: boldFont,
+    color: rgb(0.082, 0.125, 0.149), 
+  });
+
+
+  page.drawRectangle({
+    x: margin + 5,
+    y: yPosition - 40,
+    width: 10,
+    height: 10,
+    borderColor: rgb(0.361, 0.416, 0.451),
+    borderWidth: 1.5,
+  });
+
+  page.drawText("i", {
+    x: margin + 7.5,
+    y: yPosition - 38,
+    size: 9,
+    font: boldFont,
+    color: rgb(0.361, 0.416, 0.451),
+  });
 
   page.drawText("Please review all information with patient during consultation", {
-    x: margin,
-    y: yPosition - 22,
+    x: margin + 22,
+    y: yPosition - 38,
     size: 9,
     font: font,
-    color: rgb(0.5, 0.5, 0.5),
+    color: rgb(0.361, 0.416, 0.451), 
   });
 
-  yPosition -= 50;
+  yPosition -= 70;
 
   const content = soapNote.replace(/^SOAP Note:\s*/i, "").trim();
 
@@ -231,28 +348,68 @@ export const generateMedicalReportPDF = async (soapNote: string): Promise<void> 
     }
   }
 
-  const footerY = 30;
-  page.drawLine({
-    start: { x: margin, y: footerY + 15 },
-    end: { x: width - margin, y: footerY + 15 },
-    thickness: 0.5,
-    color: rgb(0.7, 0.7, 0.7),
+  const footerY = 35;
+  
+ 
+  page.drawRectangle({
+    x: 0,
+    y: footerY - 10,
+    width: width,
+    height: 30,
+    color: rgb(0.98, 0.99, 1),
+  });
+
+ 
+  page.drawRectangle({
+    x: 0,
+    y: footerY + 20,
+    width: width,
+    height: 2,
+    color: rgb(0.361, 0.416, 0.451), 
+  });
+
+
+  page.drawText("!", {
+    x: margin + 3,
+    y: footerY + 2,
+    size: 10,
+    font: boldFont,
+    color: rgb(0.361, 0.416, 0.451),
+  });
+
+
+  page.drawRectangle({
+    x: margin,
+    y: footerY,
+    width: 12,
+    height: 12,
+    borderColor: rgb(0.361, 0.416, 0.451),
+    borderWidth: 1.5,
   });
 
   page.drawText("This document contains patient-reported symptoms and AI-generated analysis.", {
-    x: margin,
-    y: footerY,
+    x: margin + 18,
+    y: footerY + 2,
     size: 8,
     font: font,
-    color: rgb(0.5, 0.5, 0.5),
+    color: rgb(0.361, 0.416, 0.451), 
   });
 
   page.drawText("Not a substitute for professional medical examination and diagnosis.", {
-    x: width - margin - 220,
+    x: margin + 18,
+    y: footerY - 7,
+    size: 8,
+    font: boldFont,
+    color: rgb(0.082, 0.125, 0.149), 
+  });
+
+
+  page.drawText("Page 1", {
+    x: width - margin - 30,
     y: footerY,
     size: 8,
     font: font,
-    color: rgb(0.5, 0.5, 0.5),
+    color: rgb(0.361, 0.416, 0.451),
   });
 
   const pdfBytes = await pdfDoc.save();
