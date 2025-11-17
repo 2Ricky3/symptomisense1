@@ -2,6 +2,8 @@
 
 SymptomiSense is a modern symptom tracking and health monitoring application built with TypeScript. It helps users track their health symptoms, identify patterns, and maintain a comprehensive health journal.
 
+(Website)
+
 ## 📌 Table of Contents
 - [Features](#features)
 - [Tech Stack](#tech-stack)
